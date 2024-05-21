@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DestinyMatch_API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e90cb7e411664b103c123df1bf14dcaa89784865")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+acde2523fbfd276d72150776ad6c9a983e5de7e9")]
 [assembly: System.Reflection.AssemblyProductAttribute("DestinyMatch_API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DestinyMatch_API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

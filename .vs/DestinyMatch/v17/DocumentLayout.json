@@ -1,25 +1,21 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\trinh\\Downloads\\FPTIU\\DestinyMatch-BE\\",
+  "WorkspaceRootPath": "C:\\Users\\trinh\\Downloads\\DeploySWD\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{6280644D-288E-45D6-A563-DE43047F7E76}|DestinyMatch_API\\DestinyMatch_API.csproj|c:\\users\\trinh\\downloads\\fptiu\\destinymatch-be\\destinymatch_api\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{6280644D-288E-45D6-A563-DE43047F7E76}|DestinyMatch_API\\DestinyMatch_API.csproj|solutionrelative:destinymatch_api\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6280644D-288E-45D6-A563-DE43047F7E76}|DestinyMatch_API\\DestinyMatch_API.csproj|c:\\users\\trinh\\downloads\\fptiu\\destinymatch-be\\destinymatch_api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{6280644D-288E-45D6-A563-DE43047F7E76}|DestinyMatch_API\\DestinyMatch_API.csproj|c:\\users\\trinh\\downloads\\deployswd\\destinymatch_api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6280644D-288E-45D6-A563-DE43047F7E76}|DestinyMatch_API\\DestinyMatch_API.csproj|solutionrelative:destinymatch_api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6280644D-288E-45D6-A563-DE43047F7E76}|DestinyMatch_API\\DestinyMatch_API.csproj|c:\\users\\trinh\\downloads\\fptiu\\destinymatch-be\\destinymatch_api\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{6280644D-288E-45D6-A563-DE43047F7E76}|DestinyMatch_API\\DestinyMatch_API.csproj|c:\\users\\trinh\\downloads\\deployswd\\destinymatch_api\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6280644D-288E-45D6-A563-DE43047F7E76}|DestinyMatch_API\\DestinyMatch_API.csproj|solutionrelative:destinymatch_api\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6280644D-288E-45D6-A563-DE43047F7E76}|DestinyMatch_API\\DestinyMatch_API.csproj|c:\\users\\trinh\\downloads\\fptiu\\destinymatch-be\\destinymatch_api\\projectconnfig\\serviceextension\\serviceextension.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{6280644D-288E-45D6-A563-DE43047F7E76}|DestinyMatch_API\\DestinyMatch_API.csproj|c:\\users\\trinh\\downloads\\deployswd\\destinymatch_api\\projectconnfig\\serviceextension\\serviceextension.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6280644D-288E-45D6-A563-DE43047F7E76}|DestinyMatch_API\\DestinyMatch_API.csproj|solutionrelative:destinymatch_api\\projectconnfig\\serviceextension\\serviceextension.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6280644D-288E-45D6-A563-DE43047F7E76}|DestinyMatch_API\\DestinyMatch_API.csproj|c:\\users\\trinh\\downloads\\fptiu\\destinymatch-be\\destinymatch_api\\projectconnfig\\mapper\\mappingentities.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{6280644D-288E-45D6-A563-DE43047F7E76}|DestinyMatch_API\\DestinyMatch_API.csproj|c:\\users\\trinh\\downloads\\deployswd\\destinymatch_api\\projectconnfig\\mapper\\mappingentities.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6280644D-288E-45D6-A563-DE43047F7E76}|DestinyMatch_API\\DestinyMatch_API.csproj|solutionrelative:destinymatch_api\\projectconnfig\\mapper\\mappingentities.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -30,7 +26,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -57,38 +53,28 @@
               "Name": "ST:0:0:{e1b7d1f8-9b3c-49b1-8f4f-bfc63a88835d}"
             },
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0174dea2-fdbe-4ef1-8f99-c0beae78880f}"
+            },
+            {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Dockerfile",
-              "DocumentMoniker": "C:\\Users\\trinh\\Downloads\\FPTIU\\DestinyMatch-BE\\DestinyMatch_API\\Dockerfile",
-              "RelativeDocumentMoniker": "DestinyMatch_API\\Dockerfile",
-              "ToolTip": "C:\\Users\\trinh\\Downloads\\FPTIU\\DestinyMatch-BE\\DestinyMatch_API\\Dockerfile",
-              "RelativeToolTip": "DestinyMatch_API\\Dockerfile",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2024-05-21T06:40:35.9Z",
-              "EditorCaption": ""
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\trinh\\Downloads\\DeploySWD\\DestinyMatch_API\\Program.cs",
+              "RelativeDocumentMoniker": "DestinyMatch_API\\Program.cs",
+              "ToolTip": "C:\\Users\\trinh\\Downloads\\DeploySWD\\DestinyMatch_API\\Program.cs",
+              "RelativeToolTip": "DestinyMatch_API\\Program.cs",
+              "ViewState": "AQIAAAQAAAAAAAAAAAAcwBAAAAAQAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-21T05:32:16.994Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\trinh\\Downloads\\FPTIU\\DestinyMatch-BE\\DestinyMatch_API\\Program.cs",
-              "RelativeDocumentMoniker": "DestinyMatch_API\\Program.cs",
-              "ToolTip": "C:\\Users\\trinh\\Downloads\\FPTIU\\DestinyMatch-BE\\DestinyMatch_API\\Program.cs",
-              "RelativeToolTip": "DestinyMatch_API\\Program.cs",
-              "ViewState": "AQIAAAQAAAAAAAAAAAAcwBAAAAAQAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-21T05:32:16.994Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
               "Title": "AccountController.cs",
-              "DocumentMoniker": "C:\\Users\\trinh\\Downloads\\FPTIU\\DestinyMatch-BE\\DestinyMatch_API\\Controllers\\AccountController.cs",
+              "DocumentMoniker": "C:\\Users\\trinh\\Downloads\\DeploySWD\\DestinyMatch_API\\Controllers\\AccountController.cs",
               "RelativeDocumentMoniker": "DestinyMatch_API\\Controllers\\AccountController.cs",
-              "ToolTip": "C:\\Users\\trinh\\Downloads\\FPTIU\\DestinyMatch-BE\\DestinyMatch_API\\Controllers\\AccountController.cs",
+              "ToolTip": "C:\\Users\\trinh\\Downloads\\DeploySWD\\DestinyMatch_API\\Controllers\\AccountController.cs",
               "RelativeToolTip": "DestinyMatch_API\\Controllers\\AccountController.cs",
               "ViewState": "AQIAABAAAAAAAAAAAAAAAB4AAABEAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -96,11 +82,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "ServiceExtension.cs",
-              "DocumentMoniker": "C:\\Users\\trinh\\Downloads\\FPTIU\\DestinyMatch-BE\\DestinyMatch_API\\ProjectConnfig\\ServiceExtension\\ServiceExtension.cs",
+              "DocumentMoniker": "C:\\Users\\trinh\\Downloads\\DeploySWD\\DestinyMatch_API\\ProjectConnfig\\ServiceExtension\\ServiceExtension.cs",
               "RelativeDocumentMoniker": "DestinyMatch_API\\ProjectConnfig\\ServiceExtension\\ServiceExtension.cs",
-              "ToolTip": "C:\\Users\\trinh\\Downloads\\FPTIU\\DestinyMatch-BE\\DestinyMatch_API\\ProjectConnfig\\ServiceExtension\\ServiceExtension.cs",
+              "ToolTip": "C:\\Users\\trinh\\Downloads\\DeploySWD\\DestinyMatch_API\\ProjectConnfig\\ServiceExtension\\ServiceExtension.cs",
               "RelativeToolTip": "DestinyMatch_API\\ProjectConnfig\\ServiceExtension\\ServiceExtension.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -108,11 +94,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 3,
               "Title": "MappingEntities.cs",
-              "DocumentMoniker": "C:\\Users\\trinh\\Downloads\\FPTIU\\DestinyMatch-BE\\DestinyMatch_API\\ProjectConnfig\\Mapper\\MappingEntities.cs",
+              "DocumentMoniker": "C:\\Users\\trinh\\Downloads\\DeploySWD\\DestinyMatch_API\\ProjectConnfig\\Mapper\\MappingEntities.cs",
               "RelativeDocumentMoniker": "DestinyMatch_API\\ProjectConnfig\\Mapper\\MappingEntities.cs",
-              "ToolTip": "C:\\Users\\trinh\\Downloads\\FPTIU\\DestinyMatch-BE\\DestinyMatch_API\\ProjectConnfig\\Mapper\\MappingEntities.cs",
+              "ToolTip": "C:\\Users\\trinh\\Downloads\\DeploySWD\\DestinyMatch_API\\ProjectConnfig\\Mapper\\MappingEntities.cs",
               "RelativeToolTip": "DestinyMatch_API\\ProjectConnfig\\Mapper\\MappingEntities.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAIAAAAQAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",

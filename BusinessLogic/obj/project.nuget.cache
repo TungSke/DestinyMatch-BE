@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "pHrJnhtIMH5VxBq1/p/pZzeQIlexXWjaRF1snPw/XzczJZ6G1fcXPmvKK9UthdJzz4ueYfbANDwMTaW9LIxf7w==",
+  "dgSpecHash": "H8VGep1D3ZlTQYPxJf9hFLedYY/JkFDfDerTBAkKcHKOXJHyqWXdnH9F5tzA81A4btmFx9mbygBJxNDbxBxMXQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\trinh\\Downloads\\FPTIU\\DestinyMatch-BE\\BusinessLogic\\BusinessLogic.csproj",
+  "projectFilePath": "C:\\Users\\trinh\\Downloads\\DeploySWD\\BusinessLogic\\BusinessLogic.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\trinh\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\trinh\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",

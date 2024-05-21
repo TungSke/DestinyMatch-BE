@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "d4cTAqMq2kcSJXr79Iz1TYDKkspWMnhkuOspU290MMPgMVmT5k1OGzfwvjmpGtA8+dvT59ml7AStNITRilQJtQ==",
+  "dgSpecHash": "rhPlI7qi7jk15RtAvmEnbP4VULkqHrPGDss0bGMMTheGUNQYzmrBqn3rGaR2GX5nRtJCBHDbDjOedmKblLDHbA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\trinh\\Downloads\\FPTIU\\DestinyMatch-BE\\DestinyMatch_API\\DestinyMatch_API.csproj",
+  "projectFilePath": "C:\\Users\\trinh\\Downloads\\DeploySWD\\DestinyMatch_API\\DestinyMatch_API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\trinh\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\trinh\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",

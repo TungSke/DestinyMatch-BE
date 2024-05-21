@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "zekrLNveo35Gt6kjzB4c9HHAhyvyoKvK3pHIm9K03UKZvnrg3S4PLRpPu9TTynAbaV6pUgTMre90Sy28+wdOkQ==",
+  "dgSpecHash": "EvhiPxuNPFjewxjwSXmnPTYOzxiWMPLdXAHPAumTB0CmXUBxnZtOAcm14O6IlnAxf6BuGoUTroUJn2VCUwMStA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\trinh\\Downloads\\FPTIU\\DestinyMatch-BE\\DataAccess\\DataAccess.csproj",
+  "projectFilePath": "C:\\Users\\trinh\\Downloads\\DeploySWD\\DataAccess\\DataAccess.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\trinh\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\trinh\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
