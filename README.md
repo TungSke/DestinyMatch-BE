@@ -9,5 +9,5 @@ Scaffold-DbContext "Server=localhost;Database=[DestinyMatch];uid=sa;pwd=12345;Tr
 
 - Terminal:
 ```plaintext
-dotnet ef dbcontext scaffold "Server=localhost;Database=DestinyMatch;uid=sa;pwd=12345;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer --output-dir Models
+dotnet ef dbcontext scaffold "Server=localhost;Database=DestinyMatch;uid=sa;pwd=12345;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer --output-dir Models --force
 ```
