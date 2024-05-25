@@ -7,7 +7,7 @@ namespace DestinyMatch_API.ProjectConnfig.Database
     {
         public static IServiceCollection ConfigureServices(IServiceCollection services, IConfiguration config)
         {
-            services.AddDbContext<DestinyMatchContext>(options => options.UseSqlServer(config["ConnectionStrings:OnlineConnection"]));
+            services.AddDbContext<DestinyMatchContext>(options => options.UseSqlServer(config["ConnectionStrings:DefaultConnection"]));
             return services;
         }
     }
