@@ -1,4 +1,7 @@
-﻿using Repository.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using Repository.Interfaces;
+using Repository.Models;
+using Repository.Models.Generic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,13 +10,34 @@ using System.Threading.Tasks;
 
 namespace Repository.Repositories
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    public class GenericRepository<TModel> : IGenericRepository<TModel> where TModel : class, GenericModel //must be a class and must implement GenericModel 
     {
-        private readonly DestinyMatchContext _context;
+        //************************[ DECLARATION ]************************
 
-        public GenericRepository(DestinyMatchContext context)
+        protected readonly DestinyMatchContext DMDB;
+
+        public GenericRepository(DestinyMatchContext _dbcontext)
         {
-            _context = context;
+            DMDB = _dbcontext;
+        }
+
+        //**************************[ METHODS ]**************************
+
+        public virtual Task<TModel> GetByIdAsync(Guid id)
+        {
+            return DMDB.Set<TModel>().SingleOrDefaultAsync(model => model.Id == id);
+        }
+        public void Add(TModel obj)
+        {
+            DMDB.Set<TModel>().Add(obj);
+        }
+        public void Update(TModel obj)
+        {
+            DMDB.Set<TModel>().Update(obj);
+        }
+        public void Remove(TModel obj)
+        {
+            DMDB.Set<TModel>().Remove(obj);
         }
     }
 }

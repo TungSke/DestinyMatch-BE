@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Repository.Models.Generic;
+using Repository.Repositories;
+using System;
 using System.Collections.Generic;
 
 namespace Repository.Models;
 
-public partial class Account
+public partial class Account : GenericModel
 {
     public Guid Id { get; set; }
 
