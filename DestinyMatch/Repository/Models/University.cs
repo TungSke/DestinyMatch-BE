@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Repository.Models.Generic;
+using System;
 using System.Collections.Generic;
 
 namespace Repository.Models;
 
-public partial class University
+public partial class University : GenericModel
 {
     public Guid Id { get; set; }
 
