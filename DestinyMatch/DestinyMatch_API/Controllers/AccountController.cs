@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DestinyMatch_API.Controllers
@@ -28,8 +29,10 @@ namespace DestinyMatch_API.Controllers
             return Ok(account);
         }
 
+        
         [HttpGet]
         [Route("getallaccounts")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> getAllAccount()
         {
             var list = await _accountService.GetAccounts();
