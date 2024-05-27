@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Repository.Models.Generic
 {
-    public interface GenericModel
+    public interface GenericModel<Tkey>
     {
-        Guid Id { get; }
+        Tkey Id { get; }
     }
 }

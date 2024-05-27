@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.Interfaces
 {
-    public class IAccountService
+    public interface IAccountService
     {
+        public Task<bool> CreateAccountAsync(string email, string password);
+        public Task<bool> LoginByPassWord(string email, string password);
     }
 }

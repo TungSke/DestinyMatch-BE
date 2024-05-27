@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Repository.Models;
 
-public partial class Picture : GenericModel
+public partial class Picture : GenericModel<Guid>
 {
     public Guid Id { get; set; }
 

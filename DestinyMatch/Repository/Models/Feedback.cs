@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Repository.Models;
 
-public partial class Feedback : GenericModel
+public partial class Feedback : GenericModel<Guid>
 {
     public Guid Id { get; set; }
 
