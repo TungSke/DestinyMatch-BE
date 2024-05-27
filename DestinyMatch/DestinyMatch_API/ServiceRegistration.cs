@@ -9,7 +9,7 @@ namespace DestinyMatch_API
 {
     public static class ServiceRegistration
     {
-        public static void InjectServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection InjectServices(this IServiceCollection services, IConfiguration configuration)
         {
             // Read ConnectionString from appsettings.json
             var connectionString = configuration.GetConnectionString("DefaultConnection");
@@ -25,6 +25,7 @@ namespace DestinyMatch_API
             services.AddScoped<IAccountRepository, AccountRepository>();
 
             // Other services
+            return services;
         }
     }
 }
