@@ -27,5 +27,13 @@ namespace DestinyMatch_API.Controllers
             }
             return Ok(account);
         }
+
+        [HttpGet]
+        [Route("getallaccounts")]
+        public async Task<IActionResult> getAllAccount()
+        {
+            var list = await _accountService.GetAccounts();
+            return Ok(list); 
+        }
     }
 }

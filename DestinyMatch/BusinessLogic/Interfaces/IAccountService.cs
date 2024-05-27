@@ -9,6 +9,7 @@ namespace BusinessLogic.Interfaces
 {
     public interface IAccountService
     {
+        Task<IEnumerable<Account>> GetAccounts();
         public Task<Account> GetByEmailAsync(string email);
         public Task<bool> CreateAccountAsync(string email, string password);
         public Task<Account> LoginByPassWord(string email, string password);

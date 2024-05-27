@@ -72,6 +72,11 @@ namespace BusinessLogic.Services
             }
             return existAccount;
         }
+
+        public async Task<IEnumerable<Account>> GetAccounts()
+        {
+            return await _accountRepository.GetAllAsync();
+        }
         /*
          [HttpPost]
         [Route("api/login/google")]

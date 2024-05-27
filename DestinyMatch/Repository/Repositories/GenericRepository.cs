@@ -22,6 +22,10 @@ namespace Repository.Repositories
         }
 
         //**************************[ METHODS ]**************************
+        public async Task<IEnumerable<TModel>> GetAllAsync()
+        {
+            return await DMDB.Set<TModel>().ToListAsync();
+        }
 
         public virtual async Task<TModel?> GetByIdAsync(Guid id)
         {
