@@ -1,16 +1,31 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BusinessLogic.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DestinyMatch_API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
-    public class AccountController : ControllerBase
+    [Route("api/[controller]")]
+    public class AccountController : Controller
     {
-        [HttpGet]
-        public IActionResult Get()
+        private readonly ILogger<AccountController> _logger;
+        private readonly IAccountService _accountService;
+
+        public AccountController(ILogger<AccountController> logger, IAccountService accountService)
         {
-            return Ok("Hello World");
+            _logger = logger;
+            _accountService = accountService;
+        }
+
+        [HttpGet]
+        [Route("api/Account/{email}")]
+        public async Task<ActionResult> GetAccountByEmail([FromRoute] string email)
+        {
+            var account = await _accountService.GetByEmailAsync(email);
+            if (account == null)
+            {
+                return NotFound();
+            }
+            return Ok(account);
         }
     }
 }

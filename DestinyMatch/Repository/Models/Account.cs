@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Repository.Models;
 
-public partial class Account : GenericModel
+public partial class Account : GenericModel<Guid>
 {
     public Guid Id { get; set; }
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Repository.Models;
 
-public partial class MatchRequest : GenericModel
+public partial class MatchRequest : GenericModel<Guid>
 {
     public Guid Id { get; set; }
 

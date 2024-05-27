@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Repository.Repositories
 {
-    public class GenericRepository<TModel> : IGenericRepository<TModel> where TModel : class, GenericModel //must be a class and must implement GenericModel 
+    public class GenericRepository<TModel> : IGenericRepository<TModel> where TModel : class, GenericModel<Guid> //must be a class and must implement GenericModel 
     {
         //************************[ DECLARATION ]************************
 
@@ -23,9 +23,9 @@ namespace Repository.Repositories
 
         //**************************[ METHODS ]**************************
 
-        public virtual Task<TModel> GetByIdAsync(Guid id)
+        public virtual async Task<TModel?> GetByIdAsync(Guid id)
         {
-            return DMDB.Set<TModel>().SingleOrDefaultAsync(model => model.Id == id);
+            return await DMDB.Set<TModel>().SingleOrDefaultAsync(model => model.Id == id);
         }
         public void Add(TModel obj)
         {
@@ -38,6 +38,11 @@ namespace Repository.Repositories
         public void Remove(TModel obj)
         {
             DMDB.Set<TModel>().Remove(obj);
+        }
+
+        public Task SaveChangeAsync()
+        {
+            return DMDB.SaveChangesAsync();
         }
     }
 }
