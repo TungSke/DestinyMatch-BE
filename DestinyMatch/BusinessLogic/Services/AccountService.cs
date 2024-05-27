@@ -18,11 +18,14 @@ namespace BusinessLogic.Services
         {
             _accountRepository = accountRepository;
         }
-
+        public async Task<Account> GetByEmailAsync(string email)
+        {
+            return await _accountRepository.GetByEmailAsync(email);
+        }
         public async Task<bool> CreateAccountAsync(string email, string password)
         {
-            var existEmail = await _accountRepository.ExistEmailAsync(email);
-            if (email.IsNullOrEmpty() || existEmail)
+            var existAccount = await _accountRepository.GetByEmailAsync(email);
+            if (email.IsNullOrEmpty() || existAccount is not null)
             {
                 return false;
             }
@@ -37,7 +40,7 @@ namespace BusinessLogic.Services
             return true;
         }
 
-        private string HashString(string input)//SHA-256 Algorithm
+        private string HashString(string input)//SHA-256 Algorithm (1 way)
         {
             using (SHA256 sha256Hash = SHA256.Create())
             {
@@ -53,19 +56,21 @@ namespace BusinessLogic.Services
                 return builder.ToString();
             }
         }
-        private string UnhashString(string hash)
+
+        public async Task<Account?> LoginByPassWord(string email, string password)
         {
-            // Unhashing (decryption)
-            byte[] bytes = new byte[hash.Length / 2];
-            for (int i = 0; i < hash.Length; i += 2)
+            var existAccount = await _accountRepository.GetByEmailAsync(email);
+            if (email.IsNullOrEmpty() || existAccount is null || password.IsNullOrEmpty())
             {
-                bytes[i / 2] = Convert.ToByte(hash.Substring(i, 2), 16);
+                return null;
             }
-            return Encoding.UTF8.GetString(bytes);
-        }
-        public Task<bool> LoginByPassWord(string email, string password)
-        {
-            throw new NotImplementedException();
+            string hashedPassword = HashString(password);
+
+            if (!existAccount.Password.Equals(hashedPassword))
+            {
+                return null;
+            }
+            return existAccount;
         }
         /*
          [HttpPost]

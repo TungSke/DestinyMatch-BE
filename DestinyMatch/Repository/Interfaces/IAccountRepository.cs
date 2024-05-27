@@ -5,6 +5,6 @@ namespace Repository.Interfaces
 {
     public interface IAccountRepository : IGenericRepository<Account>
     {
-        public Task<bool> ExistEmailAsync(string email);
+        public Task<Account?> GetByEmailAsync(string email);
     }
 }

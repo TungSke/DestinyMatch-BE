@@ -17,9 +17,10 @@ namespace Repository.Repositories
         }
 
         //**************************[ METHODS ]**************************
-        public async Task<bool> ExistEmailAsync(string email)
+        public async Task<Account?> GetByEmailAsync(string email)
         {
-            return await DMDB.Accounts.AnyAsync(a => a.Email == email);
+            var acc = await DMDB.Accounts.SingleOrDefaultAsync(a => a.Email == email);
+            return  acc;
         }
     }
 }
