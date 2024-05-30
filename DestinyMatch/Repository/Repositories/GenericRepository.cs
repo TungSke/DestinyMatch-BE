@@ -14,7 +14,7 @@ namespace Repository.Repositories
     {
         //************************[ DECLARATION ]************************
 
-        protected readonly DestinyMatchContext DMDB;
+        public readonly DestinyMatchContext DMDB;
 
         public GenericRepository(DestinyMatchContext _dbcontext)
         {
@@ -22,9 +22,9 @@ namespace Repository.Repositories
         }
 
         //**************************[ METHODS ]**************************
-        public async Task<IEnumerable<TModel>> GetAllAsync()
+        public IQueryable<TModel> GetAllAsync()
         {
-            return await DMDB.Set<TModel>().ToListAsync();
+            return DMDB.Set<TModel>().AsQueryable();
         }
 
         public virtual async Task<TModel?> GetByIdAsync(Guid id)

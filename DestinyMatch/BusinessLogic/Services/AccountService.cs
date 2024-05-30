@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace BusinessLogic.Services
 {
@@ -59,23 +60,18 @@ namespace BusinessLogic.Services
 
         public async Task<Account?> LoginByPassWord(string email, string password)
         {
-            var existAccount = await _accountRepository.GetByEmailAsync(email);
-            if (email.IsNullOrEmpty() || existAccount is null || password.IsNullOrEmpty())
+            var existAccount = await _accountRepository.GetAllAsync().FirstOrDefaultAsync(acc => acc.Email == email && acc.Password == password);
+            if(existAccount == null)
             {
-                return null;
-            }
-            string hashedPassword = HashString(password);
-
-            if (!existAccount.Password.Equals(hashedPassword))
-            {
-                return null;
+                string hardCodedPassword = HashString(password);
+                existAccount = await _accountRepository.GetAllAsync().FirstOrDefaultAsync(acc => acc.Email == email && acc.Password == hardCodedPassword);
             }
             return existAccount;
         }
 
         public async Task<IEnumerable<Account>> GetAccounts()
         {
-            return await _accountRepository.GetAllAsync();
+            return await _accountRepository.GetAllAsync().ToListAsync();
         }
         /*
          [HttpPost]
