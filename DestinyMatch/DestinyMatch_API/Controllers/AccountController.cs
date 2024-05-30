@@ -30,8 +30,7 @@ namespace DestinyMatch_API.Controllers
         }
 
         
-        [HttpGet]
-        [Route("getallaccounts")]
+        [HttpGet("getallaccounts")]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> getAllAccount()
         {
