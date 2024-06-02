@@ -31,9 +31,11 @@ namespace DestinyMatch_API
             CorsConfig(services);
             // Inject Service Classes
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IMemberService, MemberService>();
 
             //Inject Repository Classess
             services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<IMemberRepository, MemberRepository>();
 
             services.AddScoped<IAuthService, AuthService>();
 

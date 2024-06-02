@@ -12,7 +12,7 @@ public partial class Member : GenericModel<Guid>
 
     public string? Introduce { get; set; }
 
-    public DateOnly? Dob { get; set; }
+    public DateTime? Dob { get; set; }
 
     public bool? Gender { get; set; }
 
