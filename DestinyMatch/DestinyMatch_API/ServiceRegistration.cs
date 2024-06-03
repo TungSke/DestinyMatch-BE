@@ -67,6 +67,8 @@ namespace DestinyMatch_API
             services.AddScoped<IUniversityRepository, UniversityRepository>();
             services.AddScoped<IUniversitityService, UniversityService>();
 
+            services.AddScoped<IHobbyReposiroty, HobbyRepository>();
+            services.AddScoped<IHobbyService, HobbyService>();
             // Other services
             SwaggerConfig(services);
 
