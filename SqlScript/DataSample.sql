@@ -6,7 +6,7 @@ go
 --newbie@university.edu.vn', '12345', 'member', default),
 --an.nguyen@example.com', '12345', 'member', 'experienced'),
 --=============[RESET DATA]=============--
-delete from [Authentication];
+delete from [Verification];
 delete from [Feedback];
 delete from [Picture];
 delete from [MemberPackage];

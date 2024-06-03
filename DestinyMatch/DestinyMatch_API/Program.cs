@@ -26,6 +26,10 @@ if (app.Environment.IsDevelopment())
 }
 app.UseRouting();
 
+app.UseAuthentication();//Jwt
+
+app.UseAuthorization();
+
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
@@ -33,7 +37,6 @@ app.UseEndpoints(endpoints =>
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
 
 app.MapControllers();
 

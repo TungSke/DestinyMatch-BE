@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Repository.Models;
 
-public partial class Authentication : GenericModel<Guid>
+public partial class Verification : GenericModel<Guid>
 {
     public Guid Id { get; set; }
 
@@ -14,7 +14,7 @@ public partial class Authentication : GenericModel<Guid>
 
     public string? Status { get; set; }
 
-    public Guid? MemberId { get; set; }
+    public Guid MemberId { get; set; }
 
-    public virtual Member? Member { get; set; }
+    public virtual Member Member { get; set; } = null!;
 }

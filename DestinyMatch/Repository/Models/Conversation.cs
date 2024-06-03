@@ -12,13 +12,15 @@ public partial class Conversation : GenericModel<Guid>
 
     public DateTime? CreatedAt { get; set; }
 
-    public Guid? FirstMemberId { get; set; }
+    public string? Status { get; set; }
 
-    public Guid? SecondMemberId { get; set; }
+    public Guid FirstMemberId { get; set; }
 
-    public virtual Member? FirstMember { get; set; }
+    public Guid SecondMemberId { get; set; }
+
+    public virtual Member FirstMember { get; set; } = null!;
 
     public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
 
-    public virtual Member? SecondMember { get; set; }
+    public virtual Member SecondMember { get; set; } = null!;
 }

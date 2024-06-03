@@ -12,11 +12,13 @@ public partial class MemberPackage : GenericModel<Guid>
 
     public DateTime? EndDate { get; set; }
 
-    public Guid? MemberId { get; set; }
+    public string? Status { get; set; }
 
-    public Guid? PackageId { get; set; }
+    public Guid MemberId { get; set; }
 
-    public virtual Member? Member { get; set; }
+    public Guid PackageId { get; set; }
 
-    public virtual Package? Package { get; set; }
+    public virtual Member Member { get; set; } = null!;
+
+    public virtual Package Package { get; set; } = null!;
 }

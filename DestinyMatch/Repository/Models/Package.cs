@@ -16,5 +16,7 @@ public partial class Package : GenericModel<Guid>
 
     public int? Price { get; set; }
 
+    public string? Status { get; set; }
+
     public virtual ICollection<MemberPackage> MemberPackages { get; set; } = new List<MemberPackage>();
 }

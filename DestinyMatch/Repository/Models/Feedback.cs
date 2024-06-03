@@ -16,7 +16,7 @@ public partial class Feedback : GenericModel<Guid>
 
     public string? Status { get; set; }
 
-    public Guid? SenderId { get; set; }
+    public Guid SenderId { get; set; }
 
-    public virtual Member? Sender { get; set; }
+    public virtual Member Sender { get; set; } = null!;
 }

@@ -1,5 +1,4 @@
 ﻿using Repository.Models.Generic;
-using Repository.Repositories;
 using System;
 using System.Collections.Generic;
 
@@ -19,5 +18,5 @@ public partial class Account : GenericModel<Guid>
 
     public string? Status { get; set; }
 
-    public virtual ICollection<Member> Members { get; set; } = new List<Member>();
+    public virtual Member? Member { get; set; }
 }
