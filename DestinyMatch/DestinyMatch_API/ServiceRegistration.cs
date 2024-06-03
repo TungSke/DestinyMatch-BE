@@ -32,10 +32,12 @@ namespace DestinyMatch_API
             // Inject Service Classes
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IMemberService, MemberService>();
+            services.AddScoped<IMemberPackageService, MemberPackageService>();
 
             //Inject Repository Classess
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IMemberRepository, MemberRepository>();
+            services.AddScoped<IMemberPackageRepository, MemberPackageRepository>();
 
             services.AddScoped<IAuthService, AuthService>();
 
