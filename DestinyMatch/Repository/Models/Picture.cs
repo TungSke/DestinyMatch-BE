@@ -12,7 +12,9 @@ public partial class Picture : GenericModel<Guid>
 
     public bool? IsAvatar { get; set; }
 
-    public Guid? MemberId { get; set; }
+    public string? Status { get; set; }
 
-    public virtual Member? Member { get; set; }
+    public Guid MemberId { get; set; }
+
+    public virtual Member Member { get; set; } = null!;
 }

@@ -28,10 +28,10 @@ namespace BusinessLogic.Models.Request
 
         public string? Status { get; set; }
 
-        public Guid? AccountId { get; set; }
+        public Guid AccountId { get; set; }
 
-        public Guid? UniversityId { get; set; }
+        public Guid UniversityId { get; set; }
 
-        public Guid? MajorId { get; set; }
+        public Guid MajorId { get; set; }
     }
 }

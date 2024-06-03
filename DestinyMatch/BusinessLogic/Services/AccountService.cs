@@ -2,7 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using Repository.Interfaces;
 using Repository.Models;
-using System.Security.Cryptography;
+using System.Security.Cryptography;//For hash password
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,14 +19,30 @@ namespace BusinessLogic.Services
         {
             _accountRepository = accountRepository;
         }
-        public async Task<Account> GetByEmailAsync(string email)
+
+        //--------------------------[ IMPLEMENT ]--------------------------
+        public async Task<Account> GetAccountByIdAsync(Guid id)
         {
+            if (id == Guid.Empty)
+            {
+                return null;
+            }
+            return await _accountRepository.GetByIdAsync(id);
+        }
+
+        public async Task<Account?> GetAccountByEmailAsync(string email)
+        {
+            if (email is null)
+            {
+                return null;
+            }
             return await _accountRepository.GetByEmailAsync(email);
         }
+
         public async Task<bool> CreateAccountAsync(string email, string password)
         {
-            var existAccount = await _accountRepository.GetByEmailAsync(email);
-            if (email.IsNullOrEmpty() || existAccount is not null)
+            var existAccount = await GetAccountByEmailAsync(email);
+            if (existAccount is not null)
             {
                 return false;
             }
@@ -38,6 +54,7 @@ namespace BusinessLogic.Services
                     Password = hashedPassword
                 }
             );
+            await _accountRepository.SaveChangeAsync();
             return true;
         }
 
@@ -58,101 +75,66 @@ namespace BusinessLogic.Services
             }
         }
 
-        public async Task<Account?> LoginByPassWord(string email, string password)
+        public async Task<Account?> LoginByPassword(string email, string password)
         {
-            var existAccount = await _accountRepository.GetAllAsync().FirstOrDefaultAsync(acc => acc.Email == email && acc.Password == password);
-            if(existAccount == null)
+            var existAccount = await _accountRepository.GetByEmailAsync(email);
+            if (existAccount is null || existAccount.Status.Equals("deleted") || existAccount.Status.Equals("banned"))
             {
-                string hardCodedPassword = HashString(password);
-                existAccount = await _accountRepository.GetAllAsync().FirstOrDefaultAsync(acc => acc.Email == email && acc.Password == hardCodedPassword);
+                return null;
             }
-            return existAccount;
-        }
+            string hashedPassword = HashString(password);
 
-        public async Task<IEnumerable<Account>> GetAccounts()
-        {
-            return await _accountRepository.GetAllAsync().ToListAsync();
-        }
-        /*
-         [HttpPost]
-        [Route("api/login/google")]
-        public async Task<IActionResult> GoogleLogin([FromBody] string idToken)
-        {
-            var payload = await GoogleJsonWebSignature.ValidateAsync(idToken,
-        new GoogleJsonWebSignature.ValidationSettings());
-
-            // Extract the email from the payload
-            var email = payload.Email;
-
-            string username = "", password = "";
-            bool needSignup = true, existEmail = false;
-            User user;
-            Teacher teacher;
-            Staff staff;
-            Admin admin;
-            for (int role = 1; role <= 4; role++)
+            if (existAccount.Password.Equals(hashedPassword))
             {
-                switch (role)
-                {
-                    case 1:
-                        user = await _context.Users
-                        .Include(u => u.Account)
-                        .SingleOrDefaultAsync(usr => usr.Email.Equals(email));
-                        existEmail = (user is not null);
-                        username = (user is not null) ? user.Account.Username : string.Empty;
-                        password = (user is not null) ? user.Account.Password : string.Empty;
-                        break;
-                    case 2:
-                        teacher = await _context.Teachers
-                        .Include(tch => tch.Account)
-                        .SingleOrDefaultAsync(tch => tch.Email.Equals(email));
-                        existEmail = (teacher is not null);
-                        username = (teacher is not null) ? teacher.Account.Username : string.Empty;
-                        password = (teacher is not null) ? teacher.Account.Password : string.Empty;
-                        break;
-                    case 3:
-                        staff = await _context.Staff
-                        .Include(stf => stf.Account)
-                        .SingleOrDefaultAsync(stf => stf.Email.Equals(email));
-                        existEmail = (staff is not null);
-                        username = (staff is not null) ? staff.Account.Username : string.Empty;
-                        password = (staff is not null) ? staff.Account.Password : string.Empty;
-                        break;
-                    case 4:
-                        admin = await _context.Admins
-                        .Include(adm => adm.Account)
-                        .SingleOrDefaultAsync(adm => adm.Email.Equals(email));
-                        existEmail = (admin is not null);
-                        username = (admin is not null) ? admin.Account.Username : string.Empty;
-                        password = (admin is not null) ? admin.Account.Password : string.Empty;
-                        break;
-                }
-                //If exist then stop checking
-                if (existEmail)
-                {
-                    needSignup = false;
-                    break;
-                }
-
-            }//End loop
-
-            //If not exist then create account
-            if (needSignup)
-            {
-                username = email;
-                password = Guid.NewGuid().ToString();
-                await _context.Database.ExecuteSqlRawAsync("exec dbo.proc_signUpAccount @username = @p0, @password = @p1, @email = @p2", email, password, email);
+                return existAccount;
             }
-
-            //Then login
-            var account = await _context.Accounts
-                .AsNoTracking()
-                .SingleOrDefaultAsync(acc => acc.Username.Equals(username) && acc.Password.Equals(password));
-
-            HttpContext.Session.SetString("usersession", JsonSerializer.Serialize(account));
-            await HttpContext.Session.CommitAsync();
-            return RedirectToAction("Index", "Home");
+            return null;
         }
-        */
+
+        public async Task<bool> ChangeRoleAccountAsync(Guid id, string newRole)
+        {
+            var currentAcc = await _accountRepository.GetByIdAsync(id);
+            if (currentAcc == null)
+            {
+                return false;
+            }
+            currentAcc.Role = newRole;
+            return await _accountRepository.SaveChangeAsync();
+        }
+
+        public async Task<bool> ChangePasswordAccountAsync(Guid id, string oldPassword, string newPassword)
+        {
+            var currentAcc = await _accountRepository.GetByIdAsync(id);
+            string hashedOldPassword = HashString(oldPassword);
+            if (currentAcc == null || !currentAcc.Password.Equals(hashedOldPassword))
+            {
+                return false;
+            }
+            currentAcc.Password = HashString(newPassword);
+            return await _accountRepository.SaveChangeAsync();
+        }
+
+        public async Task<bool> DeleteAccountAsync(string email, string confirmPassword)
+        {
+            var currentAcc = await _accountRepository.GetByEmailAsync(email);
+            string hashedPassword = HashString(confirmPassword);
+            if (currentAcc is null || !currentAcc.Password.Equals(hashedPassword))
+            {
+                return false;
+            }
+            currentAcc.Status = "deleted";
+            return await _accountRepository.SaveChangeAsync();
+        }
+        
+        public async Task<bool> RecoverAccountAsync(string email, string newStatus)
+        {
+            var accFound = await _accountRepository.GetByEmailAsync(email);
+            if(accFound is null)
+            {
+                return false;
+            }
+            accFound.Status = newStatus;
+            return await _accountRepository.SaveChangeAsync();
+        }
     }
 }
