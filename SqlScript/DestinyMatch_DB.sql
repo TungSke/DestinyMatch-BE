@@ -43,7 +43,8 @@ create table [Account]
 	[Password] nvarchar(max),
 	[CreateAt] datetime default CURRENT_TIMESTAMP,
 	[Role] nvarchar(20) not null default 'member',				--1:admin   2:moderator   3:member
-	[Status] nvarchar(20) default 'newbie'
+	[Status] nvarchar(20) default 'newbie'						--newbie	experienced		working
+																--deleted	banned
 );
 go
 
@@ -58,9 +59,9 @@ create table [Member]
 	Surplus int default 0,				--money bag
 	[Status] nvarchar(30) default N'Chưa Xác Thực',
 
-	AccountId uniqueidentifier foreign key references [Account](Id),
-	UniversityId uniqueidentifier foreign key references [University](Id),
-	MajorId uniqueidentifier foreign key (MajorId) references [Major](Id)
+	AccountId uniqueidentifier unique not null foreign key references [Account](Id),
+	UniversityId uniqueidentifier not null foreign key references [University](Id),
+	MajorId uniqueidentifier not null foreign key (MajorId) references [Major](Id)
 );
 --increase query speed , decrease insert, update speed
 create index idx_UniversityId on [Member](UniversityId);
@@ -70,8 +71,8 @@ go
 
 create table [HobbyMember]
 (
-	HobbyId uniqueidentifier,
-	MemberId uniqueidentifier,
+	HobbyId uniqueidentifier not null,
+	MemberId uniqueidentifier not null,
 
 	primary key (HobbyId, MemberId),
 	foreign key (HobbyId) references [Hobby](Id),
@@ -85,8 +86,9 @@ create table [Picture]
 	Id uniqueidentifier default newid() primary key,
 	UrlPath nvarchar(max),
 	IsAvatar bit,
+	[Status] nvarchar(30),
 
-	MemberId uniqueidentifier foreign key references [Member](Id)
+	MemberId uniqueidentifier not null foreign key references [Member](Id)
 );
 create index idx_MemberId on [Picture](MemberId);
 go
@@ -97,7 +99,8 @@ create table [Package]
 	Code nvarchar(20) unique,
 	[Name] nvarchar(50),
 	[Description] nvarchar(max),
-	Price int
+	Price int,
+	[Status] nvarchar(30)
 );
 go
 
@@ -106,9 +109,10 @@ create table [MemberPackage]
 	Id uniqueidentifier default newid() primary key,--Buy again same Package
 	StartDate datetime default CURRENT_TIMESTAMP,
 	EndDate datetime,
+	[Status] nvarchar(30),
 	
-	MemberId uniqueidentifier,
-	PackageId uniqueidentifier,
+	MemberId uniqueidentifier not null,
+	PackageId uniqueidentifier not null,
 
 	foreign key (MemberId) references [Member](Id),
 	foreign key (PackageId) references [Package](Id)
@@ -121,8 +125,8 @@ create table [MatchRequest]
 	[CreateAt] datetime default CURRENT_TIMESTAMP,
 	[Status] nvarchar(30) default N'Chưa Phản Hồi',
 
-	FromId uniqueidentifier foreign key references [Member](Id),
-	ToId uniqueidentifier foreign key references [Member](Id)
+	FromId uniqueidentifier not null foreign key references [Member](Id),
+	ToId uniqueidentifier not null foreign key references [Member](Id)
 );
 create index idx_FromId on [MatchRequest](FromId);
 create index idx_ToId on [MatchRequest](ToId);
@@ -133,9 +137,10 @@ create table [Conversation]
 	Id uniqueidentifier default newid() primary key,
 	[Name] nvarchar(50),
 	[CreatedAt] datetime default CURRENT_TIMESTAMP,
+	[Status] nvarchar(30),
 
-	FirstMemberId uniqueidentifier references [Member](Id),
-	SecondMemberId uniqueidentifier references [Member](Id)
+	FirstMemberId uniqueidentifier not null foreign key references [Member](Id),
+	SecondMemberId uniqueidentifier not null foreign key references [Member](Id)
 );
 create index idx_FirstMemberId on [Conversation](FirstMemberId);
 create index idx_SecondMemberId on [Conversation](SecondMemberId);
@@ -148,8 +153,8 @@ create table [Message]
 	[SentAt] datetime default CURRENT_TIMESTAMP,
 	[Status] nvarchar(30) default N'Đã gửi',
 
-	ConversationId uniqueidentifier references [Conversation](Id),
-	SenderId uniqueidentifier foreign key references [Member](Id)
+	ConversationId uniqueidentifier not null foreign key references [Conversation](Id),
+	SenderId uniqueidentifier not null foreign key references [Member](Id)
 );
 create index idx_SenderId on [Message](SenderId);
 go
@@ -162,16 +167,16 @@ create table [Feedback]
 	[TimeStamp] datetime default CURRENT_TIMESTAMP,
 	[Status] nvarchar(30) default N'Đã Gửi',
 
-	SenderId uniqueidentifier foreign key references [Member](Id)
+	SenderId uniqueidentifier not null foreign key references [Member](Id)
 );
 go
 
-create table [Authentication]
+create table [Verification]
 (
 	Id uniqueidentifier default newid() primary key,
 	SubmittedPicture nvarchar(max),
 	[TimeStamp] datetime,
 	[Status] nvarchar(30) default N'Chưa Duyệt',
 
-	MemberId uniqueidentifier foreign key (MemberId) references [Member](Id)
+	MemberId uniqueidentifier not null foreign key (MemberId) references [Member](Id)
 );

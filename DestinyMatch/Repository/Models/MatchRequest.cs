@@ -12,11 +12,11 @@ public partial class MatchRequest : GenericModel<Guid>
 
     public string? Status { get; set; }
 
-    public Guid? FromId { get; set; }
+    public Guid FromId { get; set; }
 
-    public Guid? ToId { get; set; }
+    public Guid ToId { get; set; }
 
-    public virtual Member? From { get; set; }
+    public virtual Member From { get; set; } = null!;
 
-    public virtual Member? To { get; set; }
+    public virtual Member To { get; set; } = null!;
 }

@@ -22,15 +22,13 @@ public partial class Member : GenericModel<Guid>
 
     public string? Status { get; set; }
 
-    public Guid? AccountId { get; set; }
+    public Guid AccountId { get; set; }
 
-    public Guid? UniversityId { get; set; }
+    public Guid UniversityId { get; set; }
 
-    public Guid? MajorId { get; set; }
+    public Guid MajorId { get; set; }
 
-    public virtual Account? Account { get; set; }
-
-    public virtual ICollection<Authentication> Authentications { get; set; } = new List<Authentication>();
+    public virtual Account Account { get; set; } = null!;
 
     public virtual ICollection<Conversation> ConversationFirstMembers { get; set; } = new List<Conversation>();
 
@@ -38,7 +36,7 @@ public partial class Member : GenericModel<Guid>
 
     public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
 
-    public virtual Major? Major { get; set; }
+    public virtual Major Major { get; set; } = null!;
 
     public virtual ICollection<MatchRequest> MatchRequestFroms { get; set; } = new List<MatchRequest>();
 
@@ -50,7 +48,9 @@ public partial class Member : GenericModel<Guid>
 
     public virtual ICollection<Picture> Pictures { get; set; } = new List<Picture>();
 
-    public virtual University? University { get; set; }
+    public virtual University University { get; set; } = null!;
+
+    public virtual ICollection<Verification> Verifications { get; set; } = new List<Verification>();
 
     public virtual ICollection<Hobby> Hobbies { get; set; } = new List<Hobby>();
 }

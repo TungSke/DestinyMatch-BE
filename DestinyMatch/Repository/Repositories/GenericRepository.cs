@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Repository.Interfaces;
-using Repository.Models;
 using Repository.Models.Generic;
 using System;
 using System.Collections.Generic;
@@ -44,9 +43,9 @@ namespace Repository.Repositories
             DMDB.Set<TModel>().Remove(obj);
         }
 
-        public Task SaveChangeAsync()
+        public async Task<bool> SaveChangeAsync()
         {
-            return DMDB.SaveChangesAsync();
+            return await DMDB.SaveChangesAsync()>0;
         }
     }
 }

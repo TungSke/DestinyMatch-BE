@@ -14,6 +14,6 @@ namespace Repository.Interfaces
         public void Add(TModel obj);
         public void Update(TModel obj);
         public void Remove(TModel obj);
-        public Task SaveChangeAsync();
+        public Task<bool> SaveChangeAsync();
     }
 }
