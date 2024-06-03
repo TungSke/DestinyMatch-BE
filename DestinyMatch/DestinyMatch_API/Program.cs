@@ -27,10 +27,7 @@ app.UseAuthentication();//Jwt
 
 app.UseAuthorization();
 
-/*app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-});*/
+ //update test
 
 app.UseHttpsRedirection();
 
