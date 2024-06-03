@@ -73,8 +73,8 @@ namespace BusinessLogic.Services
             {
                 return null;
             }
-            member.Fullname = !string.IsNullOrEmpty(memberRequest.Fullname) ? memberRequest.Fullname : memberRequest.Fullname;
-            member.Introduce = !string.IsNullOrEmpty(memberRequest.Introduce) ? memberRequest.Introduce : memberRequest.Introduce;
+            member.Fullname = !string.IsNullOrEmpty(memberRequest.Fullname) ? memberRequest.Fullname : member.Fullname;
+            member.Introduce = !string.IsNullOrEmpty(memberRequest.Introduce) ? memberRequest.Introduce : member.Introduce;
             if(memberRequest.Dob != null)
             {
                 member.Dob = new DateTime(memberRequest.Dob.Year, memberRequest.Dob.Month, memberRequest.Dob.Day);
