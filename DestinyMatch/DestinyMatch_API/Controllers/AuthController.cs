@@ -18,7 +18,7 @@ namespace DestinyMatch_API.Controllers
         [HttpGet("login")]
         public async Task<IActionResult> Login(string email, string password)
         {
-            var acc = await _accountService.LoginByPassWord(email, password);
+            var acc = await _accountService.LoginByPassword(email, password);
             if (acc == null)
             {
                 return NotFound();

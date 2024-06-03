@@ -27,10 +27,10 @@ app.UseAuthentication();//Jwt
 
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints =>
+/*app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
-});
+});*/
 
 app.UseHttpsRedirection();
 

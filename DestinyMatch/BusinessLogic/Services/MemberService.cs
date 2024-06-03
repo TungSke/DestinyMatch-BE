@@ -83,9 +83,9 @@ namespace BusinessLogic.Services
             member.Address = !string.IsNullOrEmpty(memberRequest.Address) ? memberRequest.Address : member.Address;
             member.Surplus = memberRequest.Surplus ?? member.Surplus;
             member.Status = !string.IsNullOrEmpty(memberRequest.Status) ? memberRequest.Status : member.Status;
-            member.AccountId = memberRequest.AccountId ?? member.AccountId;
-            member.UniversityId = memberRequest.UniversityId ?? member.UniversityId;
-            member.MajorId = memberRequest.MajorId ?? member.MajorId;
+            member.AccountId = memberRequest.AccountId;
+            member.UniversityId = memberRequest.UniversityId;
+            member.MajorId = memberRequest.MajorId;
             _memberRepository.Update(member);
             await _memberRepository.SaveChangeAsync();
             return member;
