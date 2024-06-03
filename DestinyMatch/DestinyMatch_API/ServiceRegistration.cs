@@ -31,12 +31,19 @@ namespace DestinyMatch_API
             CorsConfig(services);
             // Inject Service Classes
             services.AddScoped<IAccountService, AccountService>();
-
-            //Inject Repository Classess
             services.AddScoped<IAccountRepository, AccountRepository>();
 
             services.AddScoped<IAuthService, AuthService>();
 
+            services.AddScoped<IPackageRepository, PackageRepository>();
+            services.AddScoped<IPackageService, PackageService>();
+
+
+            services.AddScoped<IPictureRepository, PictureRepository>();
+            services.AddScoped<IPictureService, PictureService>();
+
+            services.AddScoped<IUniversityRepository, UniversityRepository>();
+            services.AddScoped<IUniversitityService, UniversityService>();
             // Other services
             return services;
         }
