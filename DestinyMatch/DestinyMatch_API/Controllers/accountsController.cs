@@ -11,13 +11,13 @@ using System.Text;
 namespace DestinyMatch_API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class accountsController : Controller
+    [Route("api/accounts")]
+    public class AccountsController : Controller
     {
         private readonly IConfiguration _config;
         private readonly IAccountService _accountService;
 
-        public accountsController(IConfiguration config, IAccountService accountService)
+        public AccountsController(IConfiguration config, IAccountService accountService)
         {
             _config = config;
             _accountService = accountService;

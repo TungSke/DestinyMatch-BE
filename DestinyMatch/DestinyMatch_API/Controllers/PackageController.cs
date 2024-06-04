@@ -7,10 +7,10 @@ namespace DestinyMatch_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class packageController : ControllerBase
+    public class PackageController : ControllerBase
     {
         private readonly IPackageService _packageService;
-        public packageController(IPackageService packageService)
+        public PackageController(IPackageService packageService)
         {
             _packageService = packageService;
         }
