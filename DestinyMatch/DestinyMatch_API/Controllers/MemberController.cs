@@ -7,11 +7,11 @@ namespace DestinyMatch_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class memberController : ControllerBase
+    public class MemberController : ControllerBase
     {
         private readonly IMemberService _memberService;
 
-        public memberController(IMemberService memberService)
+        public MemberController(IMemberService memberService)
         {
             _memberService = memberService;
         }
