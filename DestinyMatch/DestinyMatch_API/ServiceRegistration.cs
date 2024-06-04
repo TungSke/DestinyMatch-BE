@@ -40,7 +40,7 @@ namespace DestinyMatch_API
                 });
 
             // Read ConnectionString from appsettings.json
-            var connectionString = configuration.GetConnectionString("OnlineConnection");
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
 
             // Inject DbContext
             services.AddDbContext<DestinyMatchContext>(options =>
