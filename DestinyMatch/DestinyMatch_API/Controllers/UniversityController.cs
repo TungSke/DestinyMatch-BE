@@ -7,11 +7,11 @@ namespace DestinyMatch_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UniversityController : ControllerBase
+    public class universityController : ControllerBase
     {
         private readonly IUniversitityService _universityService;
 
-        public UniversityController(IUniversitityService universityService)
+        public universityController(IUniversitityService universityService)
         {
             _universityService = universityService;
         }

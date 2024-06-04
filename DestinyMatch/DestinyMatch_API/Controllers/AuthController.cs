@@ -6,11 +6,11 @@ namespace DestinyMatch_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class authController : ControllerBase
     {
         private readonly IAccountService _accountService;
         private readonly IAuthService _authService;
-        public AuthController(IAccountService accountService, IAuthService authService)
+        public authController(IAccountService accountService, IAuthService authService)
         {
             _accountService = accountService;
             _authService = authService;

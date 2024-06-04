@@ -11,13 +11,13 @@ using System.Text;
 namespace DestinyMatch_API.Controllers
 {
     [ApiController]
-    [Route("Api/[controller]")]
-    public class AccountController : Controller
+    [Route("api/[controller]")]
+    public class accountsController : Controller
     {
         private readonly IConfiguration _config;
         private readonly IAccountService _accountService;
 
-        public AccountController(IConfiguration config, IAccountService accountService)
+        public accountsController(IConfiguration config, IAccountService accountService)
         {
             _config = config;
             _accountService = accountService;
@@ -37,7 +37,7 @@ namespace DestinyMatch_API.Controllers
         }
 
         [HttpPost]
-        [Route("Register")]
+        [Route("register")]
         [AllowAnonymous]
         public async Task<IActionResult> CreateAccountAsync([FromBody] AccountAuthen accCreate)
         {
@@ -50,7 +50,7 @@ namespace DestinyMatch_API.Controllers
         }
 
         [HttpPost]
-        [Route("Login")]
+        [Route("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] AccountAuthen accLog)
         {
@@ -85,7 +85,7 @@ namespace DestinyMatch_API.Controllers
         }
 
         [HttpPatch]
-        [Route("ChangRole")]
+        [Route("changRole")]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> ChangeRole([FromBody] AccountNewRole input)
         {
@@ -98,7 +98,7 @@ namespace DestinyMatch_API.Controllers
         }
 
         [HttpPatch]
-        [Route("ChangePassword")]
+        [Route("changePassword")]
         [Authorize(Roles = "moderator,member")]
         public async Task<IActionResult> ChangePassword([FromBody] AccountNewPassword input)
         {
@@ -112,7 +112,7 @@ namespace DestinyMatch_API.Controllers
         }
 
         [HttpDelete]
-        [Route("Delete")]
+        [Route("delete")]
         [Authorize(Roles = "moderator,member")]
         public async Task<IActionResult> Delete([FromBody] AccountAuthen input)
         {
@@ -125,7 +125,7 @@ namespace DestinyMatch_API.Controllers
         }
 
         [HttpPatch]
-        [Route("RecoverAccount")]
+        [Route("recoverAccount")]
         [Authorize(Roles = "admin,moderator")]
         public async Task<IActionResult> Recover([FromBody] AccountRecover input)
         {
@@ -139,7 +139,7 @@ namespace DestinyMatch_API.Controllers
         }
 
         [HttpPatch]
-        [Route("ResetPassword")]
+        [Route("resetPassword")]
         [Authorize(Roles = "moderator,member")]
         public async Task<IActionResult> ResetPassword()
         {
@@ -148,7 +148,7 @@ namespace DestinyMatch_API.Controllers
         }
 
         [HttpPost]
-        [Route("Login/Google")]
+        [Route("login/google")]
         [AllowAnonymous]
         public async Task<IActionResult> GoogleLogin([FromBody] string idToken)
         {

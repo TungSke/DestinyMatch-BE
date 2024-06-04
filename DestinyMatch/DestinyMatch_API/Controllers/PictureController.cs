@@ -7,11 +7,11 @@ namespace DestinyMatch_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PictureController : ControllerBase
+    public class pictureController : ControllerBase
     {
         private readonly IPictureService _pictureService;
 
-        public PictureController(IPictureService pictureService)
+        public pictureController(IPictureService pictureService)
         {
             _pictureService = pictureService;
         }
