@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository.DTOs.University
+namespace BusinessLogic.Models.Request
 {
-    public class GetUniversity
+    public class UniversityRequest
     {
         public string? Code { get; set; }
 

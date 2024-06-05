@@ -7,8 +7,8 @@ using Repository.Interfaces;
 using BusinessLogic.Interfaces;
 using Repository.Models;
 using Microsoft.EntityFrameworkCore;
-using Repository.DTOs.Picture;
 using Mapster;
+using BusinessLogic.Models.Response;
 
 namespace BusinessLogic.Services
 {
@@ -36,7 +36,7 @@ namespace BusinessLogic.Services
             task.Progress.ProgressChanged += (s, e) => Console.WriteLine($"Progress: {e.Percentage} %");
             var downloadUrl = await task;
 
-            GetPicture picture = new GetPicture
+            PictureResponse picture = new PictureResponse
             {
                 UrlPath = downloadUrl,
                 MemberId = memberId
@@ -46,7 +46,7 @@ namespace BusinessLogic.Services
         }
 
 
-        private async Task AddPicture(GetPicture picture)
+        private async Task AddPicture(PictureResponse picture)
         {
             picture.Id = Guid.NewGuid();
             var pic = picture.Adapt<Picture>();
@@ -64,7 +64,7 @@ namespace BusinessLogic.Services
             return await _pictureRepository.GetByIdAsync(id);
         }
 
-        public async Task UpdatePicture(GetPicture picture)
+        public async Task UpdatePicture(PictureResponse picture)
         {
             var pic = picture.Adapt<Picture>();
              _pictureRepository.Update(pic);
@@ -74,7 +74,10 @@ namespace BusinessLogic.Services
         public async Task DeletePicture(Guid id, string urlPictureOfUser)
         {
             var picture = await _pictureRepository.GetByIdAsync(id);
-            _pictureRepository.Remove(picture);
+            if(picture != null)
+            {
+                _pictureRepository.Remove(picture);
+            }           
             await _pictureRepository.SaveChangeAsync();
             await DeletePictureinFirebase(urlPictureOfUser);
         }

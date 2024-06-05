@@ -5,13 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DestinyMatch_API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/members")]
     [ApiController]
-    public class MemberController : ControllerBase
+    public class MembersController : ControllerBase
     {
         private readonly IMemberService _memberService;
 
-        public MemberController(IMemberService memberService)
+        public MembersController(IMemberService memberService)
         {
             _memberService = memberService;
         }

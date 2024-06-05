@@ -1,17 +1,17 @@
 ﻿using BusinessLogic.Interfaces;
+using BusinessLogic.Models.Response;
 using Microsoft.AspNetCore.Mvc;
-using Repository.DTOs.Picture;
 using System.Runtime.CompilerServices;
 
 namespace DestinyMatch_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class pictureController : ControllerBase
+    public class PictureController : ControllerBase
     {
         private readonly IPictureService _pictureService;
 
-        public pictureController(IPictureService pictureService)
+        public PictureController(IPictureService pictureService)
         {
             _pictureService = pictureService;
         }
@@ -43,17 +43,17 @@ namespace DestinyMatch_API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdatePicture(GetPicture picture)
+        public async Task<IActionResult> UpdatePicture(PictureResponse picture)
         {
             await _pictureService.UpdatePicture(picture);
-            return Ok();
+            return Ok(picture);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePicture(Guid id, string urlPictureOfUser)
         {
             await _pictureService.DeletePicture(id, urlPictureOfUser);
-            return Ok();
+            return Ok("delete success");
         }
     }
 }

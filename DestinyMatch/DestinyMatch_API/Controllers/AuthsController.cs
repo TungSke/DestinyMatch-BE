@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DestinyMatch_API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/auths")]
     [ApiController]
-    public class authController : ControllerBase
+    public class AuthsController : ControllerBase
     {
         private readonly IAccountService _accountService;
         private readonly IAuthService _authService;
-        public authController(IAccountService accountService, IAuthService authService)
+        public AuthsController(IAccountService accountService, IAuthService authService)
         {
             _accountService = accountService;
             _authService = authService;

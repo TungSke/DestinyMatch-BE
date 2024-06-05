@@ -1,7 +1,8 @@
 ﻿using BusinessLogic.Interfaces;
+using BusinessLogic.Models.Request;
+using BusinessLogic.Models.Response;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
-using Repository.DTOs.Package;
 using Repository.Interfaces;
 using Repository.Models;
 
@@ -14,9 +15,10 @@ namespace BusinessLogic.Services
         {
             _packageRepository = packageRepository;
         }
-        public async Task<IEnumerable<Package>> GetPackages()
+        public async Task<IEnumerable<Package>> GetPackages(int pageIndex,int pageSize,string searchString)
         {
-            return await _packageRepository.GetAllAsync().ToListAsync(); 
+            var tolowerSearch = searchString.ToLower();
+            return await _packageRepository.GetAllAsync().Where(x => x.Code.ToLower().Equals(tolowerSearch) || x.Name.ToLower().Equals(tolowerSearch)).ToListAsync(); 
         }
         
         public async Task<Package> GetPackageById(Guid id)
@@ -24,7 +26,7 @@ namespace BusinessLogic.Services
             return await _packageRepository.GetByIdAsync(id);
         }
 
-        public async Task<bool> CreatePackageAsync(CreatePackage package)
+        public async Task<bool> CreatePackageAsync(PackageRequest package)
         {
             var existed = await _packageRepository.GetAllAsync().AnyAsync(x => x.Code.ToLower().Equals(package.Code.ToLower()));
             if(existed == true)
@@ -40,7 +42,7 @@ namespace BusinessLogic.Services
             }
         }
 
-        public async Task<bool> UpdatePackageAsync(UpdatePackage package)
+        public async Task<bool> UpdatePackageAsync(PackageResponse package)
         {
             var existed = await _packageRepository.GetByIdAsync(package.Id);
             if(existed == null)

@@ -1,7 +1,7 @@
 ﻿using BusinessLogic.Interfaces;
-using Microsoft.AspNetCore.Http;
+using BusinessLogic.Models.Request;
+using BusinessLogic.Models.Response;
 using Microsoft.AspNetCore.Mvc;
-using Repository.DTOs.Package;
 
 namespace DestinyMatch_API.Controllers
 {
@@ -32,25 +32,25 @@ namespace DestinyMatch_API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreatePackageAsync(CreatePackage package)
+        public async Task<IActionResult> CreatePackageAsync(PackageRequest package)
         {
             var res = await _packageService.CreatePackageAsync(package);
             if(res == false)
             {
-                return NotFound();
+                return BadRequest();
             }
-            return Ok();
+            return Ok(package);
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdatePackageAsync(UpdatePackage package)
+        public async Task<IActionResult> UpdatePackageAsync(PackageResponse package)
         {
             var res = await _packageService.UpdatePackageAsync(package);
             if (res == false)
             {
-                return NotFound();
+                return BadRequest();
             }
-            return Ok();
+            return Ok(package);
         }
 
         [HttpDelete("{id}")]

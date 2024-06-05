@@ -1,4 +1,5 @@
-﻿using Repository.DTOs.Package;
+﻿using BusinessLogic.Models.Request;
+using BusinessLogic.Models.Response;
 using Repository.Models;
 
 namespace BusinessLogic.Interfaces
@@ -7,8 +8,8 @@ namespace BusinessLogic.Interfaces
     {
         Task<IEnumerable<Package>> GetPackages();
         Task<Package> GetPackageById(Guid id);
-        Task<bool> CreatePackageAsync(CreatePackage package);
-        Task<bool> UpdatePackageAsync(UpdatePackage package);
+        Task<bool> CreatePackageAsync(PackageRequest package);
+        Task<bool> UpdatePackageAsync(PackageResponse package);
         Task<bool> DeletePackageAsync(Guid id);
     }
 }

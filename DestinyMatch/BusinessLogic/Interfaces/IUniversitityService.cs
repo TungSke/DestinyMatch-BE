@@ -1,10 +1,6 @@
-﻿using Repository.DTOs.University;
+﻿using BusinessLogic.Models.Request;
+using BusinessLogic.Models.Response;
 using Repository.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BusinessLogic.Interfaces
 {
@@ -12,8 +8,8 @@ namespace BusinessLogic.Interfaces
     {
         Task<IEnumerable<University>> GetUniversities();
         Task<University> GetUniversityById(Guid id);
-        Task<University> AddUniversity(GetUniversity university);
-        Task<University> UpdateUniversity(UpdateUni university);
+        Task<University> AddUniversity(UniversityRequest university);
+        Task<University> UpdateUniversity(UniversityResponse university);
         Task DeleteUniversity(Guid id);
     }
 }

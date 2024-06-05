@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Repository.DTOs.Picture;
+﻿using BusinessLogic.Models.Response;
+using Microsoft.AspNetCore.Http;
 using Repository.Models;
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ namespace BusinessLogic.Interfaces
         Task<string> UploadImage(IFormFile file, Guid memberId);
         Task<IEnumerable<Picture>> getAllPicturfromusers(Guid userid);
         Task<Picture> GetPictureById(Guid id);
-        Task UpdatePicture(GetPicture picture);
+        Task UpdatePicture(PictureResponse picture);
         Task DeletePicture(Guid id, string urlPictureOfUser);
     }
 }

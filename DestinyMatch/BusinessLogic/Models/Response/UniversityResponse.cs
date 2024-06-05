@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository.DTOs.University
+namespace BusinessLogic.Models.Response
 {
-    public class UpdateUni
+    public class UniversityResponse
     {
         public Guid Id { get; set; }
 

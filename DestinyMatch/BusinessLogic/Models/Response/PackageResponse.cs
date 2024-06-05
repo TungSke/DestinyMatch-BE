@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository.DTOs.Package
+namespace BusinessLogic.Models.Response
 {
-    public class UpdatePackage
+    public class PackageResponse
     {
         public Guid Id { get; set; }
 

@@ -1,7 +1,8 @@
 ﻿using BusinessLogic.Interfaces;
+using BusinessLogic.Models.Request;
+using BusinessLogic.Models.Response;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
-using Repository.DTOs.University;
 using Repository.Interfaces;
 using Repository.Models;
 
@@ -26,7 +27,7 @@ namespace BusinessLogic.Services
             return await _universityRepository.GetByIdAsync(id);
         }
 
-        public async Task<University> AddUniversity(GetUniversity university)
+        public async Task<University> AddUniversity(UniversityRequest university)
         {
             var u = university.Adapt<University>();
             _universityRepository.Add(u);
@@ -34,7 +35,7 @@ namespace BusinessLogic.Services
             return u;
         }
 
-        public async Task<University> UpdateUniversity(UpdateUni university)
+        public async Task<University> UpdateUniversity(UniversityResponse university)
         {
             var univer = await _universityRepository.GetByIdAsync(university.Id);
             university.Adapt(univer);
@@ -45,7 +46,10 @@ namespace BusinessLogic.Services
         public async Task DeleteUniversity(Guid id)
         {
             var university = await _universityRepository.GetByIdAsync(id);
-            _universityRepository.Remove(university);
+            if(university != null)
+            {
+                _universityRepository.Remove(university);
+            }        
             await _universityRepository.SaveChangeAsync();
             return;
         }
