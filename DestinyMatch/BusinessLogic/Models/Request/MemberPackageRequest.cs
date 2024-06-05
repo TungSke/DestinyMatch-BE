@@ -14,8 +14,8 @@ namespace BusinessLogic.Models.Request
 
         public DateTime? EndDate { get; set; }
 
-        public Guid? MemberId { get; set; }
+        public Guid MemberId { get; set; }
 
-        public Guid? PackageId { get; set; }
+        public Guid PackageId { get; set; }
     }
 }

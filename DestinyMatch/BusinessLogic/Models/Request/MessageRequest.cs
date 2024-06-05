@@ -13,8 +13,8 @@ namespace BusinessLogic.Models.Request
 
         public string? Status { get; set; }
 
-        public Guid? ConversationId { get; set; }
+        public Guid ConversationId { get; set; }
 
-        public Guid? SenderId { get; set; }
+        public Guid SenderId { get; set; }
     }
 }

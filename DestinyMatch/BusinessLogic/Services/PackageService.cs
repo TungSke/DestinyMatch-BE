@@ -15,10 +15,10 @@ namespace BusinessLogic.Services
         {
             _packageRepository = packageRepository;
         }
-        public async Task<IEnumerable<Package>> GetPackages(int pageIndex,int pageSize,string searchString)
+        public async Task<IEnumerable<Package>> GetPackages()
         {
-            var tolowerSearch = searchString.ToLower();
-            return await _packageRepository.GetAllAsync().Where(x => x.Code.ToLower().Equals(tolowerSearch) || x.Name.ToLower().Equals(tolowerSearch)).ToListAsync(); 
+            
+            return await _packageRepository.GetAllAsync().ToListAsync(); 
         }
         
         public async Task<Package> GetPackageById(Guid id)

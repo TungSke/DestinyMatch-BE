@@ -1,7 +1,6 @@
 ﻿using BusinessLogic.Interfaces;
 using BusinessLogic.Models.Response;
 using Microsoft.AspNetCore.Mvc;
-using System.Runtime.CompilerServices;
 
 namespace DestinyMatch_API.Controllers
 {

@@ -66,8 +66,8 @@ namespace BusinessLogic.Services
             }
 
             memberPackage.EndDate = memberRequest.EndDate;
-            memberPackage.MemberId = memberRequest.MemberId ?? memberPackage.MemberId;
-            memberPackage.PackageId = memberRequest.PackageId ?? memberRequest.PackageId;
+            memberPackage.MemberId = memberRequest.MemberId;
+            memberPackage.PackageId = memberRequest.PackageId;
             _memberPackageRepository.Update(memberPackage);
             await _memberPackageRepository.SaveChangeAsync();
             return memberPackage;

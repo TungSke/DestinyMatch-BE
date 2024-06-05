@@ -68,8 +68,8 @@ namespace BusinessLogic.Services
             message.Content = !string.IsNullOrEmpty(messageRequest.Content) ? messageRequest.Content : message.Content;
             message.SentAt = DateTime.UtcNow;
             message.Status = !string.IsNullOrEmpty(messageRequest.Status) ? messageRequest.Status : message.Status;
-            message.ConversationId = messageRequest.ConversationId ?? message.ConversationId;
-            message.SenderId = messageRequest.SenderId ?? message.SenderId;
+            message.ConversationId = messageRequest.ConversationId;
+            message.SenderId = messageRequest.SenderId;
             _messageReposirory.Update(message);
             await _messageReposirory.SaveChangeAsync();
             return message;
