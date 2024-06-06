@@ -7,11 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FPT.DestinyMatch.Repository\FPT.DestinyMatch.Repository.csproj" />
+    <Compile Remove="BusinessModels\**" />
+    <EmbeddedResource Remove="BusinessModels\**" />
+    <None Remove="BusinessModels\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="BusinessModels\" />
+    <ProjectReference Include="..\FPT.DestinyMatch.Repository\FPT.DestinyMatch.Repository.csproj" />
   </ItemGroup>
 
   <ItemGroup>
