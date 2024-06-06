@@ -21,7 +21,36 @@ namespace FPT.DestinyMatch.API
     {
         public static IServiceCollection InjectServices(this IServiceCollection services, IConfiguration configuration)
         {
+            // Read ConnectionString from appsettings.json
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+            // Inject DbContext
+            services.AddDbContext<DestinyMatchContext>(options =>
+                options.UseSqlServer(connectionString));
+
+            // Inject Service Classes
+            services.AddScoped<IAccountService, AccountService>();
+
+            // Inject Repository Classess
+            services.AddScoped<IAccountRepository, AccountRepository>();
+
+            //
+            // =========================[ Other services]=========================
+            //
+
             // Add JWT service
+            services.AddJwtService(configuration);
+
+            // Add Authorize On Swagger
+            services.AddAuthorizeOnSwagger();
+
+            // Add Google Service
+            services.AddGoogleService();
+            return services;
+        }
+
+        private static IServiceCollection AddJwtService(this IServiceCollection services, IConfiguration configuration)
+        {
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -36,8 +65,11 @@ namespace FPT.DestinyMatch.API
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!))
                     };
                 });
+            return services;
+        }
 
-            // Add Bearer Service
+        private static IServiceCollection AddAuthorizeOnSwagger(this IServiceCollection services)
+        {
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("Bearer", policy =>
@@ -50,7 +82,7 @@ namespace FPT.DestinyMatch.API
             // Add Authorize to Swagger
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "DestinyMatch.API", Version = "v1" });
 
                 // Add JWT Bearer security definition
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -75,21 +107,18 @@ namespace FPT.DestinyMatch.API
                     }
                 });
             });
+            return services;
+        }
 
-            // Read ConnectionString from appsettings.json
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
+        private static IServiceCollection AddGoogleService(this IServiceCollection services)
+        {
+            //services.AddAuthentication().AddGoogle(options =>
+            //{
+            //    IConfigurationSection googleAuthNSection = configuration.GetSection("Authentication:Google");
 
-            // Inject DbContext
-            services.AddDbContext<DestinyMatchContext>(options =>
-                options.UseSqlServer(connectionString));
-
-            // Inject Service Classes
-            services.AddScoped<IAccountService, AccountService>();
-
-            // Inject Repository Classess
-            services.AddScoped<IAccountRepository, AccountRepository>();
-
-            // Other services
+            //    options.ClientId = "268713324794-6op71f4fodke41ftkgc70r76so334dqn.apps.googleusercontent.com";
+            //    options.ClientSecret = "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";
+            //});
             return services;
         }
     }
