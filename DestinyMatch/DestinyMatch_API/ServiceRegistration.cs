@@ -40,7 +40,7 @@ namespace DestinyMatch_API
                 });
 
             // Read ConnectionString from appsettings.json
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            var connectionString = configuration.GetConnectionString("OnlineConnection");
 
             // Inject DbContext
             services.AddDbContext<DestinyMatchContext>(options =>
@@ -76,6 +76,9 @@ namespace DestinyMatch_API
 
             services.AddScoped<IMajorRepository, MajorRepository>();
             services.AddScoped<IMajorService, MajorService>();
+
+            services.AddScoped<IMatchRequestService, MatchRequestService>();
+            services.AddScoped<IMatchRequestRepository, MatchRequestRepository>();
             // Other services
             SwaggerConfig(services);
 
