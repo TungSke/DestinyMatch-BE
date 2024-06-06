@@ -72,6 +72,9 @@ namespace DestinyMatch_API
 
             services.AddScoped<IMajorRepository, MajorRepository>();
             services.AddScoped<IMajorService, MajorService>();
+
+            services.AddScoped<IMatchRequestService, MatchRequestService>();
+            services.AddScoped<IMatchRequestRepository, MatchRequestRepository>();
             // Other services
             SwaggerConfig(services);
 
