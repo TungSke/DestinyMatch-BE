@@ -30,9 +30,28 @@ namespace FPT.DestinyMatch.API
 
             // Inject Service Classes
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IMemberService, MemberService>();
+            services.AddScoped<IMemberPackageService, MemberPackageService>();
+            services.AddScoped<IMessageService, MessageService>();
+            services.AddScoped<IPackageService, PackageService>();
+            services.AddScoped<IPictureService, PictureService>();
+            services.AddScoped<IUniversitityService, UniversityService>();
+            services.AddScoped<IHobbyService, HobbyService>();
+            services.AddScoped<IMajorService, MajorService>();
+            services.AddScoped<IMatchRequestService, MatchRequestService>();
 
             // Inject Repository Classess
             services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<IMemberRepository, MemberRepository>();
+            services.AddScoped<IMemberPackageRepository, MemberPackageRepository>();
+            services.AddScoped<IMessageReposirory, MessageReposirory>();
+            services.AddScoped<IPackageRepository, PackageRepository>();
+            services.AddScoped<IPictureRepository, PictureRepository>();
+            services.AddScoped<IUniversityRepository, UniversityRepository>();
+            services.AddScoped<IHobbyReposiroty, HobbyRepository>();
+            services.AddScoped<IMajorRepository, MajorRepository>();
+            services.AddScoped<IMatchRequestRepository, MatchRequestRepository>();
+
 
             //
             // =========================[ Other services]=========================
@@ -46,6 +65,9 @@ namespace FPT.DestinyMatch.API
 
             // Add Google Service
             services.AddGoogleService();
+
+            // Cors
+            services.CorsConfig();
             return services;
         }
 
@@ -119,6 +141,21 @@ namespace FPT.DestinyMatch.API
             //    options.ClientId = "268713324794-6op71f4fodke41ftkgc70r76so334dqn.apps.googleusercontent.com";
             //    options.ClientSecret = "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";
             //});
+            return services;
+        }
+
+        private static IServiceCollection CorsConfig(this IServiceCollection services)
+        {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins",
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                               .AllowAnyMethod()
+                               .AllowAnyHeader();
+                    });
+            });
             return services;
         }
     }
