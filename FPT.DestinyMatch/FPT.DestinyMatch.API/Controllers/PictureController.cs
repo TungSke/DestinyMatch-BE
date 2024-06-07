@@ -1,23 +1,22 @@
 ﻿using FPT.DestinyMatch.Service.Interfaces;
+using FPT.DestinyMatch.Service.Models.Response;
 using Microsoft.AspNetCore.Mvc;
-using FPT.DestinyMatch.Repository.DTOs.Picture;
-using System.Runtime.CompilerServices;
 
 namespace FPT.DestinyMatch.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class pictureController : ControllerBase
+    public class PictureController : ControllerBase
     {
         private readonly IPictureService _pictureService;
 
-        public pictureController(IPictureService pictureService)
+        public PictureController(IPictureService pictureService)
         {
             _pictureService = pictureService;
         }
 
         [HttpPost]
-        public async Task<IActionResult> UploadImage(IFormFile file,Guid memberId)
+        public async Task<IActionResult> UploadImage(IFormFile file, Guid memberId)
         {
             if (file == null)
             {
@@ -43,17 +42,17 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdatePicture(GetPicture picture)
+        public async Task<IActionResult> UpdatePicture(PictureResponse picture)
         {
             await _pictureService.UpdatePicture(picture);
-            return Ok();
+            return Ok(picture);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePicture(Guid id, string urlPictureOfUser)
         {
             await _pictureService.DeletePicture(id, urlPictureOfUser);
-            return Ok();
+            return Ok("delete success");
         }
     }
 }

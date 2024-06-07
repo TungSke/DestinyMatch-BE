@@ -4,6 +4,5 @@ namespace FPT.DestinyMatch.Repository.Interfaces
 {
     public interface IUniversityRepository : IGenericRepository<University>
     {
-
     }
 }

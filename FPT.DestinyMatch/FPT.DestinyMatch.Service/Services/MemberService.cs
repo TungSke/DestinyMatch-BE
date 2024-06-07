@@ -20,17 +20,17 @@ namespace FPT.DestinyMatch.Service.Services
             _memberRepository = memberRepository;
         }
 
-        public  async Task<Member> CreateMember(MemberRequest memberRequest)
+        public async Task<Member> CreateMember(MemberRequest memberRequest)
         {
-            DateTime? dob = memberRequest.Dob != null
-        ? new DateTime(memberRequest.Dob.Year, memberRequest.Dob.Month, memberRequest.Dob.Day)
-        : (DateTime?)null;
+        //    DateTime? dob = memberRequest.Dob != null
+        //? new DateTime(memberRequest.Dob.Year, memberRequest.Dob.Month, memberRequest.Dob.Day)
+        //: (DateTime?)null;
             var MemberToAdd = new Member
             {
                 Id = Guid.NewGuid(),
                 Fullname = memberRequest.Fullname,
                 Introduce = memberRequest.Introduce,
-                Dob = dob,
+                Dob = memberRequest.Dob,
                 Gender = memberRequest.Gender,
                 Address = memberRequest.Address,
                 Surplus = memberRequest.Surplus,
@@ -39,7 +39,7 @@ namespace FPT.DestinyMatch.Service.Services
                 UniversityId = memberRequest.UniversityId,
                 MajorId = memberRequest.MajorId
             };
-             _memberRepository.Add(MemberToAdd);
+            _memberRepository.Add(MemberToAdd);
             await _memberRepository.SaveChangeAsync();
             return MemberToAdd;
         }
@@ -73,11 +73,11 @@ namespace FPT.DestinyMatch.Service.Services
             {
                 return null;
             }
-            member.Fullname = !string.IsNullOrEmpty(memberRequest.Fullname) ? memberRequest.Fullname : memberRequest.Fullname;
-            member.Introduce = !string.IsNullOrEmpty(memberRequest.Introduce) ? memberRequest.Introduce : memberRequest.Introduce;
-            if(memberRequest.Dob != null)
+            member.Fullname = !string.IsNullOrEmpty(memberRequest.Fullname) ? memberRequest.Fullname : member.Fullname;
+            member.Introduce = !string.IsNullOrEmpty(memberRequest.Introduce) ? memberRequest.Introduce : member.Introduce;
+            if (memberRequest.Dob != null)
             {
-                member.Dob = new DateTime(memberRequest.Dob.Year, memberRequest.Dob.Month, memberRequest.Dob.Day);
+                member.Dob = memberRequest.Dob;//new DateTime(memberRequest.Dob.Year, memberRequest.Dob.Month, memberRequest.Dob.Day);
             }
             member.Gender = memberRequest.Gender ?? member.Gender;
             member.Address = !string.IsNullOrEmpty(memberRequest.Address) ? memberRequest.Address : member.Address;

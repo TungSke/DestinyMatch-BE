@@ -3,12 +3,6 @@ using FPT.DestinyMatch.Service.Models.Request;
 using Microsoft.EntityFrameworkCore;
 using FPT.DestinyMatch.Repository.Interfaces;
 using FPT.DestinyMatch.Repository.Models;
-using FPT.DestinyMatch.Repository.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FPT.DestinyMatch.Service.Services
 {

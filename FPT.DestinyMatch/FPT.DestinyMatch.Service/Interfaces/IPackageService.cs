@@ -1,5 +1,6 @@
-﻿using Repository.DTOs.Package;
-using FPT.DestinyMatch.Repository.Models;
+﻿using FPT.DestinyMatch.Repository.Models;
+using FPT.DestinyMatch.Service.Models.Request;
+using FPT.DestinyMatch.Service.Models.Response;
 
 namespace FPT.DestinyMatch.Service.Interfaces
 {
@@ -7,8 +8,8 @@ namespace FPT.DestinyMatch.Service.Interfaces
     {
         Task<IEnumerable<Package>> GetPackages();
         Task<Package> GetPackageById(Guid id);
-        Task<bool> CreatePackageAsync(CreatePackage package);
-        Task<bool> UpdatePackageAsync(UpdatePackage package);
+        Task<bool> CreatePackageAsync(PackageRequest package);
+        Task<bool> UpdatePackageAsync(PackageResponse package);
         Task<bool> DeletePackageAsync(Guid id);
     }
 }

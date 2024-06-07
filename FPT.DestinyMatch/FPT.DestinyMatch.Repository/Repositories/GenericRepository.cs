@@ -22,6 +22,10 @@ namespace FPT.DestinyMatch.Repository.Repositories
         }
 
         //**************************[ METHODS ]**************************
+        public IQueryable<TModel> GetAllAsync()
+        {
+            return DMDB.Set<TModel>().AsQueryable();
+        }
 
         public virtual async Task<TModel?> GetByIdAsync(Guid id)
         {

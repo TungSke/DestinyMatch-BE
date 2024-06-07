@@ -1,17 +1,18 @@
 ﻿using FPT.DestinyMatch.Service.Interfaces;
+using FPT.DestinyMatch.Service.Models.Request;
+using FPT.DestinyMatch.Service.Models.Response;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using FPT.DestinyMatch.Repository.DTOs.University;
 
 namespace FPT.DestinyMatch.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class universityController : ControllerBase
+    public class UniversityController : ControllerBase
     {
         private readonly IUniversitityService _universityService;
 
-        public universityController(IUniversitityService universityService)
+        public UniversityController(IUniversitityService universityService)
         {
             _universityService = universityService;
         }
@@ -31,14 +32,14 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddUniversity(GetUniversity university)
+        public async Task<IActionResult> AddUniversity(UniversityRequest university)
         {
             var u = await _universityService.AddUniversity(university);
             return Ok(u);
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateUniversity(UpdateUni university)
+        public async Task<IActionResult> UpdateUniversity(UniversityResponse university)
         {
             var u = await _universityService.UpdateUniversity(university);
             return Ok(u);

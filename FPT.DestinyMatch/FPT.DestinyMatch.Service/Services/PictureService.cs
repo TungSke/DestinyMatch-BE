@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Firebase.Storage;
+using System.IO;
 using FPT.DestinyMatch.Repository.Interfaces;
 using FPT.DestinyMatch.Service.Interfaces;
 using FPT.DestinyMatch.Repository.Models;
 using Microsoft.EntityFrameworkCore;
-using FPT.DestinyMatch.Repository.DTOs.Picture;
 using Mapster;
+using FPT.DestinyMatch.Service.Models.Response;
 
 namespace FPT.DestinyMatch.Service.Services
 {
@@ -33,7 +34,7 @@ namespace FPT.DestinyMatch.Service.Services
             task.Progress.ProgressChanged += (s, e) => Console.WriteLine($"Progress: {e.Percentage} %");
             var downloadUrl = await task;
 
-            GetPicture picture = new GetPicture
+            PictureResponse picture = new PictureResponse
             {
                 UrlPath = downloadUrl,
                 MemberId = memberId
@@ -43,7 +44,7 @@ namespace FPT.DestinyMatch.Service.Services
         }
 
 
-        private async Task AddPicture(GetPicture picture)
+        private async Task AddPicture(PictureResponse picture)
         {
             picture.Id = Guid.NewGuid();
             var pic = picture.Adapt<Picture>();
@@ -61,17 +62,20 @@ namespace FPT.DestinyMatch.Service.Services
             return await _pictureRepository.GetByIdAsync(id);
         }
 
-        public async Task UpdatePicture(GetPicture picture)
+        public async Task UpdatePicture(PictureResponse picture)
         {
             var pic = picture.Adapt<Picture>();
-             _pictureRepository.Update(pic);
+            _pictureRepository.Update(pic);
             await _pictureRepository.SaveChangeAsync();
         }
 
         public async Task DeletePicture(Guid id, string urlPictureOfUser)
         {
             var picture = await _pictureRepository.GetByIdAsync(id);
-            _pictureRepository.Remove(picture);
+            if (picture != null)
+            {
+                _pictureRepository.Remove(picture);
+            }
             await _pictureRepository.SaveChangeAsync();
             await DeletePictureinFirebase(urlPictureOfUser);
         }
@@ -87,6 +91,5 @@ namespace FPT.DestinyMatch.Service.Services
             .DeleteAsync();
             await task;
         }
-
     }
 }

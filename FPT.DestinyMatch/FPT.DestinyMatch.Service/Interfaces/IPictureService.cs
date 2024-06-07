@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Repository.DTOs.Picture;
 using FPT.DestinyMatch.Repository.Models;
+using FPT.DestinyMatch.Service.Models.Response;
 
 namespace FPT.DestinyMatch.Service.Interfaces
 {
@@ -9,7 +9,7 @@ namespace FPT.DestinyMatch.Service.Interfaces
         Task<string> UploadImage(IFormFile file, Guid memberId);
         Task<IEnumerable<Picture>> getAllPicturfromusers(Guid userid);
         Task<Picture> GetPictureById(Guid id);
-        Task UpdatePicture(GetPicture picture);
+        Task UpdatePicture(PictureResponse picture);
         Task DeletePicture(Guid id, string urlPictureOfUser);
     }
 }

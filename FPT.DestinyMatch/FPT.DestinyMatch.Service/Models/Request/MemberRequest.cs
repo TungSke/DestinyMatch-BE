@@ -12,7 +12,7 @@
 
         public string? Introduce { get; set; }
 
-        public DateModel? Dob { get; set; }
+        public DateOnly? Dob { get; set; }
 
         public bool? Gender { get; set; }
 

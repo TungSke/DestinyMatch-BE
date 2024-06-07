@@ -1,9 +1,10 @@
 ﻿using FPT.DestinyMatch.Service.Interfaces;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
-using FPT.DestinyMatch.Repository.DTOs.University;
 using FPT.DestinyMatch.Repository.Interfaces;
 using FPT.DestinyMatch.Repository.Models;
+using FPT.DestinyMatch.Service.Models.Request;
+using FPT.DestinyMatch.Service.Models.Response;
 
 namespace FPT.DestinyMatch.Service.Services
 {
@@ -26,7 +27,7 @@ namespace FPT.DestinyMatch.Service.Services
             return await _universityRepository.GetByIdAsync(id);
         }
 
-        public async Task<University> AddUniversity(GetUniversity university)
+        public async Task<University> AddUniversity(UniversityRequest university)
         {
             var u = university.Adapt<University>();
             _universityRepository.Add(u);
@@ -34,7 +35,7 @@ namespace FPT.DestinyMatch.Service.Services
             return u;
         }
 
-        public async Task<University> UpdateUniversity(UpdateUni university)
+        public async Task<University> UpdateUniversity(UniversityResponse university)
         {
             var univer = await _universityRepository.GetByIdAsync(university.Id);
             university.Adapt(univer);
@@ -45,7 +46,10 @@ namespace FPT.DestinyMatch.Service.Services
         public async Task DeleteUniversity(Guid id)
         {
             var university = await _universityRepository.GetByIdAsync(id);
-            _universityRepository.Remove(university);
+            if (university != null)
+            {
+                _universityRepository.Remove(university);
+            }
             await _universityRepository.SaveChangeAsync();
             return;
         }

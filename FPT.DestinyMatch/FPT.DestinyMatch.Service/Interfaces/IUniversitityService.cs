@@ -1,4 +1,5 @@
-﻿using Repository.DTOs.University;
+﻿using FPT.DestinyMatch.Service.Models.Request;
+using FPT.DestinyMatch.Service.Models.Response;
 using FPT.DestinyMatch.Repository.Models;
 
 namespace FPT.DestinyMatch.Service.Interfaces
@@ -7,8 +8,8 @@ namespace FPT.DestinyMatch.Service.Interfaces
     {
         Task<IEnumerable<University>> GetUniversities();
         Task<University> GetUniversityById(Guid id);
-        Task<University> AddUniversity(GetUniversity university);
-        Task<University> UpdateUniversity(UpdateUni university);
+        Task<University> AddUniversity(UniversityRequest university);
+        Task<University> UpdateUniversity(UniversityResponse university);
         Task DeleteUniversity(Guid id);
     }
 }
