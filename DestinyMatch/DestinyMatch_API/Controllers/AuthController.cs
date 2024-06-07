@@ -6,11 +6,11 @@ namespace DestinyMatch_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class authController : ControllerBase
     {
         private readonly IAccountService _accountService;
         private readonly IAuthService _authService;
-        public AuthController(IAccountService accountService, IAuthService authService)
+        public authController(IAccountService accountService, IAuthService authService)
         {
             _accountService = accountService;
             _authService = authService;
@@ -18,7 +18,7 @@ namespace DestinyMatch_API.Controllers
         [HttpGet("login")]
         public async Task<IActionResult> Login(string email, string password)
         {
-            var acc = await _accountService.LoginByPassWord(email, password);
+            var acc = await _accountService.LoginByPassword(email, password);
             if (acc == null)
             {
                 return NotFound();
