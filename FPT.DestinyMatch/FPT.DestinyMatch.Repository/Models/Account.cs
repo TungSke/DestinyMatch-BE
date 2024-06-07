@@ -1,0 +1,22 @@
+﻿using FPT.DestinyMatch.Repository.Models.Generic;
+using System;
+using System.Collections.Generic;
+
+namespace FPT.DestinyMatch.Repository.Models;
+
+public partial class Account : GenericModel<Guid>
+{
+    public Guid Id { get; set; }
+
+    public string? Email { get; set; }
+
+    public string? Password { get; set; }
+
+    public DateTime? CreateAt { get; set; }
+
+    public string Role { get; set; } = null!;
+
+    public string? Status { get; set; }
+
+    public virtual Member? Member { get; set; }
+}
