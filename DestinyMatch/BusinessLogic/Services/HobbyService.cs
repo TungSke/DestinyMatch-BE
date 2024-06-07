@@ -21,7 +21,7 @@ namespace BusinessLogic.Services
             _hobbyRepository = hobbyRepository;
         }
 
-        public async Task<IEnumerable<Hobby>> GetHobbies() => await _hobbyRepository.GetAllAsync().ToListAsync();
+        public async Task<IEnumerable<Hobby>> GetHobbies() => await _hobbyRepository.Get().ToListAsync();
 
         public async Task<Hobby?> GetHobbyById(Guid id) => await _hobbyRepository.GetByIdAsync(id);
 

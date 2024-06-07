@@ -63,7 +63,7 @@ namespace BusinessLogic.Services
 
         public async Task<IEnumerable<Member>> GetMembers()
         {
-            return await _memberRepository.GetAllAsync().ToListAsync();
+            return await _memberRepository.Get().ToListAsync();
         }
 
         public async Task<Member> UpdateMember(Guid Id, MemberRequest memberRequest)

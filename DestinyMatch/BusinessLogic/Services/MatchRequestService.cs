@@ -33,7 +33,7 @@ namespace BusinessLogic.Services
 
         public async Task<IEnumerable<MatchRequest>?> GetMatchRequests()
         {
-            return await _matchRequestRepository.GetAllAsync().ToListAsync();
+            return await _matchRequestRepository.Get().ToListAsync();
         }
 
         public async Task<MatchRequest> Matching(MatchRequestToAdd matchRequesttoAdd)

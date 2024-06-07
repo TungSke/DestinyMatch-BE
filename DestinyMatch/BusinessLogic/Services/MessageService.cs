@@ -55,7 +55,7 @@ namespace BusinessLogic.Services
 
         public async Task<IEnumerable<Message>> GetMessages()
         {
-            return await _messageReposirory.GetAllAsync().ToListAsync();
+            return await _messageReposirory.Get().ToListAsync();
         }
 
         public async Task<Message> UpdateMessage(Guid Id, MessageRequest messageRequest)

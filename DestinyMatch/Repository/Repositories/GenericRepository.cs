@@ -21,7 +21,7 @@ namespace Repository.Repositories
         }
 
         //**************************[ METHODS ]**************************
-        public IQueryable<TModel> GetAllAsync()
+        public IQueryable<TModel> Get()
         {
             return DMDB.Set<TModel>().AsQueryable();
         }

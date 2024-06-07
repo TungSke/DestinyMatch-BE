@@ -19,7 +19,7 @@ namespace BusinessLogic.Services
 
         public async Task<IEnumerable<University>> GetUniversities()
         {
-            return await _universityRepository.GetAllAsync().ToListAsync();
+            return await _universityRepository.Get().ToListAsync();
         }
 
         public async Task<University> GetUniversityById(Guid id)

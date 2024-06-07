@@ -54,7 +54,7 @@ namespace BusinessLogic.Services
 
         public async Task<IEnumerable<MemberPackage>> GetMemberPackages()
         {
-            return await _memberPackageRepository.GetAllAsync().ToListAsync();
+            return await _memberPackageRepository.Get().ToListAsync();
         }
 
         public async Task<MemberPackage> UpdateMemberPackage(Guid Id, MemberPackageRequest memberRequest)

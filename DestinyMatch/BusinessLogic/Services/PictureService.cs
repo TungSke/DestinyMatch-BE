@@ -56,7 +56,7 @@ namespace BusinessLogic.Services
 
         public async Task<IEnumerable<Picture>> getAllPicturfromusers(Guid userid)
         {
-            return await _pictureRepository.GetAllAsync().Where(x => x.MemberId.Equals(userid)).ToListAsync();
+            return await _pictureRepository.Get().Where(x => x.MemberId.Equals(userid)).ToListAsync();
         }
 
         public async Task<Picture> GetPictureById(Guid id)
