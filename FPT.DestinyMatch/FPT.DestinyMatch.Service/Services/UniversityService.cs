@@ -17,9 +17,9 @@ namespace FPT.DestinyMatch.Service.Services
             _universityRepository = universityRepository;
         }
 
-        public async Task<IEnumerable<University>> GetUniversities()
+        public async Task<IEnumerable<University>> GetUniversities(int pageIndex, int PageSize, string searchString)
         {
-            return await _universityRepository.GetAsync().ToListAsync();
+            return await _universityRepository.GetUniversities(pageIndex,PageSize,searchString);
         }
 
         public async Task<University> GetUniversityById(Guid id)

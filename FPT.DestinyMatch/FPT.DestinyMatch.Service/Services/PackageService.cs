@@ -15,10 +15,10 @@ namespace FPT.DestinyMatch.Service.Services
         {
             _packageRepository = packageRepository;
         }
-        public async Task<IEnumerable<Package>> GetPackages()
+        public async Task<IEnumerable<Package>> GetPackages(int pageIndex, int PageSize, string searchString)
         {
 
-            return await _packageRepository.GetAsync().ToListAsync();
+            return await _packageRepository.GetPackages(pageIndex, PageSize, searchString);
         }
 
         public async Task<Package> GetPackageById(Guid id)
