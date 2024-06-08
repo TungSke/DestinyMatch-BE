@@ -34,7 +34,7 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin,moderator")]
         public async Task<IActionResult> CreatePackageAsync(PackageRequest package)
         {
             var res = await _packageService.CreatePackageAsync(package);
@@ -46,7 +46,7 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpPut]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin,moderator")]
         public async Task<IActionResult> UpdatePackageAsync(PackageResponse package)
         {
             var res = await _packageService.UpdatePackageAsync(package);
@@ -58,7 +58,7 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin,moderator")]
         public async Task<IActionResult> DeletePackageAsync(Guid id)
         {
             var res = await _packageService.DeletePackageAsync(id);
