@@ -1,5 +1,6 @@
 ﻿using FPT.DestinyMatch.Service.Interfaces;
 using FPT.DestinyMatch.Service.Models.Response;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FPT.DestinyMatch.API.Controllers
@@ -28,6 +29,7 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "member")]
         public async Task<IActionResult> GetPictureById(Guid id)
         {
             var picture = await _pictureService.GetPictureById(id);
@@ -35,6 +37,7 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpGet("user/{userid}")]
+        [Authorize(Roles = "member")]
         public async Task<IActionResult> GetAllPicturesFromUser(Guid userid)
         {
             var pictures = await _pictureService.getAllPicturfromusers(userid);
@@ -42,6 +45,7 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "member")]
         public async Task<IActionResult> UpdatePicture(PictureResponse picture)
         {
             await _pictureService.UpdatePicture(picture);
@@ -49,6 +53,7 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "member")]
         public async Task<IActionResult> DeletePicture(Guid id, string urlPictureOfUser)
         {
             await _pictureService.DeletePicture(id, urlPictureOfUser);

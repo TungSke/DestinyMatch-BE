@@ -14,6 +14,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using System.Text.Json;
 
 namespace FPT.DestinyMatch.API
 {
@@ -68,6 +70,9 @@ namespace FPT.DestinyMatch.API
 
             // Cors
             services.CorsConfig();
+
+            AddKebab(services);
+
             return services;
         }
 
@@ -90,6 +95,22 @@ namespace FPT.DestinyMatch.API
             return services;
         }
 
+        private static IServiceCollection AddKebab(IServiceCollection services)
+        {
+            
+            services.AddControllers(options =>
+            {
+                options.Conventions.Add(
+                    new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
+            })
+                 .AddJsonOptions(options =>
+                 {
+                     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.KebabCaseLower ;
+                 });
+            return services;
+        }
+
+
         private static IServiceCollection AddAuthorizeOnSwagger(this IServiceCollection services)
         {
             services.AddAuthorization(options =>
@@ -105,7 +126,6 @@ namespace FPT.DestinyMatch.API
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DestinyMatch.API", Version = "v1" });
-
                 // Add JWT Bearer security definition
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {

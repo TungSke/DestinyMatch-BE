@@ -2,7 +2,7 @@
 {
     public interface IGenericRepository<TModel> where TModel : class
     {
-        IQueryable<TModel> GetAllAsync();
+        IQueryable<TModel> GetAsync();
         public Task<TModel?> GetByIdAsync(Guid id);
         public void Add(TModel obj);
         public void Update(TModel obj);
