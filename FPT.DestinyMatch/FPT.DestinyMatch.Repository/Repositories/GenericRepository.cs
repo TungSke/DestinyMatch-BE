@@ -22,7 +22,7 @@ namespace FPT.DestinyMatch.Repository.Repositories
         }
 
         //**************************[ METHODS ]**************************
-        public IQueryable<TModel> GetAllAsync()
+        public IQueryable<TModel> GetAsync()
         {
             return DMDB.Set<TModel>().AsQueryable();
         }

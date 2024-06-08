@@ -18,7 +18,7 @@ namespace FPT.DestinyMatch.Service.Services
         public async Task<IEnumerable<Package>> GetPackages()
         {
 
-            return await _packageRepository.GetAllAsync().ToListAsync();
+            return await _packageRepository.GetAsync().ToListAsync();
         }
 
         public async Task<Package> GetPackageById(Guid id)
@@ -28,7 +28,7 @@ namespace FPT.DestinyMatch.Service.Services
 
         public async Task<bool> CreatePackageAsync(PackageRequest package)
         {
-            var existed = await _packageRepository.GetAllAsync().AnyAsync(x => x.Code.ToLower().Equals(package.Code.ToLower()));
+            var existed = await _packageRepository.GetAsync().AnyAsync(x => x.Code.ToLower().Equals(package.Code.ToLower()));
             if (existed == true)
             {
                 return false;
