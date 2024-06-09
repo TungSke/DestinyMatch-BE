@@ -1,5 +1,4 @@
 ﻿using FPT.DestinyMatch.Service.Interfaces;
-using Microsoft.IdentityModel.Tokens;
 using FPT.DestinyMatch.Repository.Interfaces;
 using FPT.DestinyMatch.Repository.Models;
 using System.Security.Cryptography;//For hash password

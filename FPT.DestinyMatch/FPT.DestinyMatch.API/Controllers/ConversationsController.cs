@@ -94,7 +94,8 @@ namespace FPT.DestinyMatch.API.Controllers
             {
                 Id = newConversation.Id,
                 Name = newConversation.SecondName,//Display the other member name -> Not the interacting member
-                ChattingMember = newConversation.SecondMemberId,
+                ChattingMemberId = newConversation.SecondMemberId,
+                RecentlyTime = DateTime.Now,
                 CreateTime = DateTime.Now
             });
         }

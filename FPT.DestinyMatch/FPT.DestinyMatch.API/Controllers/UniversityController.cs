@@ -1,7 +1,6 @@
 ﻿using FPT.DestinyMatch.Service.Interfaces;
 using FPT.DestinyMatch.Service.Models.Request;
 using FPT.DestinyMatch.Service.Models.Response;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FPT.DestinyMatch.API.Controllers

@@ -38,7 +38,7 @@ namespace FPT.DestinyMatch.API.Controllers
             return Ok(account);
         }
         [HttpGet]
-        [Route("list/size={size}&page={page}")]
+        [Route("list")]
         [Authorize(Roles = "admin,moderator")]
         public async Task<IActionResult> GetListAccount([FromRoute] int size, int page)
         {
@@ -89,7 +89,7 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpGet]
-        [Route("who-am-i")]
+        [Route("me")]
         [Authorize]//Must login to use
         public async Task<IActionResult> WhoAmI()
         {
@@ -202,7 +202,7 @@ namespace FPT.DestinyMatch.API.Controllers
 
             // Extract the email from the payload
             var email = payload.Email;
-            
+
             string username = "", password = "";
             bool needSignup = true, existEmail = false;
             User user;
@@ -252,9 +252,9 @@ namespace FPT.DestinyMatch.API.Controllers
                needSignup = false;
                break;
             }
-            
+
             }//End loop
-            
+
             //If not exist then create account
             if (needSignup)
             {
@@ -262,12 +262,12 @@ namespace FPT.DestinyMatch.API.Controllers
             password = Guid.NewGuid().ToString();
             await _context.Database.ExecuteSqlRawAsync("exec dbo.proc_signUpAccount @username = @p0, @password = @p1, @email = @p2", email, password, email);
             }
-            
+
             //Then login
             var account = await _context.Accounts
             .AsNoTracking()
             .SingleOrDefaultAsync(acc => acc.Username.Equals(username) && acc.Password.Equals(password));
-            
+
             HttpContext.Session.SetString("usersession", JsonSerializer.Serialize(account));
             await HttpContext.Session.CommitAsync();
             return RedirectToAction("Index", "Home");
