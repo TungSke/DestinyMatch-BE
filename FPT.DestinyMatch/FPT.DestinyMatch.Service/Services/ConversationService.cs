@@ -9,9 +9,11 @@ namespace FPT.DestinyMatch.Service.Services
     public class ConversationService : IConversationService
     {
         private readonly IConversationRepository _conversationRepository;
-        public ConversationService(IConversationRepository conversationRepository)
+        private readonly IMemberRepository _memberRepository;
+        public ConversationService(IConversationRepository conversationRepository, IMemberRepository memberRepository)
         {
             _conversationRepository = conversationRepository;
+            _memberRepository = memberRepository;
         }
 
         //--------------------------[ IMPLEMENT ]--------------------------
@@ -27,6 +29,17 @@ namespace FPT.DestinyMatch.Service.Services
             ValidateConversationIsDeleted(currentStatus);
             return currentConversation;
         }
+        public async Task<List<Conversation>> GetConversationList(Guid ofMemberId)
+        {
+            var listConversation = await _conversationRepository.GetListByFilterAsync
+                (c => c.FirstMemberId == ofMemberId || c.SecondMemberId==ofMemberId);
+            if(listConversation.Count<1)
+            {
+                throw new NotFoundException("You don't have any conversation");
+            }
+            return listConversation;
+        }
+
         public async Task<Conversation> StartNewConversation(Guid fromMemberId, Guid toMemberId)
         {
             var trySearch = await _conversationRepository.GetByFilterAsync(cv => cv.FirstMemberId == fromMemberId && cv.SecondMemberId == toMemberId);
@@ -39,9 +52,13 @@ namespace FPT.DestinyMatch.Service.Services
                 return existedConversation;
             }
 
+            var first_member = await _memberRepository.GetByIdAsync(fromMemberId);
+            var second_member = await _memberRepository.GetByIdAsync(toMemberId);
+
             var newConversation = await _conversationRepository.Add(new Conversation
             {
-                FirstName = "",
+                FirstName = first_member.Fullname,
+                SecondName = second_member.Fullname,
                 FirstMemberId = fromMemberId,
                 SecondMemberId = toMemberId,
                 Status = "Created"
@@ -59,7 +76,7 @@ namespace FPT.DestinyMatch.Service.Services
             ValidateConversationIsDeleted(currentConversation.Status);
             ValidateMemberInConversation(currentConversation, interactingMemberId);
 
-            if(currentConversation.FirstMemberId == interactingMemberId)
+            if (interactingMemberId == currentConversation.FirstMemberId)
             {
                 currentConversation.SecondName = newName;
                 return await _conversationRepository.SaveChangeAsync();

@@ -40,32 +40,67 @@ namespace FPT.DestinyMatch.API.Controllers
             }
 
             // Declare target other member base on who is requesting
-            Guid otherMemberId =
-                (currentMemberId == currentConversation.FirstMemberId) ?
-                currentConversation.SecondMemberId : currentMemberId;
+            Guid otherMemberId;
+            if (currentMemberId == currentConversation.FirstMemberId)
+            {
+                otherMemberId = currentConversation.SecondMemberId;
+                return Ok(new ConversationDetail
+                {
+                    Id = currentConversation.Id,
+                    Name = currentConversation.SecondName,//Display the other member name -> Not the interacting member
+                    CreateTime = currentConversation.CreatedAt,
+                    ChattingMember = otherMemberId
+                });
+            }
+
+            otherMemberId = currentConversation.FirstMemberId;
+
             return Ok(new ConversationDetail
             {
                 Id = currentConversation.Id,
-                Name = currentConversation.Name,
+                Name = currentConversation.FirstName,
                 CreateTime = currentConversation.CreatedAt,
                 ChattingMember = otherMemberId
             });
         }
 
         [HttpGet]
-        [Route("")]
+        [Route("my-conversation-list")]
         [Authorize(Roles = "member")]
-        public async Task<IActionResult> GetListByMemberId()
+        public async Task<IActionResult> GetListByMemberId(Guid currentMemberId)
         {
-            return Ok();
+            var defaultList = await _conversationService.GetConversationList(currentMemberId);
+            var customList = defaultList.Select(c => new ConversationDetail
+            {
+                Id = c.Id,
+                Name = (currentMemberId == c.FirstMemberId) ? c.SecondName : c.FirstName,
+                CreateTime = c.CreatedAt,
+                ChattingMember = (currentMemberId == c.FirstMemberId) ? c.SecondMemberId : c.FirstMemberId
+            });
+            return Ok(customList);
         }
 
         [HttpPost]
-        [Route("")]
+        [Route("create-new")]
         [Authorize(Roles = "member")]
-        public async Task<IActionResult> NewConversation()
+        public async Task<IActionResult> NewConversation(Guid withMemberId)
         {
-            return Ok();
+            Guid interactingMemberId;
+            if (Guid.TryParse
+                (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value, out interactingMemberId)
+                == false)
+            {
+                return Unauthorized("Member Id is missing or not available");
+            };
+
+            var newConversation = await _conversationService.StartNewConversation(interactingMemberId, withMemberId);
+            return Ok(new ConversationDetail
+            {
+                Id = newConversation.Id,
+                Name = newConversation.SecondName,//Display the other member name -> Not the interacting member
+                ChattingMember = newConversation.SecondMemberId,
+                CreateTime = DateTime.Now
+            });
         }
 
         [HttpPatch]
@@ -76,12 +111,13 @@ namespace FPT.DestinyMatch.API.Controllers
             // Declare current member using
             Guid interactingMemberId;
             if (Guid.TryParse
-                (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value, out currentMemberId)
+                (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value, out interactingMemberId)
                 == false)
             {
                 return Unauthorized("Member Id is missing or not available");
             };
-            return await _conversationService.ChangeNameConversation(conversationId, newName)? Ok("Rename Success") : BadRequest("Rename failed!"); ;
+            return await _conversationService.ChangeNameConversation(conversationId, interactingMemberId, newName) ?
+                Ok("Rename Success") : BadRequest("Rename failed!"); ;
         }
 
         [HttpDelete]
@@ -89,7 +125,8 @@ namespace FPT.DestinyMatch.API.Controllers
         [Authorize(Roles = "member")]
         public async Task<IActionResult> DeleteConveration([FromRoute] Guid id)
         {
-            return await _conversationService.DeleteConversation(id)? Ok("Delete Success"): BadRequest("Delete failed!");
+            return await _conversationService.DeleteConversation(id) ?
+                Ok("Delete Success") : BadRequest("Delete failed!");
         }
     }
 }
