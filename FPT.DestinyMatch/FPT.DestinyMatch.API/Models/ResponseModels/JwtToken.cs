@@ -1,7 +1,9 @@
-﻿namespace FPT.DestinyMatch.API.Models.ResponseModels
+﻿using Newtonsoft.Json;
+
+namespace FPT.DestinyMatch.API.Models.ResponseModels
 {
     public class JwtToken
     {
-        public string Token { get; set; }
+        [JsonProperty("token")] public string Token { get; set; }
     }
 }

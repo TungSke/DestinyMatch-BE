@@ -3,6 +3,8 @@ using FPT.DestinyMatch.Repository.Models;
 using FPT.DestinyMatch.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Serialization;
+using Newtonsoft.Json;
 using System.ComponentModel;
 using System.Security.Claims;
 
@@ -23,25 +25,30 @@ namespace FPT.DestinyMatch.API.Controllers
         [Authorize(Roles = "member")]
         public async Task<IActionResult> GetConversationDetail(Guid id)
         {
+            // Declare current member using
             Guid currentMemberId;
             if (Guid.TryParse
                 (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value, out currentMemberId)
                 == false)
             {
-                return BadRequest("Wrong conversation Id format");
+                return Unauthorized("Member Id is missing or not available");
             };
-            var conversation = await _conversationService.GetConversationDetail(id, currentMemberId);
-            if (conversation is null)
+            var currentConversation = await _conversationService.GetConversationDetail(id, currentMemberId);
+            if (currentConversation is null)
             {
                 BadRequest("Not found this conversation");
             }
 
+            // Declare target other member base on who is requesting
+            Guid otherMemberId =
+                (currentMemberId == currentConversation.FirstMemberId) ?
+                currentConversation.SecondMemberId : currentMemberId;
             return Ok(new ConversationDetail
             {
-                Id = conversation.Id,
-                Name = conversation.Name,
-                Create_time = conversation.CreatedAt,
-
+                Id = currentConversation.Id,
+                Name = currentConversation.Name,
+                CreateTime = currentConversation.CreatedAt,
+                ChattingMember = otherMemberId
             });
         }
 
@@ -61,11 +68,20 @@ namespace FPT.DestinyMatch.API.Controllers
             return Ok();
         }
 
-        [HttpDelete]
+        [HttpPatch]
+        [Route("rename-conversation")]
         [Authorize(Roles = "member")]
-        public async Task<IActionResult> DeleteConveration()
+        public async Task<IActionResult> RenameConversation([FromBody] Guid conversationId, string newName)
         {
-            return Ok();
+            return await _conversationService.ChangeNameConversation(conversationId, newName)? Ok("Rename Success") : BadRequest("Rename failed!"); ;
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        [Authorize(Roles = "member")]
+        public async Task<IActionResult> DeleteConveration([FromRoute] Guid id)
+        {
+            return await _conversationService.DeleteConversation(id)? Ok("Delete Success"): BadRequest("Delete failed!");
         }
     }
 }
