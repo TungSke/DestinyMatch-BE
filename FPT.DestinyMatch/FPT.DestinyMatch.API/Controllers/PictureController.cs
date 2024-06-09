@@ -3,7 +3,11 @@ using FPT.DestinyMatch.Service.Models.Request;
 using FPT.DestinyMatch.Service.Models.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SixLabors.ImageSharp.Formats.Jpeg;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 
 namespace FPT.DestinyMatch.API.Controllers
 {
@@ -19,14 +23,27 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UploadImage([Required]IFormFile file, Guid memberId)
+        public async Task<IActionResult> UploadImage([Required] IFormFile file, Guid memberId)
         {
             if (file == null)
             {
                 return BadRequest("No file was uploaded");
             }
+            using var image = await Image.LoadAsync(file.OpenReadStream());
 
-            var downloadUrl = await _pictureService.UploadImage(file, memberId);
+            image.Mutate(x => x.Resize(1024, 720));
+
+            using var ms = new MemoryStream();
+            await image.SaveAsync(ms, new JpegEncoder());
+
+            ms.Position = 0;
+            IFormFile formFile = new FormFile(ms, 0, ms.Length, "image", file.FileName)
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = file.ContentType
+            };
+
+            var downloadUrl = await _pictureService.UploadImage(formFile, memberId);
             return Ok(downloadUrl);
         }
 
@@ -56,7 +73,7 @@ namespace FPT.DestinyMatch.API.Controllers
 
         [HttpDelete]
         [Authorize(Roles = "member")]
-        public async Task<IActionResult> DeletePicture(Guid pictureId )
+        public async Task<IActionResult> DeletePicture(Guid pictureId)
         {
             await _pictureService.DeletePicture(pictureId);
             return Ok("delete success");
