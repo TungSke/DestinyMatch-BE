@@ -38,6 +38,10 @@ namespace FPT.DestinyMatch.Service.Services
         public async Task<University> UpdateUniversity(UniversityResponse university)
         {
             var univer = await _universityRepository.GetByIdAsync(university.Id);
+            if (univer == null)
+            {
+                throw new Exception("University not found");
+            }
             university.Adapt(univer);
             await _universityRepository.SaveChangeAsync();
             return univer;
@@ -50,6 +54,7 @@ namespace FPT.DestinyMatch.Service.Services
             {
                 _universityRepository.Remove(university);
             }
+            else throw new Exception("University not found");
             await _universityRepository.SaveChangeAsync();
             return;
         }

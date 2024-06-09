@@ -7,6 +7,7 @@ using FPT.DestinyMatch.Repository.Models;
 using Microsoft.EntityFrameworkCore;
 using Mapster;
 using FPT.DestinyMatch.Service.Models.Response;
+using System;
 
 namespace FPT.DestinyMatch.Service.Services
 {
@@ -22,7 +23,6 @@ namespace FPT.DestinyMatch.Service.Services
 
         public async Task<string> UploadImage(IFormFile file, Guid memberId)
         {
-            var cancellationToken = new CancellationToken();
 
             var task = new FirebaseStorage(_bucket, new FirebaseStorageOptions
             {
@@ -30,7 +30,9 @@ namespace FPT.DestinyMatch.Service.Services
             })
             .Child("imgs")
             .Child(file.FileName)
-            .PutAsync(file.OpenReadStream(), cancellationToken);
+            .PutAsync(file.OpenReadStream());
+
+            Console.WriteLine($"task: {file.OpenReadStream()}");
             task.Progress.ProgressChanged += (s, e) => Console.WriteLine($"Progress: {e.Percentage} %");
             var downloadUrl = await task;
 
@@ -64,32 +66,38 @@ namespace FPT.DestinyMatch.Service.Services
 
         public async Task UpdatePicture(PictureResponse picture)
         {
-            var pic = picture.Adapt<Picture>();
-            _pictureRepository.Update(pic);
+            var pic = await GetPictureById(picture.Id);
+            if(pic == null)
+            {
+                throw new KeyNotFoundException("Picture not found");
+            }
+            picture.Adapt(pic);
             await _pictureRepository.SaveChangeAsync();
         }
 
-        public async Task DeletePicture(Guid id, string urlPictureOfUser)
+        public async Task DeletePicture(Guid id)
         {
             var picture = await _pictureRepository.GetByIdAsync(id);
             if (picture != null)
             {
+                await DeletePictureInFirebase(picture.UrlPath);
                 _pictureRepository.Remove(picture);
+                await _pictureRepository.SaveChangeAsync();
             }
-            await _pictureRepository.SaveChangeAsync();
-            await DeletePictureinFirebase(urlPictureOfUser);
+            else throw new KeyNotFoundException("Picture not found");
         }
 
-        private async Task DeletePictureinFirebase(string urlPictureOfUser)
+        private async Task DeletePictureInFirebase(string urlPictureOfUser)
         {
-            var task = new FirebaseStorage(_bucket, new FirebaseStorageOptions
+            Uri uri = new Uri(urlPictureOfUser);
+            string filename = System.Web.HttpUtility.UrlDecode(Path.GetFileName(uri.LocalPath));
+            var storageReference = new FirebaseStorage(_bucket, new FirebaseStorageOptions
             {
                 ThrowOnCancel = true
-            })
-            .Child("imgs")
-            .Child(urlPictureOfUser)
-            .DeleteAsync();
-            await task;
+            }).Child("imgs").Child(filename);
+            Console.WriteLine($"Delete file: {filename}");
+            await storageReference.DeleteAsync();       
+            
         }
     }
 }

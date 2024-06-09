@@ -31,7 +31,7 @@ namespace FPT.DestinyMatch.Service.Services
             var existed = await _packageRepository.GetAsync().AnyAsync(x => x.Code.ToLower().Equals(package.Code.ToLower()));
             if (existed == true)
             {
-                return false;
+                throw new Exception("University not found");
             }
             else
             {
@@ -47,7 +47,7 @@ namespace FPT.DestinyMatch.Service.Services
             var existed = await _packageRepository.GetByIdAsync(package.Id);
             if (existed == null)
             {
-                return false;
+                throw new Exception("University not found");
             }
             else
             {
@@ -62,7 +62,7 @@ namespace FPT.DestinyMatch.Service.Services
             var existed = await _packageRepository.GetByIdAsync(id);
             if (existed == null)
             {
-                return false;
+                throw new Exception("University not found");
             }
             else
             {
