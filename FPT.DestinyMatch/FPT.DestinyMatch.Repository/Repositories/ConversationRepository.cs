@@ -11,5 +11,15 @@ namespace FPT.DestinyMatch.Repository.Repositories
         }
 
         //**************************[ METHODS ]**************************
+        public async Task<bool> UpdateRecentlyTime(Guid conversationId)
+        {
+            var currentConversation = await GetByIdAsync(conversationId);
+            if (currentConversation is null)
+            {
+                return false;
+            }
+            currentConversation.RecentlyActivity = DateTime.Now;
+            return await SaveChangeAsync();
+        }
     }
 }

@@ -17,16 +17,19 @@ namespace FPT.DestinyMatch.Service.Services
         }
 
         //--------------------------[ IMPLEMENT ]--------------------------
-        public async Task<Conversation?> GetConversationDetail(Guid conversationId, Guid memberUsingId)
+        public async Task<Conversation> GetConversationDetail(Guid conversationId, Guid memberUsingId)
         {
             var currentConversation = await _conversationRepository.GetByIdAsync(conversationId);
-            string currentStatus = currentConversation.Status;
+            if (currentConversation == null)
+            {
+                throw new NotFoundException("Not found this Conversation id");
+            }
 
             // Validate Member having in this conversation
             ValidateMemberInConversation(currentConversation, memberUsingId);
 
             // Validate available conversation
-            ValidateConversationIsDeleted(currentStatus);
+            ValidateConversationIsDeleted(currentConversation.Status);
             return currentConversation;
         }
         public async Task<List<Conversation>> GetConversationList(Guid ofMemberId)

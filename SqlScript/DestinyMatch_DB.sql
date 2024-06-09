@@ -138,6 +138,7 @@ create table [Conversation]
 	Id uniqueidentifier default newid() primary key,
 	[FirstName] nvarchar(50),
 	[SecondName] nvarchar(50),
+	[RecentlyActivity] datetime default CURRENT_TIMESTAMP,
 	[CreatedAt] datetime default CURRENT_TIMESTAMP,
 	[Status] nvarchar(30),
 

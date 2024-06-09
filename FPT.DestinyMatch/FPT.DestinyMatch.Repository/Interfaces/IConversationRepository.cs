@@ -9,5 +9,6 @@ namespace FPT.DestinyMatch.Repository.Interfaces
 {
     public interface IConversationRepository : IGenericRepository<Conversation>
     {
+        public Task<bool> UpdateRecentlyTime(Guid conversationId);
     }
 }

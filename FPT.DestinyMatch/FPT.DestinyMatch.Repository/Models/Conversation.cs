@@ -12,6 +12,8 @@ public partial class Conversation : GenericModel<Guid>
 
     public string? SecondName { get; set; }
 
+    public DateTime? RecentlyActivity { get; set; }
+
     public DateTime? CreatedAt { get; set; }
 
     public string? Status { get; set; }
