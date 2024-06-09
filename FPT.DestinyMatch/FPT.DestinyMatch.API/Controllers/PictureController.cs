@@ -47,7 +47,7 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpPut]
-        //[Authorize(Roles = "member")]
+        [Authorize(Roles = "member")]
         public async Task<IActionResult> UpdatePicture(PictureResponse picture)
         {
             await _pictureService.UpdatePicture(picture);
@@ -55,7 +55,7 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpDelete]
-        //[Authorize(Roles = "member")]
+        [Authorize(Roles = "member")]
         public async Task<IActionResult> DeletePicture(Guid pictureId )
         {
             await _pictureService.DeletePicture(pictureId);
