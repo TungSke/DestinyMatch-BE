@@ -1,4 +1,4 @@
-﻿using FPT.DestinyMatch.API.Models.ResponseModels;
+using FPT.DestinyMatch.API.Models.ResponseModels;
 using FPT.DestinyMatch.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

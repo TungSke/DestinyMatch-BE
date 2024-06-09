@@ -49,7 +49,7 @@ namespace FPT.DestinyMatch.Service.Services
 
         public async Task<IEnumerable<Message>> GetMessages()
         {
-            return await _messageReposirory.GetAllAsync().ToListAsync();
+            return await _messageReposirory.GetAsync().ToListAsync();
         }
 
         public async Task<Message> UpdateMessage(Guid Id, MessageRequest messageRequest)

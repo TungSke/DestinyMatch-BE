@@ -1,6 +1,7 @@
 ﻿using FPT.DestinyMatch.Service.Interfaces;
 using FPT.DestinyMatch.Service.Models.Request;
 using FPT.DestinyMatch.Service.Models.Response;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,9 +19,9 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetUniversities()
+        public async Task<IActionResult> GetUniversities(int pageIndex, int pageSize, string? searchString)
         {
-            var universities = await _universityService.GetUniversities();
+            var universities = await _universityService.GetUniversities(pageIndex, pageSize, searchString);
             return Ok(universities);
         }
 
@@ -32,6 +33,7 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin,moderator")]
         public async Task<IActionResult> AddUniversity(UniversityRequest university)
         {
             var u = await _universityService.AddUniversity(university);
@@ -39,6 +41,7 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "admin,moderator")]
         public async Task<IActionResult> UpdateUniversity(UniversityResponse university)
         {
             var u = await _universityService.UpdateUniversity(university);
@@ -46,6 +49,7 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin,moderator")]
         public async Task<IActionResult> DeleteUniversity(Guid id)
         {
             await _universityService.DeleteUniversity(id);

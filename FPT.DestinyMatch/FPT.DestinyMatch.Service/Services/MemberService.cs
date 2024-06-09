@@ -63,7 +63,7 @@ namespace FPT.DestinyMatch.Service.Services
 
         public async Task<IEnumerable<Member>> GetMembers()
         {
-            return await _memberRepository.GetAllAsync().ToListAsync();
+            return await _memberRepository.GetAsync().ToListAsync();
         }
 
         public async Task<Member> UpdateMember(Guid Id, MemberRequest memberRequest)

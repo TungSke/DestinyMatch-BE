@@ -15,10 +15,10 @@ namespace FPT.DestinyMatch.Service.Services
         {
             _packageRepository = packageRepository;
         }
-        public async Task<IEnumerable<Package>> GetPackages()
+        public async Task<IEnumerable<Package>> GetPackages(int pageIndex, int PageSize, string searchString)
         {
 
-            return await _packageRepository.GetAllAsync().ToListAsync();
+            return await _packageRepository.GetPackages(pageIndex, PageSize, searchString);
         }
 
         public async Task<Package> GetPackageById(Guid id)
@@ -28,10 +28,10 @@ namespace FPT.DestinyMatch.Service.Services
 
         public async Task<bool> CreatePackageAsync(PackageRequest package)
         {
-            var existed = await _packageRepository.GetAllAsync().AnyAsync(x => x.Code.ToLower().Equals(package.Code.ToLower()));
+            var existed = await _packageRepository.GetAsync().AnyAsync(x => x.Code.ToLower().Equals(package.Code.ToLower()));
             if (existed == true)
             {
-                return false;
+                throw new Exception("University not found");
             }
             else
             {
@@ -47,7 +47,7 @@ namespace FPT.DestinyMatch.Service.Services
             var existed = await _packageRepository.GetByIdAsync(package.Id);
             if (existed == null)
             {
-                return false;
+                throw new Exception("University not found");
             }
             else
             {
@@ -62,7 +62,7 @@ namespace FPT.DestinyMatch.Service.Services
             var existed = await _packageRepository.GetByIdAsync(id);
             if (existed == null)
             {
-                return false;
+                throw new Exception("University not found");
             }
             else
             {

@@ -21,8 +21,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors("AllowAllOrigins");
 app.UseRouting();
-
 app.UseAuthentication();//Jwt
 
 app.UseAuthorization();
