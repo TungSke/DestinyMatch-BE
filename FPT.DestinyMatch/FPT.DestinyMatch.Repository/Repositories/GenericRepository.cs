@@ -40,16 +40,21 @@ namespace FPT.DestinyMatch.Repository.Repositories
 
         public virtual async Task<TModel?> GetByIdAsync(Guid id)
         {
-            return await DMDB.Set<TModel>().SingleOrDefaultAsync(model => model.Id == id);
+            return await DMDB.Set<TModel>().FindAsync(id);
         }
-        public async Task<List<TModel>> GetByFilterAsync(Expression<Func<TModel, bool>> expression)
+        public async Task<TModel?> GetByFilterAsync(Expression<Func<TModel, bool>> expression)
+        {
+            return await DMDB.Set<TModel>().FirstOrDefaultAsync(expression);
+        }
+        public async Task<List<TModel>> GetListByFilterAsync(Expression<Func<TModel, bool>> expression)
         {
             return await DMDB.Set<TModel>().Where(expression).ToListAsync();
         }
 
-        public void Add(TModel obj)
+        public Task<TModel> Add(TModel obj)
         {
             DMDB.Set<TModel>().Add(obj);
+            return Task.FromResult(obj);
         }
 
         public async Task AddRangeAsync(IEnumerable<TModel> tmodel)
@@ -57,14 +62,16 @@ namespace FPT.DestinyMatch.Repository.Repositories
             await DMDB.Set<TModel>().AddRangeAsync(tmodel);
         }
 
-        public void Update(TModel obj)
+        public Task Update(TModel obj)
         {
             DMDB.Set<TModel>().Update(obj);
+            return Task.CompletedTask;
         }
 
-        public void Remove(TModel obj)
+        public Task Remove(TModel obj)
         {
             DMDB.Set<TModel>().Remove(obj);
+            return Task.CompletedTask;
         }
 
         public async Task<bool> SaveChangeAsync()

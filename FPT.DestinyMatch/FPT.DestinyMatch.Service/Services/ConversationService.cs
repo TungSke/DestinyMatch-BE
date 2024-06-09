@@ -27,8 +27,29 @@ namespace FPT.DestinyMatch.Service.Services
             ValidateConversationIsDeleted(currentStatus);
             return currentConversation;
         }
+        public async Task<Conversation> StartNewConversation(Guid fromMemberId, Guid toMemberId)
+        {
+            var trySearch = await _conversationRepository.GetByFilterAsync(cv => cv.FirstMemberId == fromMemberId && cv.SecondMemberId == toMemberId);
+            var existedConversation = trySearch is null ?//if null -> search in reverse. If not -> assign
+                await _conversationRepository.GetByFilterAsync
+                (cv => cv.FirstMemberId == toMemberId && cv.SecondMemberId == fromMemberId) : trySearch;
 
-        public async Task<bool> ChangeNameConversation (Guid conversationId, string newName)
+            if (existedConversation is not null && !existedConversation.Status.ToLower().Equals("deleted"))
+            {
+                return existedConversation;
+            }
+
+            var newConversation = await _conversationRepository.Add(new Conversation
+            {
+                FirstName = "",
+                FirstMemberId = fromMemberId,
+                SecondMemberId = toMemberId,
+                Status = "Created"
+            });
+            await _conversationRepository.SaveChangeAsync();
+            return newConversation;
+        }
+        public async Task<bool> ChangeNameConversation(Guid conversationId, Guid interactingMemberId, string newName)
         {
             var currentConversation = await _conversationRepository.GetByIdAsync(conversationId);
             if (currentConversation is null || newName.IsNullOrEmpty())
@@ -36,7 +57,14 @@ namespace FPT.DestinyMatch.Service.Services
                 throw new BadRequestException("Not found this conversation or cannot have null name");
             }
             ValidateConversationIsDeleted(currentConversation.Status);
-            currentConversation.Name = newName;
+            ValidateMemberInConversation(currentConversation, interactingMemberId);
+
+            if(currentConversation.FirstMemberId == interactingMemberId)
+            {
+                currentConversation.SecondName = newName;
+                return await _conversationRepository.SaveChangeAsync();
+            }
+            currentConversation.FirstName = newName;
             return await _conversationRepository.SaveChangeAsync();
         }
 
@@ -48,7 +76,7 @@ namespace FPT.DestinyMatch.Service.Services
                 throw new BadRequestException("Not found this conversation Id");
             }
             // Validate if deleted
-            ValidateConversationIsDeleted (currentConversation.Status);
+            ValidateConversationIsDeleted(currentConversation.Status);
 
             currentConversation.Status = "deleted";
             return await _conversationRepository.SaveChangeAsync();

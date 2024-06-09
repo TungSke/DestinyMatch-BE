@@ -73,6 +73,14 @@ namespace FPT.DestinyMatch.API.Controllers
         [Authorize(Roles = "member")]
         public async Task<IActionResult> RenameConversation([FromBody] Guid conversationId, string newName)
         {
+            // Declare current member using
+            Guid interactingMemberId;
+            if (Guid.TryParse
+                (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value, out currentMemberId)
+                == false)
+            {
+                return Unauthorized("Member Id is missing or not available");
+            };
             return await _conversationService.ChangeNameConversation(conversationId, newName)? Ok("Rename Success") : BadRequest("Rename failed!"); ;
         }
 
