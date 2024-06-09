@@ -1,0 +1,15 @@
+﻿using FPT.DestinyMatch.Repository.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FPT.DestinyMatch.Service.Interfaces
+{
+    public interface IConversationService
+    {
+        public Task<Conversation?> GetConversationDetail(Guid conversationId, Guid memberUsingId);
+        public Task<bool> DeleteConversation(Guid conversationId);
+    }
+}

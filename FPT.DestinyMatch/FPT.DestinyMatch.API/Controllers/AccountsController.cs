@@ -105,10 +105,7 @@ namespace FPT.DestinyMatch.API.Controllers
 
                 return Ok(new AuthenticationAccount { Id = userId, Email = userEmail, Role = userRole });
             }
-            else
-            {
-                return Unauthorized();//401: User haven't authorized yet or don't have access permission
-            }
+            return Unauthorized();//401: User haven't authorized yet or don't have access permission
         }
 
         private string GenerateToken(AuthenticationAccount account)

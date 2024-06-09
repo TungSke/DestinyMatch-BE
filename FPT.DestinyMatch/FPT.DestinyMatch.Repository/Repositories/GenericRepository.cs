@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,18 +28,40 @@ namespace FPT.DestinyMatch.Repository.Repositories
             return DMDB.Set<TModel>().AsQueryable();
         }
 
+        public async Task<int> CountAsync(Expression<Func<TModel, bool>> expression)
+        {
+            return await DMDB.Set<TModel>().CountAsync(expression);
+        }
+
+        public async Task<bool> AnyAsync(Expression<Func<TModel, bool>> expression)
+        {
+            return await DMDB.Set<TModel>().AnyAsync(expression);
+        }
+
         public virtual async Task<TModel?> GetByIdAsync(Guid id)
         {
             return await DMDB.Set<TModel>().SingleOrDefaultAsync(model => model.Id == id);
         }
+        public async Task<List<TModel>> GetByFilterAsync(Expression<Func<TModel, bool>> expression)
+        {
+            return await DMDB.Set<TModel>().Where(expression).ToListAsync();
+        }
+
         public void Add(TModel obj)
         {
             DMDB.Set<TModel>().Add(obj);
         }
+
+        public async Task AddRangeAsync(IEnumerable<TModel> tmodel)
+        {
+            await DMDB.Set<TModel>().AddRangeAsync(tmodel);
+        }
+
         public void Update(TModel obj)
         {
             DMDB.Set<TModel>().Update(obj);
         }
+
         public void Remove(TModel obj)
         {
             DMDB.Set<TModel>().Remove(obj);

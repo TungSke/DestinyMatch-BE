@@ -1,4 +1,9 @@
-﻿namespace FPT.DestinyMatch.API.Middleware
+﻿using FPT.DestinyMatch.Service.Extensions.Exceptions;
+using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
+using System.Net;
+
+namespace FPT.DestinyMatch.API.Middleware
 {
     public class GlobalExceptionMiddleware
     {
@@ -10,8 +15,14 @@
             _next = next;
             _logger = logger;
         }
-
-        public async Task InvokeAsync(HttpContext context)
+        public enum ErrorType
+        {
+            NotFound,
+            BadRequest,
+            Unauthorized,
+            InternalServerError
+        }
+        public async Task Invoke(HttpContext context)
         {
             try
             {
@@ -19,16 +30,46 @@
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Unexpected exception");
-                context.Response.ContentType = "application/json";
-                context.Response.StatusCode = 500;
-
-                await context.Response.WriteAsync(new
-                {
-                    Code = 500,
-                    ex.Message
-                }.ToString() ?? string.Empty);
+                _logger.LogError(ex, $"Something went wrong while processing {context.Request.Path}");
+                await HandleExceptionAsync(context, ex);
             }
         }
+
+        private Task HandleExceptionAsync(HttpContext context, Exception ex)
+        {
+            context.Response.ContentType = "application/json";
+            var errorDetails = new ErrorDetails
+            {
+                ErrorType = ErrorType.InternalServerError.ToString(),
+                ErrorMessage = ex.Message,
+                StackTrace = ex.StackTrace
+            };
+
+            errorDetails = ex switch
+            {
+                NotFoundException => errorDetails with { ErrorType = ErrorType.NotFound.ToString(), StatusCode = (int)HttpStatusCode.NotFound },
+                BadRequestException => errorDetails with { ErrorType = ErrorType.BadRequest.ToString(), StatusCode = (int)HttpStatusCode.BadRequest },
+                UnauthorizedException => errorDetails with { ErrorType = ErrorType.Unauthorized.ToString(), StatusCode = (int)HttpStatusCode.Unauthorized },
+                _ => errorDetails
+            };
+
+            var response = JsonConvert.SerializeObject(errorDetails);
+            context.Response.StatusCode = errorDetails.StatusCode;
+
+            return context.Response.WriteAsync(response);
+        }
+
+        internal record ErrorDetails
+        {
+            public int StatusCode { get; set; } = (int)HttpStatusCode.InternalServerError;
+
+            [EnumDataType(typeof(ErrorType))]
+            public required string ErrorType { get; set; }
+
+            public required string ErrorMessage { get; set; }
+
+            public string? StackTrace { get; set; }
+        }
+
     }
 }

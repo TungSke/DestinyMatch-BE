@@ -30,6 +30,7 @@ namespace FPT.DestinyMatch.API
 
             // Inject Service Classes
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IConversationService, ConversationService>();
             services.AddScoped<IMemberService, MemberService>();
             services.AddScoped<IMemberPackageService, MemberPackageService>();
             services.AddScoped<IMessageService, MessageService>();
@@ -42,6 +43,7 @@ namespace FPT.DestinyMatch.API
 
             // Inject Repository Classess
             services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<IConversationRepository, ConversationRepository>();
             services.AddScoped<IMemberRepository, MemberRepository>();
             services.AddScoped<IMemberPackageRepository, MemberPackageRepository>();
             services.AddScoped<IMessageReposirory, MessageReposirory>();
