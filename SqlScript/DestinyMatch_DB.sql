@@ -10,6 +10,7 @@ go
 use DestinyMatch;
 go
 
+--dotnet ef dbcontext scaffold "Server=(local);database=DestinyMatch;uid=sa;pwd=12345;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer --output-dir Models --force
 --=====================================================================
 
 create table [University]
@@ -135,7 +136,9 @@ go
 create table [Conversation]
 (
 	Id uniqueidentifier default newid() primary key,
-	[Name] nvarchar(50),
+	[FirstName] nvarchar(50),
+	[SecondName] nvarchar(50),
+	[RecentlyActivity] datetime default CURRENT_TIMESTAMP,
 	[CreatedAt] datetime default CURRENT_TIMESTAMP,
 	[Status] nvarchar(30),
 

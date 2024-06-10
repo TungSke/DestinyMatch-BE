@@ -1,9 +1,11 @@
-﻿namespace FPT.DestinyMatch.API.Models.ResponseModels
+using Newtonsoft.Json;
+
+namespace FPT.DestinyMatch.API.Models.ResponseModels
 {
     public class AuthenticationAccount
     {
-        public string Id { get; set; }
-        public string Email { get; set; }
-        public string Role { get; set; }
+        [JsonProperty("id")] public string Id { get; set; }
+        [JsonProperty("email")] public string Email { get; set; }
+        [JsonProperty("role")] public string Role { get; set; }
     }
 }

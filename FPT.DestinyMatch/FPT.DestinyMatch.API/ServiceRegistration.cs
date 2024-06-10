@@ -6,12 +6,6 @@ using FPT.DestinyMatch.Repository.Interfaces;
 using FPT.DestinyMatch.Repository.Repositories;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
@@ -32,6 +26,7 @@ namespace FPT.DestinyMatch.API
 
             // Inject Service Classes
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IConversationService, ConversationService>();
             services.AddScoped<IMemberService, MemberService>();
             services.AddScoped<IMemberPackageService, MemberPackageService>();
             services.AddScoped<IMessageService, MessageService>();
@@ -44,6 +39,7 @@ namespace FPT.DestinyMatch.API
 
             // Inject Repository Classess
             services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<IConversationRepository, ConversationRepository>();
             services.AddScoped<IMemberRepository, MemberRepository>();
             services.AddScoped<IMemberPackageRepository, MemberPackageRepository>();
             services.AddScoped<IMessageReposirory, MessageReposirory>();

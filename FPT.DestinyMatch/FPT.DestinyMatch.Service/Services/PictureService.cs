@@ -7,7 +7,6 @@ using FPT.DestinyMatch.Repository.Models;
 using Microsoft.EntityFrameworkCore;
 using Mapster;
 using FPT.DestinyMatch.Service.Models.Response;
-using System;
 
 namespace FPT.DestinyMatch.Service.Services
 {
