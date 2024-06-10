@@ -3,11 +3,10 @@ using FPT.DestinyMatch.Service.Models.Request;
 using FPT.DestinyMatch.Service.Models.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SixLabors.ImageSharp.Formats.Jpeg;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Http;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
+using System.Drawing;
+using System.Drawing.Imaging;
+
 
 namespace FPT.DestinyMatch.API.Controllers
 {
@@ -29,22 +28,34 @@ namespace FPT.DestinyMatch.API.Controllers
             {
                 return BadRequest("No file was uploaded");
             }
-            using var image = await Image.LoadAsync(file.OpenReadStream());
+            /*using var image = await Image.LoadAsync(file.OpenReadStream());
 
             image.Mutate(x => x.Resize(1024, 720));
 
             using var ms = new MemoryStream();
             await image.SaveAsync(ms, new JpegEncoder());
 
-            ms.Position = 0;
-            IFormFile formFile = new FormFile(ms, 0, ms.Length, "image", file.FileName)
+            ms.Position = 0;*/
+            Image image = Image.FromStream(file.OpenReadStream(), true, true);
+            var newImage = new Bitmap(1024, 768);
+            using (var g = Graphics.FromImage(newImage))
             {
-                Headers = new HeaderDictionary(),
-                ContentType = file.ContentType
-            };
+                g.DrawImage(image, 0, 0, 1024, 768);
+            }
+            using (var outputStream = new MemoryStream())
+            {
+                newImage.Save(outputStream, ImageFormat.Jpeg);
+                outputStream.Position = 0;
 
-            var downloadUrl = await _pictureService.UploadImage(formFile, memberId);
-            return Ok(downloadUrl);
+                var resizedFile = new FormFile(outputStream, 0, outputStream.Length, file.Name, file.FileName)
+                {
+                    Headers = file.Headers,
+                    ContentType = file.ContentType
+                };
+
+                var downloadUrl = await _pictureService.UploadImage(resizedFile, memberId);
+                return Ok(downloadUrl);
+            }
         }
 
         [HttpGet("{id}")]
