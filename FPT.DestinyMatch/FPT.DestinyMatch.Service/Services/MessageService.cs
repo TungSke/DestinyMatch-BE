@@ -68,5 +68,10 @@ namespace FPT.DestinyMatch.Service.Services
             await _messageReposirory.SaveChangeAsync();
             return message;
         }
+
+        public async Task<IEnumerable<Message>> GetMessagesByConversationId(Guid conversationId)
+        {
+            return await _messageReposirory.GetAsync().Where(m => m.ConversationId == conversationId).ToListAsync();
+        }
     }
 }

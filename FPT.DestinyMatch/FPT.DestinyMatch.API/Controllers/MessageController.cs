@@ -10,11 +10,13 @@ namespace FPT.DestinyMatch.API.Controllers
         [ApiController]
         public class MessageController : ControllerBase
         {
+            private readonly ChatHub _chatHub;
             private readonly IMessageService _messageService;
 
-            public MessageController(IMessageService messageService)
+            public MessageController(IMessageService messageService, ChatHub chatHub)
             {
                 _messageService = messageService;
+                _chatHub=chatHub;
             }
 
             [HttpGet]
@@ -39,6 +41,7 @@ namespace FPT.DestinyMatch.API.Controllers
             public async Task<IActionResult> CreateMessage([FromBody] MessageRequest messageRequest)
             {
                 var message = await _messageService.CreateMessage(messageRequest);
+                await _chatHub.SendMessage(message.ConversationId, message.Content);
                 return Ok(message);
             }
 
@@ -63,6 +66,19 @@ namespace FPT.DestinyMatch.API.Controllers
                 }
                 return Ok(result);
             }
+
+            [HttpGet("{conversationId}")]
+            public async Task<IActionResult> GetMessagesByConversationId(Guid conversationId)
+            {
+                var messages = await _messageService.GetMessagesByConversationId(conversationId);
+                if (messages == null)
+                {
+                    return NotFound();
+                }
+                await _chatHub.JoinConversation(conversationId.ToString());
+                return Ok(messages);
+            }
+
         }
     }
 }

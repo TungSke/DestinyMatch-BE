@@ -11,5 +11,6 @@ namespace FPT.DestinyMatch.Service.Interfaces
         Task<bool> DeleteMessage(Guid memberId);
         Task<Message> CreateMessage(MessageRequest messageRequest);
         Task<Message> UpdateMessage(Guid Id, MessageRequest messageRequest);
+        Task<IEnumerable<Message>> GetMessagesByConversationId(Guid conversationId);
     }
 }
