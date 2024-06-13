@@ -29,14 +29,10 @@ app.UseAuthentication();//Jwt
 
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapHub<ChatHub>("/chathub");
-});
-
 app.UseHttpsRedirection();
 
-
 app.MapControllers();
+
+app.MapHub<ChatHub>("/chatHub"); //websocket
 
 app.Run();

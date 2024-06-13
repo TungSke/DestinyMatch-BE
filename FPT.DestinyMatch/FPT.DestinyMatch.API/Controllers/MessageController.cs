@@ -1,6 +1,7 @@
 ﻿using FPT.DestinyMatch.Service.Interfaces;
 using FPT.DestinyMatch.Service.Models.Request;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace FPT.DestinyMatch.API.Controllers
 {
@@ -10,13 +11,13 @@ namespace FPT.DestinyMatch.API.Controllers
         [ApiController]
         public class MessageController : ControllerBase
         {
-            private readonly ChatHub _chatHub;
+            private readonly IHubContext<ChatHub> _hubContext;
             private readonly IMessageService _messageService;
 
-            public MessageController(IMessageService messageService, ChatHub chatHub)
+            public MessageController(IMessageService messageService, IHubContext<ChatHub> hubContext)
             {
                 _messageService = messageService;
-                _chatHub=chatHub;
+                _hubContext = hubContext;
             }
 
             [HttpGet]
@@ -36,12 +37,14 @@ namespace FPT.DestinyMatch.API.Controllers
                 }
                 return Ok(message);
             }
-
             [HttpPost]
             public async Task<IActionResult> CreateMessage([FromBody] MessageRequest messageRequest)
             {
                 var message = await _messageService.CreateMessage(messageRequest);
-                await _chatHub.SendMessage(message.ConversationId, message.Content);
+
+                // Notify clients about the new message
+                await _hubContext.Clients.All.SendAsync("ReceiveMessage", message.ConversationId.ToString(), message.Content);
+                Console.WriteLine(_hubContext.Groups);
                 return Ok(message);
             }
 
@@ -67,7 +70,7 @@ namespace FPT.DestinyMatch.API.Controllers
                 return Ok(result);
             }
 
-            [HttpGet("{conversationId}")]
+            [HttpGet("conversation/{conversationId}")]
             public async Task<IActionResult> GetMessagesByConversationId(Guid conversationId)
             {
                 var messages = await _messageService.GetMessagesByConversationId(conversationId);
@@ -75,7 +78,10 @@ namespace FPT.DestinyMatch.API.Controllers
                 {
                     return NotFound();
                 }
-                await _chatHub.JoinConversation(conversationId.ToString());
+
+                // Join the conversation using SignalR hub
+                await _hubContext.Clients.All.SendAsync("JoinConversation", conversationId.ToString());
+
                 return Ok(messages);
             }
 
