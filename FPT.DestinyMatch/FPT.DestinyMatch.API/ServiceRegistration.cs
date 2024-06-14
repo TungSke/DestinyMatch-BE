@@ -10,6 +10,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using System.Text.Json;
+using FPT.DestinyMatch.Repository.Models;
+using FPT.DestinyMatch.Service.Models.Response;
+using Mapster;
 
 namespace FPT.DestinyMatch.API
 {
@@ -36,7 +39,7 @@ namespace FPT.DestinyMatch.API
             services.AddScoped<IHobbyService, HobbyService>();
             services.AddScoped<IMajorService, MajorService>();
             services.AddScoped<IMatchRequestService, MatchRequestService>();
-            
+
 
             // Inject Repository Classess
             services.AddScoped<IAccountRepository, AccountRepository>();
@@ -70,6 +73,8 @@ namespace FPT.DestinyMatch.API
 
             AddKebab(services);
 
+            addMapper();
+
             return services;
         }
 
@@ -94,7 +99,7 @@ namespace FPT.DestinyMatch.API
 
         private static IServiceCollection AddKebab(IServiceCollection services)
         {
-            
+
             services.AddControllers(options =>
             {
                 options.Conventions.Add(
@@ -102,7 +107,7 @@ namespace FPT.DestinyMatch.API
             })
                  .AddJsonOptions(options =>
                  {
-                     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.KebabCaseLower ;
+                     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.KebabCaseLower;
                  });
             return services;
         }
@@ -174,6 +179,13 @@ namespace FPT.DestinyMatch.API
                     });
             });
             return services;
+        }
+
+        private static void addMapper()
+        {
+            TypeAdapterConfig<Member, MemberResponse>
+                .NewConfig()
+                .Map(dest => dest.UrlPath, src => src.Pictures.Select(p => p.UrlPath).ToList());
         }
     }
 }
