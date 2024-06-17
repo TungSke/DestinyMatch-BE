@@ -4,7 +4,7 @@ namespace FPT.DestinyMatch.Repository.Interfaces
 {
     public interface IGenericRepository<TModel> where TModel : class
     {
-        IQueryable<TModel> GetAllAsync();
+        IQueryable<TModel> GetAsync();
         public Task<int> CountAsync(Expression<Func<TModel, bool>> expression);
         public Task<bool> AnyAsync(Expression<Func<TModel, bool>> expression);
         public Task<TModel?> GetByIdAsync(Guid id);

@@ -8,6 +8,11 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using System.Text.Json;
+using FPT.DestinyMatch.Repository.Models;
+using FPT.DestinyMatch.Service.Models.Response;
+using Mapster;
 
 namespace FPT.DestinyMatch.API
 {
@@ -36,6 +41,7 @@ namespace FPT.DestinyMatch.API
             services.AddScoped<IMajorService, MajorService>();
             services.AddScoped<IMatchRequestService, MatchRequestService>();
 
+
             // Inject Repository Classess
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IConversationRepository, ConversationRepository>();
@@ -50,6 +56,7 @@ namespace FPT.DestinyMatch.API
             services.AddScoped<IMajorRepository, MajorRepository>();
             services.AddScoped<IMatchRequestRepository, MatchRequestRepository>();
 
+            services.AddScoped<ChatHub>();
             //
             // =========================[ Other services]=========================
             //
@@ -65,6 +72,11 @@ namespace FPT.DestinyMatch.API
 
             // Cors
             services.CorsConfig();
+
+            AddKebab(services);
+
+            addMapper();
+
             return services;
         }
 
@@ -87,6 +99,22 @@ namespace FPT.DestinyMatch.API
             return services;
         }
 
+        private static IServiceCollection AddKebab(IServiceCollection services)
+        {
+
+            services.AddControllers(options =>
+            {
+                options.Conventions.Add(
+                    new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
+            })
+                 .AddJsonOptions(options =>
+                 {
+                     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.KebabCaseLower;
+                 });
+            return services;
+        }
+
+
         private static IServiceCollection AddAuthorizeOnSwagger(this IServiceCollection services)
         {
             services.AddAuthorization(options =>
@@ -102,7 +130,6 @@ namespace FPT.DestinyMatch.API
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DestinyMatch.API", Version = "v1" });
-
                 // Add JWT Bearer security definition
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -154,6 +181,13 @@ namespace FPT.DestinyMatch.API
                     });
             });
             return services;
+        }
+
+        private static void addMapper()
+        {
+            TypeAdapterConfig<Member, MemberResponse>
+                .NewConfig()
+                .Map(dest => dest.UrlPath, src => src.Pictures.Select(p => p.UrlPath).ToList());
         }
     }
 }

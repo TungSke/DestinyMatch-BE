@@ -1,11 +1,12 @@
 ﻿using FPT.DestinyMatch.Service.Models.Request;
 using FPT.DestinyMatch.Repository.Models;
+using FPT.DestinyMatch.Service.Models.Response;
 
 namespace FPT.DestinyMatch.Service.Interfaces
 {
     public interface IMemberService
     {
-        Task<IEnumerable<Member>> GetMembers();
+        Task<IEnumerable<MemberResponse>> GetMembers();
         
         Task<Member?> GetMemberById(Guid id);
         Task<bool> DeleteMeber(Guid memberId);

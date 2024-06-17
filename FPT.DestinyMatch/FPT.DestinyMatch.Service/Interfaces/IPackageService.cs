@@ -6,7 +6,7 @@ namespace FPT.DestinyMatch.Service.Interfaces
 {
     public interface IPackageService
     {
-        Task<IEnumerable<Package>> GetPackages();
+        Task<IEnumerable<Package>> GetPackages(int pageIndex, int PageSize, string searchString);
         Task<Package> GetPackageById(Guid id);
         Task<bool> CreatePackageAsync(PackageRequest package);
         Task<bool> UpdatePackageAsync(PackageResponse package);

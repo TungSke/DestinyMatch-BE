@@ -1,4 +1,4 @@
-﻿using FPT.DestinyMatch.Repository.Interfaces;
+using FPT.DestinyMatch.Repository.Interfaces;
 using FPT.DestinyMatch.Repository.Models;
 using Microsoft.EntityFrameworkCore;
 

@@ -15,7 +15,7 @@ namespace FPT.DestinyMatch.Service.Services
             _majorRepository = majorRepository;
         }
 
-        public async Task<IEnumerable<Major>> GetAllMajor() => await _majorRepository.GetAllAsync().ToListAsync();
+        public async Task<IEnumerable<Major>> GetAllMajor() => await _majorRepository.GetAsync().ToListAsync();
 
         public async Task<Major?> GetMajorById(Guid id) => await _majorRepository.GetByIdAsync(id);
 

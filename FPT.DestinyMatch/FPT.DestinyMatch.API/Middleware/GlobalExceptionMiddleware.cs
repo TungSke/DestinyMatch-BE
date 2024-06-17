@@ -1,4 +1,4 @@
-﻿using FPT.DestinyMatch.Service.Extensions.Exceptions;
+using FPT.DestinyMatch.Service.Extensions.Exceptions;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using System.Net;

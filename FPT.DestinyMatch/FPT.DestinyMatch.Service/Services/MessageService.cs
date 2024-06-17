@@ -49,7 +49,7 @@ namespace FPT.DestinyMatch.Service.Services
 
         public async Task<IEnumerable<Message>> GetMessages()
         {
-            return await _messageReposirory.GetAllAsync().ToListAsync();
+            return await _messageReposirory.GetAsync().ToListAsync();
         }
 
         public async Task<Message> UpdateMessage(Guid Id, MessageRequest messageRequest)
@@ -67,6 +67,11 @@ namespace FPT.DestinyMatch.Service.Services
             _messageReposirory.Update(message);
             await _messageReposirory.SaveChangeAsync();
             return message;
+        }
+
+        public async Task<IEnumerable<Message>> GetMessagesByConversationId(Guid conversationId)
+        {
+            return await _messageReposirory.GetAsync().Where(m => m.ConversationId == conversationId).ToListAsync();
         }
     }
 }

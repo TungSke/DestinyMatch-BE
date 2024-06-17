@@ -1,6 +1,12 @@
 ﻿using FPT.DestinyMatch.Service.Interfaces;
+using FPT.DestinyMatch.Service.Models.Request;
 using FPT.DestinyMatch.Service.Models.Response;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+using System.Drawing;
+using System.Drawing.Imaging;
+
 
 namespace FPT.DestinyMatch.API.Controllers
 {
@@ -16,18 +22,44 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UploadImage(IFormFile file, Guid memberId)
+        public async Task<IActionResult> UploadImage([Required] IFormFile file, Guid memberId)
         {
             if (file == null)
             {
                 return BadRequest("No file was uploaded");
             }
+            /*using var image = await Image.LoadAsync(file.OpenReadStream());
 
-            var downloadUrl = await _pictureService.UploadImage(file, memberId);
-            return Ok(downloadUrl);
+            image.Mutate(x => x.Resize(1024, 720));
+
+            using var ms = new MemoryStream();
+            await image.SaveAsync(ms, new JpegEncoder());
+
+            ms.Position = 0;*/
+            Image image = Image.FromStream(file.OpenReadStream(), true, true);
+            var newImage = new Bitmap(1024, 768);
+            using (var g = Graphics.FromImage(newImage))
+            {
+                g.DrawImage(image, 0, 0, 1024, 768);
+            }
+            using (var outputStream = new MemoryStream())
+            {
+                newImage.Save(outputStream, ImageFormat.Jpeg);
+                outputStream.Position = 0;
+
+                var resizedFile = new FormFile(outputStream, 0, outputStream.Length, file.Name, file.FileName)
+                {
+                    Headers = file.Headers,
+                    ContentType = file.ContentType
+                };
+
+                var downloadUrl = await _pictureService.UploadImage(resizedFile, memberId);
+                return Ok(downloadUrl);
+            }
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "member")]
         public async Task<IActionResult> GetPictureById(Guid id)
         {
             var picture = await _pictureService.GetPictureById(id);
@@ -35,6 +67,7 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpGet("user/{userid}")]
+        [Authorize(Roles = "member")]
         public async Task<IActionResult> GetAllPicturesFromUser(Guid userid)
         {
             var pictures = await _pictureService.getAllPicturfromusers(userid);
@@ -42,16 +75,18 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "member")]
         public async Task<IActionResult> UpdatePicture(PictureResponse picture)
         {
             await _pictureService.UpdatePicture(picture);
             return Ok(picture);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePicture(Guid id, string urlPictureOfUser)
+        [HttpDelete]
+        [Authorize(Roles = "member")]
+        public async Task<IActionResult> DeletePicture(Guid pictureId)
         {
-            await _pictureService.DeletePicture(id, urlPictureOfUser);
+            await _pictureService.DeletePicture(pictureId);
             return Ok("delete success");
         }
     }

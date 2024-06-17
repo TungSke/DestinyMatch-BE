@@ -10,6 +10,6 @@ namespace FPT.DestinyMatch.Service.Interfaces
         Task<IEnumerable<Picture>> getAllPicturfromusers(Guid userid);
         Task<Picture> GetPictureById(Guid id);
         Task UpdatePicture(PictureResponse picture);
-        Task DeletePicture(Guid id, string urlPictureOfUser);
+        Task DeletePicture(Guid id);
     }
 }

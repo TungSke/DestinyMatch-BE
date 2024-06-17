@@ -1,4 +1,4 @@
-﻿using FPT.DestinyMatch.API.Models.ResponseModels;
+using FPT.DestinyMatch.API.Models.ResponseModels;
 using FPT.DestinyMatch.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +11,7 @@ namespace FPT.DestinyMatch.API.Controllers
     [Route("api/[controller]")]
     public class ConversationsController : Controller
     {
+        private readonly ChatHub chatHub;
         private readonly IConversationService _conversationService;
         public ConversationsController(IConversationService conversationService)
         {

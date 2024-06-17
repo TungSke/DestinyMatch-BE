@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Mapster;
+using FPT.DestinyMatch.Service.Models.Response;
 
 namespace FPT.DestinyMatch.Service.Services
 {
@@ -61,9 +63,11 @@ namespace FPT.DestinyMatch.Service.Services
             return await _memberRepository.GetByIdAsync(id);
         }
 
-        public async Task<IEnumerable<Member>> GetMembers()
+        public async Task<IEnumerable<MemberResponse>> GetMembers()
         {
-            return await _memberRepository.GetAllAsync().ToListAsync();
+            var listmem = await _memberRepository.GetAsync().Include(x => x.Pictures).ToListAsync();
+            var mapper = listmem.Adapt<IEnumerable<MemberResponse>>();
+            return mapper;
         }
 
         public async Task<Member> UpdateMember(Guid Id, MemberRequest memberRequest)

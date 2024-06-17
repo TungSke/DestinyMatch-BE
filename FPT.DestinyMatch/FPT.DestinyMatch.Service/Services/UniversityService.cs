@@ -17,9 +17,9 @@ namespace FPT.DestinyMatch.Service.Services
             _universityRepository = universityRepository;
         }
 
-        public async Task<IEnumerable<University>> GetUniversities()
+        public async Task<IEnumerable<University>> GetUniversities(int pageIndex, int PageSize, string searchString)
         {
-            return await _universityRepository.GetAllAsync().ToListAsync();
+            return await _universityRepository.GetUniversities(pageIndex,PageSize,searchString);
         }
 
         public async Task<University> GetUniversityById(Guid id)
@@ -38,6 +38,10 @@ namespace FPT.DestinyMatch.Service.Services
         public async Task<University> UpdateUniversity(UniversityResponse university)
         {
             var univer = await _universityRepository.GetByIdAsync(university.Id);
+            if (univer == null)
+            {
+                throw new Exception("University not found");
+            }
             university.Adapt(univer);
             await _universityRepository.SaveChangeAsync();
             return univer;
@@ -50,6 +54,7 @@ namespace FPT.DestinyMatch.Service.Services
             {
                 _universityRepository.Remove(university);
             }
+            else throw new Exception("University not found");
             await _universityRepository.SaveChangeAsync();
             return;
         }

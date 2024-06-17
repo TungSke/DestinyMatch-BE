@@ -49,7 +49,7 @@ namespace FPT.DestinyMatch.Service.Services
 
         public async Task<IEnumerable<MemberPackage>> GetMemberPackages()
         {
-            return await _memberPackageRepository.GetAllAsync().ToListAsync();
+            return await _memberPackageRepository.GetAsync().ToListAsync();
         }
 
         public async Task<MemberPackage> UpdateMemberPackage(Guid Id, MemberPackageRequest memberRequest)

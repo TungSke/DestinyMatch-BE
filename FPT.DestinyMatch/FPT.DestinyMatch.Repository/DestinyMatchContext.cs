@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using FPT.DestinyMatch.Repository.Models;
 
 namespace FPT.DestinyMatch.Repository;
