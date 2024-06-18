@@ -19,7 +19,7 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpGet]
-        [Route("view-detail{id}")]
+        [Route("{id}")]
         [Authorize(Roles = "member")]
         public async Task<IActionResult> GetConversationDetail([FromRoute] Guid id)
         {
@@ -61,9 +61,9 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpGet]
-        [Route("my-conversation-list")]
+        [Route("list")]
         [Authorize(Roles = "member")]
-        public async Task<IActionResult> GetListByMemberId([FromBody] GuidRequest currentMember)
+        public async Task<IActionResult> GetListByMemberId([FromBody] GuidRequestor currentMember)
         {
             var defaultList = await _conversationService.GetConversationList(currentMember.Id);
             var customList = defaultList.Select(c => new ConversationDetail
@@ -78,9 +78,10 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpPost]
-        [Route("create-new")]
+        [Route("new")]
         [Authorize(Roles = "member")]
         public async Task<IActionResult> NewConversation([FromBody] GuidRequest withMember)
+        public async Task<IActionResult> NewConversation([FromBody] GuidRequestor withMember)
         {
             Guid interactingMemberId;
             if (Guid.TryParse
@@ -102,7 +103,7 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpPatch]
-        [Route("rename-conversation")]
+        [Route("new-name")]
         [Authorize(Roles = "member")]
         public async Task<IActionResult> RenameConversation([FromBody] RenamingConversationRequest request)
         {
@@ -120,7 +121,7 @@ namespace FPT.DestinyMatch.API.Controllers
 
         [HttpDelete]
         [Authorize(Roles = "member")]
-        public async Task<IActionResult> DeleteConveration([FromBody] GuidRequest request)
+        public async Task<IActionResult> DeleteConveration([FromBody] GuidRequestor request)
         {
             return await _conversationService.DeleteConversation(request.Id) ?
                 Ok("Delete Success") : BadRequest("Delete failed!");

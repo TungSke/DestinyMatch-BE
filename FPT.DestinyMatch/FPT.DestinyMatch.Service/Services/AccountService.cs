@@ -3,6 +3,9 @@ using FPT.DestinyMatch.Repository.Interfaces;
 using FPT.DestinyMatch.Repository.Models;
 using System.Security.Cryptography;//For hash password
 using System.Text;
+using FPT.DestinyMatch.Service.Extensions.Exceptions;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Identity.Client;
 
 namespace FPT.DestinyMatch.Service.Services
 {
@@ -15,22 +18,34 @@ namespace FPT.DestinyMatch.Service.Services
         }
 
         //--------------------------[ IMPLEMENT ]--------------------------
-        public async Task<Account> GetAccountByIdAsync(Guid id)
+        public async Task<Account?> GetAccountByIdAsync(Guid accountId)
         {
-            if (id == Guid.Empty)
+            if (accountId == Guid.Empty)
             {
-                return null;
+                throw new BadRequestException("None account id like that");
             }
-            return await _accountRepository.GetByIdAsync(id);
+            return await _accountRepository.GetByIdAsync(accountId);
         }
 
         public async Task<Account?> GetAccountByEmailAsync(string email)
         {
-            if (email is null)
+            if (email.IsNullOrEmpty())
             {
-                return null;
+                throw new BadRequestException("Cannot find account with null email!");
             }
             return await _accountRepository.GetByEmailAsync(email);
+        }
+        public async Task<IEnumerable<Account>> GetAccountsList(int size, int page,
+            string? keyword, bool byDate, string? status, string? role, bool isDescending)
+        {
+            size = size == 0 ? 10 : size;
+            page = page == 0 ? 1 : page;
+            var accountList = await _accountRepository.GetList(size, page, keyword, byDate, status, role, isDescending);
+            if(accountList.Any()==false)
+            {
+                throw new NotFoundException("Not found any account");
+            }
+            return accountList;
         }
 
         public async Task<bool> CreateAccountAsync(string email, string password)
@@ -41,7 +56,7 @@ namespace FPT.DestinyMatch.Service.Services
                 return false;
             }
             string hashedPassword = HashString(password);
-            _accountRepository.Add(
+            await _accountRepository.Add(
                 new Account
                 {
                     Email = email,
@@ -72,22 +87,24 @@ namespace FPT.DestinyMatch.Service.Services
         public async Task<Account?> LoginByPassword(string email, string password)
         {
             var existAccount = await _accountRepository.GetByEmailAsync(email);
-            if (existAccount is null || existAccount.Status.Equals("deleted") || existAccount.Status.Equals("banned"))
+            if (existAccount is null
+                || existAccount.Status!.ToLower().Equals("deleted")
+                || existAccount.Status.ToLower().Equals("banned"))
             {
-                return null;
+                throw new BadRequestException("Email is not existed or not available");
             }
             string hashedPassword = HashString(password);
 
-            if (existAccount.Password.Equals(hashedPassword))
+            if (!existAccount.Password!.Equals(hashedPassword))
             {
-                return existAccount;
+                throw new BadRequestException("Incorrect password!");
             }
-            return null;
+            return existAccount;
         }
 
-        public async Task<bool> ChangeRoleAccountAsync(Guid id, string newRole)
+        public async Task<bool> ChangeRoleAccountAsync(Guid accountId, string newRole)
         {
-            var currentAcc = await _accountRepository.GetByIdAsync(id);
+            var currentAcc = await _accountRepository.GetByIdAsync(accountId);
             if (currentAcc == null)
             {
                 return false;
@@ -96,34 +113,48 @@ namespace FPT.DestinyMatch.Service.Services
             return await _accountRepository.SaveChangeAsync();
         }
 
-        public async Task<bool> ChangePasswordAccountAsync(Guid id, string oldPassword, string newPassword)
+        public async Task<bool> ChangePasswordAccountAsync(Guid accountId, string oldPassword, string newPassword, bool privilegedOverride)
         {
-            var currentAcc = await _accountRepository.GetByIdAsync(id);
-            string hashedOldPassword = HashString(oldPassword);
-            if (currentAcc == null || !currentAcc.Password.Equals(hashedOldPassword))
+            var currentAcc = await _accountRepository.GetByIdAsync(accountId);
+            if (currentAcc == null)
             {
-                return false;
+                throw new NotFoundException("Not found that account");
+            }
+            if (privilegedOverride == false)
+            {
+                string hashedOldPassword = HashString(oldPassword);
+                if (!currentAcc.Password.Equals(hashedOldPassword))
+                {
+                    throw new BadRequestException("Wrong password!");
+                }
             }
             currentAcc.Password = HashString(newPassword);
             return await _accountRepository.SaveChangeAsync();
         }
 
-        public async Task<bool> DeleteAccountAsync(string email, string confirmPassword)
+        public async Task<bool> DeleteAccountAsync(string email, string confirmPassword, bool privilegedOverride)
         {
             var currentAcc = await _accountRepository.GetByEmailAsync(email);
-            string hashedPassword = HashString(confirmPassword);
-            if (currentAcc is null || !currentAcc.Password.Equals(hashedPassword))
+            if (currentAcc is null)
             {
-                return false;
+                throw new NotFoundException("Cannot found that email account");
+            }
+            if (privilegedOverride == false)
+            {
+                string hashedPassword = HashString(confirmPassword);
+                if (!currentAcc.Password.Equals(hashedPassword))
+                {
+                    throw new BadRequestException("Wrong confirm password!");
+                }
             }
             currentAcc.Status = "deleted";
             return await _accountRepository.SaveChangeAsync();
         }
-        
+
         public async Task<bool> RecoverAccountAsync(string email, string newStatus)
         {
             var accFound = await _accountRepository.GetByEmailAsync(email);
-            if(accFound is null)
+            if (accFound is null)
             {
                 return false;
             }

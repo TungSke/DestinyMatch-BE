@@ -17,65 +17,46 @@ namespace FPT.DestinyMatch.Repository.Repositories
             var acc = await DMDB.Accounts.SingleOrDefaultAsync(a => a.Email == email);
             return acc;
         }
-        public async Task<IEnumerable<Account>> GetAccountList(
-            int amountItem, int pageIndex,
-            string? emailSearch = null,
-            string? roleSearch = null,
-            string? statusSearch = null,
-            string? sortField = nameof(Account.CreateAt),
-            bool sortDescending = true)
+        public async Task<IEnumerable<Account>> GetList(int amountItem, int pageIndex,
+            string? keyword, bool sortByDate, string? statusSearch, string? roleSearch, bool sortDescending)
         {
             var query = DMDB.Accounts.AsQueryable();
 
             // Apply search
-            if (!string.IsNullOrEmpty(emailSearch))
+            if (!string.IsNullOrEmpty(keyword))
             {
-                query = query.Where(a => a.Email.Contains(emailSearch));
+                query = query.Where(acc => acc.Email.ToLower().Contains(keyword.ToLower()));
             }
 
             if (!string.IsNullOrEmpty(roleSearch))
             {
-                query = query.Where(a => a.Role == roleSearch);
+                query = query.Where(acc => acc.Role.ToLower().Equals(roleSearch.ToLower()));
             }
 
             if (!string.IsNullOrEmpty(statusSearch))
             {
-                query = query.Where(a => a.Status == statusSearch);
+                query = query.Where(acc => acc.Status.ToLower().Equals(statusSearch.ToLower()));
             }
 
-            // Sort
-            switch (sortField)
+            // Sort by date if specified
+            if (sortByDate==false)
             {
-                case nameof(Account.CreateAt):
-                    query = sortDescending
-                        ? query.OrderByDescending(a => a.CreateAt)
-                        : query.OrderBy(a => a.CreateAt);
-                    break;
-                case nameof(Account.Email):
-                    query = sortDescending
-                        ? query.OrderByDescending(a => a.Email)
-                        : query.OrderBy(a => a.Email);
-                    break;
-                case nameof(Account.Role):
-                    query = sortDescending
-                        ? query.OrderByDescending(a => a.Role)
-                        : query.OrderBy(a => a.Role);
-                    break;
-                case nameof(Account.Status):
-                    query = sortDescending
-                        ? query.OrderByDescending(a => a.Status)
-                        : query.OrderBy(a => a.Status);
-                    break;
+                query = sortDescending == true ?
+                    query.OrderByDescending(acc => acc.Email) : query.OrderBy(acc => acc.Email);
+            }
+            else
+            {
+                query = sortDescending == true ?
+                    query.OrderByDescending(acc => acc.CreateAt) : query.OrderBy(acc => acc.CreateAt);
             }
 
-            // Paging
-            var totalCount = await query.CountAsync();
-            var accounts = await query
+            // Apply paging
+            var pagedAccounts = await query
                 .Skip((pageIndex - 1) * amountItem)
                 .Take(amountItem)
                 .ToListAsync();
 
-            return accounts;
+            return pagedAccounts;
         }
     }
 }
