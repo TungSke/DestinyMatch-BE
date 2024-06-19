@@ -53,7 +53,7 @@ namespace FPT.DestinyMatch.Service.Services
             var existAccount = await GetAccountByEmailAsync(email);
             if (existAccount is not null)
             {
-                return false;
+                throw new ConflictException("Account existed!");
             }
             string hashedPassword = HashString(password);
             await _accountRepository.Add(
@@ -63,8 +63,7 @@ namespace FPT.DestinyMatch.Service.Services
                     Password = hashedPassword
                 }
             );
-            await _accountRepository.SaveChangeAsync();
-            return true;
+            return await _accountRepository.SaveChangeAsync();
         }
 
         private string HashString(string input)//SHA-256 Algorithm (1 way)

@@ -31,11 +31,7 @@ namespace FPT.DestinyMatch.API.Controllers
         public async Task<IActionResult> ViewAccount([FromRoute] Guid id)
         {
             var account = await _accountService.GetAccountByIdAsync(id);
-            if (account is null)
-            {
-                return NotFound("Not found that id account");
-            }
-            return Ok(account);
+            return account is null ? NotFound("Not found that id account") : Ok(account);
         }
 
         [HttpGet]
@@ -61,7 +57,7 @@ namespace FPT.DestinyMatch.API.Controllers
         [HttpPost]
         [Route("register")]
         [AllowAnonymous]
-        public async Task<IActionResult> CreateAccountAsync([FromBody] AccountLogin accCreate)
+        public async Task<IActionResult> RegisterAccount([FromBody] AccountLogin accCreate)
         {
             // Validate the email address
             if (!AccountLogin.IsValidEmail(accCreate.Email))
@@ -70,11 +66,7 @@ namespace FPT.DestinyMatch.API.Controllers
             }
 
             var CreateSucces = await _accountService.CreateAccountAsync(accCreate.Email, accCreate.Password);
-            if (CreateSucces == true)
-            {
-                return Created(nameof(CreateAccountAsync), "Create Success");
-            }
-            return Conflict("Account existed!"); //409: Cannot complete because existed email
+            return CreateSucces ? Created(nameof(RegisterAccount), "Create Success") : BadRequest("Create Failed");
         }
 
         [HttpPost]
@@ -107,7 +99,7 @@ namespace FPT.DestinyMatch.API.Controllers
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, account.Id.ToString()),//Jwt standard claim
-                new Claim(JwtRegisteredClaimNames.Email, account.Email ?? ""),
+                new Claim(JwtRegisteredClaimNames.Email, account.Email),
                 new Claim(ClaimTypes.Role, account.Role)//Jwt claim in .Net
             };
 
@@ -125,17 +117,12 @@ namespace FPT.DestinyMatch.API.Controllers
         [Authorize(Roles = "member")]
         public async Task<IActionResult> ChangePassword([FromBody] AccountNewPassword input)
         {
-            if(input.OldPassword.IsNullOrEmpty())
+            if (input.OldPassword.IsNullOrEmpty())
             {
                 return BadRequest("Old password required for confirmation!");
             }
-            bool result = await _accountService
-                .ChangePasswordAccountAsync(input.Id, input.OldPassword, input.NewPassword, false);
-            if (result == true)
-            {
-                return Ok("Update Success!");
-            }
-            return BadRequest("Update Failed!");
+            bool result = await _accountService.ChangePasswordAccountAsync(input.Id, input.OldPassword, input.NewPassword, false);
+            return result ? Ok("Update Success!") : BadRequest("Update Failed!");
         }
 
         [HttpDelete]
@@ -143,11 +130,7 @@ namespace FPT.DestinyMatch.API.Controllers
         public async Task<IActionResult> Delete([FromBody] AccountLogin input)
         {
             bool result = await _accountService.DeleteAccountAsync(input.Email, input.Password, false);
-            if (result == true)
-            {
-                return Ok("Delete Success!");
-            }
-            return BadRequest("Delete Failed!");
+            return result ? Ok("Delete Success!") : BadRequest("Delete Failed!");
         }
 
         [HttpPatch]

@@ -33,29 +33,27 @@ namespace FPT.DestinyMatch.API.Controllers
             {
                 return Unauthorized("Member Id is missing or not available for validate permission");
             };
+
+            //Validate Member in Conversation
             var currentConversation = await _conversationService.GetConversationDetailAsync(id, currentMemberId);
 
             // Declare target other member base on who is requesting
             Guid otherMemberId;
+            string destinationName;
             if (currentMemberId == currentConversation.FirstMemberId)
             {
+                destinationName = currentConversation.SecondName!;
                 otherMemberId = currentConversation.SecondMemberId;
-                return Ok(new ConversationDetail
-                {
-                    Id = currentConversation.Id,
-                    Name = currentConversation.SecondName,//Display the other member name -> Not the interacting member
-                    RecentlyTime = currentConversation.RecentlyActivity,
-                    CreateTime = currentConversation.CreatedAt,
-                    ChattingMemberId = otherMemberId
-                });
             }
-
-            otherMemberId = currentConversation.FirstMemberId;
-
+            else
+            {
+                destinationName = currentConversation.FirstName!;
+                otherMemberId = currentConversation.FirstMemberId;
+            }
             return Ok(new ConversationDetail
             {
                 Id = currentConversation.Id,
-                Name = currentConversation.FirstName,
+                Name = destinationName,
                 RecentlyTime = currentConversation.RecentlyActivity,
                 CreateTime = currentConversation.CreatedAt,
                 ChattingMemberId = otherMemberId
@@ -63,7 +61,7 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpGet]
-        [Route("recently-list/{id}&{page}")]
+        [Route("recently-list/{id}&&{page}")]
         [Authorize(Roles = "member")]
         public async Task<IActionResult> GetListRecentlyConversation([FromRoute] Guid id, int page)
         {
@@ -123,14 +121,7 @@ namespace FPT.DestinyMatch.API.Controllers
             };
 
             var newConversation = await _conversationService.StartNewConversationAsync(interactingMemberId, withMember.Id);
-            return Ok(new ConversationDetail
-            {
-                Id = newConversation.Id,
-                Name = newConversation.SecondName,//Display the other member name -> Not the interacting member
-                ChattingMemberId = newConversation.SecondMemberId,
-                RecentlyTime = DateTime.Now,
-                CreateTime = DateTime.Now
-            });
+            return newConversation ? Created(nameof(NewConversation), "Create Success") : BadRequest("Create Failed");
         }
 
         [HttpPatch]
