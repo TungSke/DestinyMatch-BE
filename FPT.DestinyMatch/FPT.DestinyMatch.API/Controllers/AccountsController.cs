@@ -31,7 +31,7 @@ namespace FPT.DestinyMatch.API.Controllers
         public async Task<IActionResult> ViewAccount([FromRoute] Guid id)
         {
             var account = await _accountService.GetAccountByIdAsync(id);
-            if (account == null)
+            if (account is null)
             {
                 return NotFound("Not found that id account");
             }

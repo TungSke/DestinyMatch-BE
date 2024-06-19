@@ -26,7 +26,7 @@ namespace FPT.DestinyMatch.API.Controllers
         public async Task<IActionResult> GetHobbyById(Guid id)
         {
             var hobby = await _hobbyService.GetHobbyById(id);
-            if (hobby == null)
+            if (hobby is null)
             {
                 return NotFound();
             }
@@ -46,7 +46,7 @@ namespace FPT.DestinyMatch.API.Controllers
         public async Task<IActionResult> UpdateHobby(Guid id, [FromBody] HobbyRequest hobbyRequest)
         {
             var hobby = await _hobbyService.EditHobby(id, hobbyRequest);
-            if (hobby == null)
+            if (hobby is null)
             {
                 return NotFound();
             }

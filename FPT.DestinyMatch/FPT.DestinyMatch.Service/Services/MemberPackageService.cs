@@ -32,7 +32,7 @@ namespace FPT.DestinyMatch.Service.Services
         public async Task<bool> DeleteMeberPackage(Guid Id)
         {
             var memberPackage = await _memberPackageRepository.GetByIdAsync(Id);
-            if (memberPackage == null)
+            if (memberPackage is null)
             {
                 return false;
             }
@@ -55,7 +55,7 @@ namespace FPT.DestinyMatch.Service.Services
         public async Task<MemberPackage> UpdateMemberPackage(Guid Id, MemberPackageRequest memberRequest)
         {
             var memberPackage = await _memberPackageRepository.GetByIdAsync(Id);
-            if (memberPackage == null)
+            if (memberPackage is null)
             {
                 return null;
             }

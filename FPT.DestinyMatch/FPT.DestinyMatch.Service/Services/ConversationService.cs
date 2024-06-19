@@ -20,7 +20,7 @@ namespace FPT.DestinyMatch.Service.Services
         public async Task<Conversation> GetConversationDetailAsync(Guid conversationId, Guid memberUsingId)
         {
             var currentConversation = await _conversationRepository.GetByIdAsync(conversationId);
-            if (currentConversation == null)
+            if (currentConversation is null)
             {
                 throw new NotFoundException("Not found this Conversation id");
             }

@@ -105,7 +105,7 @@ namespace FPT.DestinyMatch.Service.Services
         public async Task<bool> ChangeRoleAccountAsync(Guid accountId, string newRole)
         {
             var currentAcc = await _accountRepository.GetByIdAsync(accountId);
-            if (currentAcc == null)
+            if (currentAcc is null)
             {
                 return false;
             }
@@ -116,7 +116,7 @@ namespace FPT.DestinyMatch.Service.Services
         public async Task<bool> ChangePasswordAccountAsync(Guid accountId, string oldPassword, string newPassword, bool privilegedOverride)
         {
             var currentAcc = await _accountRepository.GetByIdAsync(accountId);
-            if (currentAcc == null)
+            if (currentAcc is null)
             {
                 throw new NotFoundException("Not found that account");
             }

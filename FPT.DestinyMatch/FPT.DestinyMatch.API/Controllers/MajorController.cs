@@ -26,7 +26,7 @@ namespace FPT.DestinyMatch.API.Controllers
         public async Task<IActionResult> GetMajorById(Guid id)
         {
             var major = await _majorService.GetMajorById(id);
-            if (major == null)
+            if (major is null)
             {
                 return NotFound();
             }
@@ -46,7 +46,7 @@ namespace FPT.DestinyMatch.API.Controllers
         public async Task<IActionResult> UpdateMajor(Guid id, [FromBody] MajorRequest majorRequest)
         {
             var hobby = await _majorService.EditMajor(id, majorRequest);
-            if (hobby == null)
+            if (hobby is null)
             {
                 return NotFound();
             }
