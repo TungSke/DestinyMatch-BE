@@ -1,4 +1,5 @@
 ﻿using FPT.DestinyMatch.API.Models.RequestModels;
+using FPT.DestinyMatch.API.Models.RequestModels.Paging;
 using FPT.DestinyMatch.API.Models.ResponseModels;
 using FPT.DestinyMatch.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -35,9 +36,9 @@ namespace FPT.DestinyMatch.API.Controllers
         [HttpPost]
         [Route("account/list")]
         [Authorize(Roles = "admin,moderator")]
-        public async Task<IActionResult> GetListAccount([FromBody] AccountFilter inputData)
+        public async Task<IActionResult> GetListAccount([FromBody] AccountPaging inputData)
         {
-            var accList = await _accountService.GetAccountsList
+            var accList = await _accountService.GetAccountsListAsync
                 (inputData.Amount,
                 inputData.Page,
                 inputData.EmailKeyword,

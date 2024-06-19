@@ -35,12 +35,12 @@ namespace FPT.DestinyMatch.Service.Services
             }
             return await _accountRepository.GetByEmailAsync(email);
         }
-        public async Task<IEnumerable<Account>> GetAccountsList(int size, int page,
+        public async Task<IEnumerable<Account>> GetAccountsListAsync(int size, int page,
             string? keyword, bool byDate, string? status, string? role, bool isDescending)
         {
             size = size == 0 ? 10 : size;
             page = page == 0 ? 1 : page;
-            var accountList = await _accountRepository.GetList(size, page, keyword, byDate, status, role, isDescending);
+            var accountList = await _accountRepository.GetListAsync(size, page, keyword, byDate, status, role, isDescending);
             if(accountList.Any()==false)
             {
                 throw new NotFoundException("Not found any account");
@@ -84,7 +84,7 @@ namespace FPT.DestinyMatch.Service.Services
             }
         }
 
-        public async Task<Account?> LoginByPassword(string email, string password)
+        public async Task<Account> LoginByPasswordAsync(string email, string password)
         {
             var existAccount = await _accountRepository.GetByEmailAsync(email);
             if (existAccount is null

@@ -6,10 +6,10 @@ namespace FPT.DestinyMatch.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class VerificationController : Controller
+    public class VerificationsController : Controller
     {
         private readonly IVerificationService _verificationService;
-        public VerificationController(IVerificationService verificationService)
+        public VerificationsController(IVerificationService verificationService)
         {
             _verificationService = verificationService;
         }

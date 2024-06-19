@@ -17,7 +17,7 @@ namespace FPT.DestinyMatch.Repository.Repositories
             var acc = await DMDB.Accounts.SingleOrDefaultAsync(a => a.Email == email);
             return acc;
         }
-        public async Task<IEnumerable<Account>> GetList(int amountItem, int pageIndex,
+        public async Task<IEnumerable<Account>> GetListAsync(int amountItem, int pageIndex,
             string? keyword, bool sortByDate, string? statusSearch, string? roleSearch, bool sortDescending)
         {
             var query = DMDB.Accounts.AsQueryable();

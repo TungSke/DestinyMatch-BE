@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace FPT.DestinyMatch.API.Models.RequestModels
+namespace FPT.DestinyMatch.API.Models.RequestModels.Paging
 {
-    public class AccountFilter
+    public class AccountPaging
     {
         public int Amount { get; set; }
         public int Page { get; set; }

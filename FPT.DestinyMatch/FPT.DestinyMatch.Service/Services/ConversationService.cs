@@ -17,7 +17,7 @@ namespace FPT.DestinyMatch.Service.Services
         }
 
         //--------------------------[ IMPLEMENT ]--------------------------
-        public async Task<Conversation> GetConversationDetail(Guid conversationId, Guid memberUsingId)
+        public async Task<Conversation> GetConversationDetailAsync(Guid conversationId, Guid memberUsingId)
         {
             var currentConversation = await _conversationRepository.GetByIdAsync(conversationId);
             if (currentConversation == null)
@@ -32,25 +32,34 @@ namespace FPT.DestinyMatch.Service.Services
             ValidateConversationIsDeleted(currentConversation.Status);
             return currentConversation;
         }
-        public async Task<List<Conversation>> GetConversationList(Guid ofMemberId)
+        public async Task<IEnumerable<Conversation>> GetRecentlyConversationListAsync(Guid memberId, int pageIndex)
         {
-            var listConversation = await _conversationRepository.GetListByFilterAsync
-                (c => c.FirstMemberId == ofMemberId || c.SecondMemberId==ofMemberId);
-            if(listConversation.Count<1)
+            var partialList =await _conversationRepository.GetRecentlyListAsync(memberId, pageIndex);
+            if(!partialList.Any())
             {
-                throw new NotFoundException("You don't have any conversation");
+                throw new NotFoundException("Not found any conversation");
             }
-            return listConversation;
+            return partialList;
+        }
+        public async Task<IEnumerable<Conversation>> SearchConversationsListAsync(int size, int page, Guid memberUsingId,
+            string? keyword, string? status, bool isDescending)
+        {
+            var partialList = await _conversationRepository.GetFilteredListAsync(size, page, memberUsingId, keyword, status, isDescending);
+            if (!partialList.Any())
+            {
+                throw new NotFoundException("Not found any conversation");
+            }
+            return partialList;
         }
 
-        public async Task<Conversation> StartNewConversation(Guid fromMemberId, Guid toMemberId)
+        public async Task<Conversation> StartNewConversationAsync(Guid fromMemberId, Guid toMemberId)
         {
             var trySearch = await _conversationRepository.GetByFilterAsync(cv => cv.FirstMemberId == fromMemberId && cv.SecondMemberId == toMemberId);
             var existedConversation = trySearch is null ?//if null -> search in reverse. If not -> assign
                 await _conversationRepository.GetByFilterAsync
                 (cv => cv.FirstMemberId == toMemberId && cv.SecondMemberId == fromMemberId) : trySearch;
 
-            if (existedConversation is not null && !existedConversation.Status.ToLower().Equals("deleted"))
+            if (existedConversation is not null && !existedConversation.Status!.ToLower().Equals("deleted"))
             {
                 return existedConversation;
             }
@@ -69,7 +78,7 @@ namespace FPT.DestinyMatch.Service.Services
             await _conversationRepository.SaveChangeAsync();
             return newConversation;
         }
-        public async Task<bool> ChangeNameConversation(Guid conversationId, Guid interactingMemberId, string newName)
+        public async Task<bool> ChangeNameConversationAsync(Guid conversationId, Guid interactingMemberId, string newName)
         {
             var currentConversation = await _conversationRepository.GetByIdAsync(conversationId);
             if (currentConversation is null || newName.IsNullOrEmpty())
@@ -88,7 +97,7 @@ namespace FPT.DestinyMatch.Service.Services
             return await _conversationRepository.SaveChangeAsync();
         }
 
-        public async Task<bool> DeleteConversation(Guid conversationId)
+        public async Task<bool> DeleteConversationAsync(Guid conversationId)
         {
             var currentConversation = await _conversationRepository.GetByIdAsync(conversationId);
             if (currentConversation is null)

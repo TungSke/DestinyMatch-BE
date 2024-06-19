@@ -82,7 +82,7 @@ namespace FPT.DestinyMatch.API.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] AccountLogin accLog)
         {
-            var acc = await _accountService.LoginByPassword(accLog.Email, accLog.Password);
+            var acc = await _accountService.LoginByPasswordAsync(accLog.Email, accLog.Password);
 
             AuthenticationAccount validAcc = new()
             {

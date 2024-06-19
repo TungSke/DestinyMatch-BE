@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using FPT.DestinyMatch.API.Models.RequestModels;
+using FPT.DestinyMatch.API.Models.RequestModels.Paging;
+using FPT.DestinyMatch.Service.Services;
 
 namespace FPT.DestinyMatch.API.Controllers
 {
@@ -29,9 +31,9 @@ namespace FPT.DestinyMatch.API.Controllers
                 (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value, out currentMemberId)
                 == false)
             {
-                return Unauthorized("Member Id is missing or not available");
+                return Unauthorized("Member Id is missing or not available for validate permission");
             };
-            var currentConversation = await _conversationService.GetConversationDetail(id, currentMemberId);
+            var currentConversation = await _conversationService.GetConversationDetailAsync(id, currentMemberId);
 
             // Declare target other member base on who is requesting
             Guid otherMemberId;
@@ -61,26 +63,55 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpGet]
+        [Route("recently-list/{id}&{page}")]
+        [Authorize(Roles = "member")]
+        public async Task<IActionResult> GetListRecentlyConversation([FromRoute] Guid id, int page)
+        {
+            // Declare current member using
+            Guid currentMemberId;
+            if (Guid.TryParse
+                (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value, out currentMemberId)
+                == false)
+            {
+                return Unauthorized("Member Id is missing or not available");
+            };
+            if (id != currentMemberId)
+            {
+                return Unauthorized("You don't have permission to view this member's conversations");
+            }
+            var conversationList = await _conversationService.GetRecentlyConversationListAsync(id, page);
+            return Ok(conversationList);
+        }
+
+        [HttpPost]
         [Route("list")]
         [Authorize(Roles = "member")]
-        public async Task<IActionResult> GetListByMemberId([FromBody] GuidRequestor currentMember)
+        public async Task<IActionResult> SearchConversation([FromBody] ConversationPaging inputData)
         {
-            var defaultList = await _conversationService.GetConversationList(currentMember.Id);
-            var customList = defaultList.Select(c => new ConversationDetail
+            Guid currentMemberId;
+            if (Guid.TryParse
+                (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value, out currentMemberId)
+                == false)
             {
-                Id = c.Id,
-                Name = (currentMember.Id == c.FirstMemberId) ? c.SecondName : c.FirstName,
-                RecentlyTime = c.RecentlyActivity,
-                CreateTime = c.CreatedAt,
-                ChattingMemberId = (currentMember.Id == c.FirstMemberId) ? c.SecondMemberId : c.FirstMemberId
-            }).OrderByDescending(c => c.RecentlyTime);
-            return Ok(customList);
+                return Unauthorized("Member Id is missing or not available");
+            };
+            if (inputData.CurrentUsingMemberId != currentMemberId)
+            {
+                return Unauthorized("You don't have permission to view this member's conversations");
+            }
+            var conversationList = await _conversationService.SearchConversationsListAsync
+                (inputData.Amount,
+                inputData.Page,
+                inputData.CurrentUsingMemberId,
+                inputData.NameKeyword,
+                inputData.Status,
+                inputData.OrderByDescending);
+            return Ok(conversationList);
         }
 
         [HttpPost]
         [Route("new")]
         [Authorize(Roles = "member")]
-        public async Task<IActionResult> NewConversation([FromBody] GuidRequest withMember)
         public async Task<IActionResult> NewConversation([FromBody] GuidRequestor withMember)
         {
             Guid interactingMemberId;
@@ -91,7 +122,7 @@ namespace FPT.DestinyMatch.API.Controllers
                 return Unauthorized("Member Id is missing or not available");
             };
 
-            var newConversation = await _conversationService.StartNewConversation(interactingMemberId, withMember.Id);
+            var newConversation = await _conversationService.StartNewConversationAsync(interactingMemberId, withMember.Id);
             return Ok(new ConversationDetail
             {
                 Id = newConversation.Id,
@@ -115,7 +146,7 @@ namespace FPT.DestinyMatch.API.Controllers
             {
                 return Unauthorized("Member Id is missing or not available");
             };
-            return await _conversationService.ChangeNameConversation(request.ConversationId, interactingMemberId, request.NewName) ?
+            return await _conversationService.ChangeNameConversationAsync(request.ConversationId, interactingMemberId, request.NewName) ?
                 Ok("Rename Success") : BadRequest("Rename failed!"); ;
         }
 
@@ -123,7 +154,7 @@ namespace FPT.DestinyMatch.API.Controllers
         [Authorize(Roles = "member")]
         public async Task<IActionResult> DeleteConveration([FromBody] GuidRequestor request)
         {
-            return await _conversationService.DeleteConversation(request.Id) ?
+            return await _conversationService.DeleteConversationAsync(request.Id) ?
                 Ok("Delete Success") : BadRequest("Delete failed!");
         }
     }
