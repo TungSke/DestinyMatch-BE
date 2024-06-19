@@ -136,7 +136,7 @@ namespace FPT.DestinyMatch.API.Controllers
         [HttpPatch]
         [Route("new-name")]
         [Authorize(Roles = "member")]
-        public async Task<IActionResult> RenameConversation([FromBody] RenamingConversationRequest request)
+        public async Task<IActionResult> RenameConversation([FromBody] ConversationNewName request)
         {
             // Declare current member using
             Guid interactingMemberId;
