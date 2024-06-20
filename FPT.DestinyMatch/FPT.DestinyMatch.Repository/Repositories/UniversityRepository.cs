@@ -10,16 +10,19 @@ namespace FPT.DestinyMatch.Repository.Repositories
         {
         }
 
-        public async Task<IEnumerable<University>> GetUniversities(int pageIndex, int PageSize, string searchString)
+        public async Task<(IEnumerable<University> universities, int totalCount)> GetUniversities(string? search, int page, int pagesize)
         {
-            var list = GetAsync().AsNoTracking();
-            if (!string.IsNullOrEmpty(searchString))
+            var universities = DMDB.Universities.AsQueryable();
+
+            if (!string.IsNullOrEmpty(search))
             {
-                var search = searchString.ToLower();
-                list = list.Where(x => x.Name.ToLower().Contains(search) || x.Code.ToLower().Contains(search));
+                universities = universities.Where(u => u.Name.Contains(search) || u.Code.Contains(search));
             }
-            list = list.Skip((pageIndex - 1) * PageSize).Take(PageSize);
-            return list;
+
+            var totalCount = await universities.CountAsync();
+            universities = universities.Skip((page - 1) * pagesize).Take(pagesize);
+
+            return (universities, totalCount);
         }
     }
 }

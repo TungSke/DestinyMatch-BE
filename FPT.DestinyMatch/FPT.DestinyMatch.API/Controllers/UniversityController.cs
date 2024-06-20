@@ -1,4 +1,5 @@
-﻿using FPT.DestinyMatch.Service.Interfaces;
+﻿using FPT.DestinyMatch.Repository.Models;
+using FPT.DestinyMatch.Service.Interfaces;
 using FPT.DestinyMatch.Service.Models.Request;
 using FPT.DestinyMatch.Service.Models.Response;
 using Microsoft.AspNetCore.Authorization;
@@ -19,10 +20,10 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetUniversities(int pageIndex, int pageSize, string? searchString)
+        public async Task<IActionResult> GetUniversities(string? search, int page, int pagesize)
         {
-            var universities = await _universityService.GetUniversities(pageIndex, pageSize, searchString);
-            return Ok(universities);
+            var (universities, count) = await _universityService.GetUniversities(search, page, pagesize);
+            return Ok(new { universities, count });
         }
 
         [HttpGet("{id}")]

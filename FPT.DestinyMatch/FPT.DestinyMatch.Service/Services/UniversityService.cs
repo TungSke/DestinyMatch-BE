@@ -5,6 +5,7 @@ using FPT.DestinyMatch.Repository.Interfaces;
 using FPT.DestinyMatch.Repository.Models;
 using FPT.DestinyMatch.Service.Models.Request;
 using FPT.DestinyMatch.Service.Models.Response;
+using FPT.DestinyMatch.Repository.Repositories;
 
 namespace FPT.DestinyMatch.Service.Services
 {
@@ -17,10 +18,7 @@ namespace FPT.DestinyMatch.Service.Services
             _universityRepository = universityRepository;
         }
 
-        public async Task<IEnumerable<University>> GetUniversities(int pageIndex, int PageSize, string searchString)
-        {
-            return await _universityRepository.GetUniversities(pageIndex,PageSize,searchString);
-        }
+        public async Task<(IEnumerable<University> universities, int totalCount)> GetUniversities(string search, int page, int pagesize) => await _universityRepository.GetUniversities(search, page, pagesize);
 
         public async Task<University> GetUniversityById(Guid id)
         {

@@ -5,7 +5,7 @@ namespace FPT.DestinyMatch.Service.Interfaces
 {
     public interface IMajorService
     {
-        Task<IEnumerable<Major>> GetAllMajor();
+        public Task<(IEnumerable<Major> majors, int totalCount)> GetMajors(string search, int page, int pagesize);
         Task<Major?> GetMajorById(Guid id);
         Task<Major> CreateMajor(MajorRequest majorRequest);
         Task<Major> EditMajor(Guid id, MajorRequest majorRequest);

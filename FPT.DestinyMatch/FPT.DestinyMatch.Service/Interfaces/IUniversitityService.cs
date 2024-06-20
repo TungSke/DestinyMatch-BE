@@ -6,7 +6,7 @@ namespace FPT.DestinyMatch.Service.Interfaces
 {
     public interface IUniversitityService
     {
-        Task<IEnumerable<University>> GetUniversities(int pageIndex, int PageSize, string searchString);
+        public Task<(IEnumerable<University> universities, int totalCount)> GetUniversities(string search, int page, int pagesize);
         Task<University> GetUniversityById(Guid id);
         Task<University> AddUniversity(UniversityRequest university);
         Task<University> UpdateUniversity(UniversityResponse university);

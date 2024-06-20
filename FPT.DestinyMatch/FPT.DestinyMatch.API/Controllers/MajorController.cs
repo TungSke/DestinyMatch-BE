@@ -16,10 +16,10 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllMajor()
+        public async Task<IActionResult> GetAllMajor(string? search, int page, int pagesize)
         {
-            var majors = await _majorService.GetAllMajor();
-            return Ok(majors);
+            var (majors, count) = await _majorService.GetMajors(search, page, pagesize);
+            return Ok(new { majors, count });
         }
 
         [HttpGet("{id}")]
