@@ -5,6 +5,8 @@ using FPT.DestinyMatch.Repository.Interfaces;
 using FPT.DestinyMatch.Repository.Models;
 using FPT.DestinyMatch.Service.Models.Request;
 using FPT.DestinyMatch.Service.Models.Response;
+using FPT.DestinyMatch.API.Models.ResponseModels;
+using FPT.DestinyMatch.Repository.Repositories;
 
 namespace FPT.DestinyMatch.Service.Services
 {
@@ -15,10 +17,18 @@ namespace FPT.DestinyMatch.Service.Services
         {
             _packageRepository = packageRepository;
         }
-        public async Task<IEnumerable<Package>> GetPackages(int pageIndex, int PageSize, string searchString)
+        public async Task<PageModel<Package>> GetPackages(int pageIndex, int PageSize, string searchString)
         {
-
-            return await _packageRepository.GetPackages(pageIndex, PageSize, searchString);
+            var packages = await _packageRepository.GetPackages(pageIndex, PageSize, searchString);
+            var totalRecords = await _packageRepository.GetAsync().CountAsync();
+            return new PageModel<Package>
+            {
+                PageIndex = pageIndex,
+                PageSize = PageSize,
+                TotalPage = (int)Math.Ceiling((double)totalRecords / PageSize),
+                TotalRecord = totalRecords,
+                Data = packages
+            };
         }
 
         public async Task<Package> GetPackageById(Guid id)
