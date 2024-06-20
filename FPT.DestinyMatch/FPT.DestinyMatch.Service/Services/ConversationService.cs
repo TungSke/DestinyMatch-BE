@@ -100,11 +100,8 @@ namespace FPT.DestinyMatch.Service.Services
 
         public async Task<bool> DeleteConversationAsync(Guid conversationId)
         {
-            var currentConversation = await _conversationRepository.GetByIdAsync(conversationId);
-            if (currentConversation is null)
-            {
-                throw new BadRequestException("Not found this conversation Id");
-            }
+            var currentConversation = await _conversationRepository.GetByIdAsync(conversationId)?? throw new NotFoundException("Not found this conversation Id");
+
             // Validate if deleted
             ValidateConversationIsDeleted(currentConversation.Status);
 

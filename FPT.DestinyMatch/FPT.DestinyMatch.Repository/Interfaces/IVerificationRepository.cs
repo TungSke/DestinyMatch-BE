@@ -9,5 +9,11 @@ namespace FPT.DestinyMatch.Repository.Interfaces
 {
     public interface IVerificationRepository : IGenericRepository<Verification>
     {
+        public Task<Verification?> GetDetailAsync(Guid verificationId);
+        public Task<IEnumerable<Verification>> GetListVerificationAsync(
+            int amountItem, int pageIndex,
+            Guid memberId,
+            string? statusSearch,
+            bool OrderByAscending);
     }
 }

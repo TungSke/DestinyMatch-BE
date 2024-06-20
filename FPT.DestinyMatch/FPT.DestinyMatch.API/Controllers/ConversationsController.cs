@@ -138,14 +138,14 @@ namespace FPT.DestinyMatch.API.Controllers
                 return Unauthorized("Member Id is missing or not available");
             };
             return await _conversationService.ChangeNameConversationAsync(request.ConversationId, interactingMemberId, request.NewName) ?
-                Ok("Rename Success") : BadRequest("Rename failed!"); ;
+                Ok("Rename Success") : BadRequest("Rename failed!");
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         [Authorize(Roles = "member")]
-        public async Task<IActionResult> DeleteConveration([FromBody] GuidRequestor request)
+        public async Task<IActionResult> DeleteConveration([FromRoute] Guid id)
         {
-            return await _conversationService.DeleteConversationAsync(request.Id) ?
+            return await _conversationService.DeleteConversationAsync(id) ?
                 Ok("Delete Success") : BadRequest("Delete failed!");
         }
     }

@@ -129,7 +129,7 @@ namespace FPT.DestinyMatch.API.Controllers
         [Authorize(Roles = "member")]
         public async Task<IActionResult> Delete([FromBody] AccountLogin input)
         {
-            bool result = await _accountService.DeleteAccountAsync(input.Email, input.Password, false);
+            bool result = await _accountService.DeleteAccountAsync(input.Email, input.Password);
             return result ? Ok("Delete Success!") : BadRequest("Delete Failed!");
         }
 

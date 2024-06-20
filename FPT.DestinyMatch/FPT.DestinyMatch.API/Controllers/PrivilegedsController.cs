@@ -2,6 +2,7 @@
 using FPT.DestinyMatch.API.Models.RequestModels.Paging;
 using FPT.DestinyMatch.API.Models.ResponseModels;
 using FPT.DestinyMatch.Service.Interfaces;
+using FPT.DestinyMatch.Service.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,10 +15,13 @@ namespace FPT.DestinyMatch.API.Controllers
     public class PrivilegedsController : ControllerBase
     {
         private readonly IAccountService _accountService;
+        private readonly IVerificationService _verificationService;
         public PrivilegedsController(
-            IAccountService accountService)
+            IAccountService accountService,
+            IVerificationService verificationService)
         {
             _accountService = accountService;
+            _verificationService = verificationService;
         }
 
         //=====================[ ACCOUNT ]=====================
@@ -27,12 +31,13 @@ namespace FPT.DestinyMatch.API.Controllers
         public async Task<IActionResult> ViewAccount([FromRoute] Guid id)
         {
             var account = await _accountService.GetAccountByIdAsync(id);
-            if (account == null)
+            if (account is null)
             {
                 return NotFound("Not found that id account");
             }
             return Ok(account);
         }
+
         [HttpPost]
         [Route("account/list")]
         [Authorize(Roles = "admin,moderator")]
@@ -61,6 +66,7 @@ namespace FPT.DestinyMatch.API.Controllers
             }
             return BadRequest("Update Failed!");
         }
+
         [HttpPatch]
         [Route("account/new-password")]
         [Authorize(Roles = "moderator")]
@@ -73,18 +79,6 @@ namespace FPT.DestinyMatch.API.Controllers
                 return Ok("Update Success!");
             }
             return BadRequest("Update Failed!");
-        }
-        [HttpDelete]
-        [Route("account")]
-        [Authorize(Roles = "moderator")]
-        public async Task<IActionResult> Delete([FromBody] AccountLogin input)
-        {
-            bool result = await _accountService.DeleteAccountAsync(input.Email, input.Password, true);
-            if (result == true)
-            {
-                return Ok("Delete Success!");
-            }
-            return BadRequest("Delete Failed!");
         }
 
         [HttpPatch]
@@ -99,6 +93,60 @@ namespace FPT.DestinyMatch.API.Controllers
                 return Ok("Recover Success!");
             }
             return BadRequest("Recover Failed!");
+        }
+
+        [HttpDelete]
+        [Route("account/{id}")]
+        [Authorize(Roles = "moderator")]
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
+        {
+            bool result = await _accountService.DeleteAccountAsync(id);
+            if (result == true)
+            {
+                return Ok("Delete Success!");
+            }
+            return BadRequest("Delete Failed!");
+        }
+
+        //=====================[ VERIFICATION ]=====================
+        [HttpGet]
+        [Route("verification/{id}")]
+        [Authorize(Roles = "moderator")]
+        public async Task<IActionResult> ViewDetail([FromRoute] Guid id)
+        {
+            return Ok(await _verificationService.GetVerificationDetailAsync(id));
+        }
+
+        [HttpPost]
+        [Route("verification/list")]
+        [Authorize(Roles = "moderator")]
+        public async Task<IActionResult> ViewListVerification([FromBody] VerificationPaging inputData)
+        {
+            var verList = await _verificationService.GetListVerificationAsync(
+                inputData.Amount,
+                inputData.Page,
+                inputData.MemberId,
+                inputData.Status,
+                inputData.OrderByAscending);
+            return Ok(verList);
+        }
+
+        [HttpPatch]
+        [Route("verification/new-status")]
+        [Authorize(Roles = "moderator")]
+        public async Task<IActionResult> UpdateStatusVerification([FromBody] VerificationUpdate inputData)
+        {
+            bool result = await _verificationService.UpdateStatusVerificationAsync(inputData.Id, inputData.Status);
+            return result ? Ok("Update Success") : BadRequest("Update Failed");
+        }
+
+        [HttpDelete]
+        [Route("verification/{id}")]
+        [Authorize(Roles = "member")]
+        public async Task<IActionResult> CancelVerification([FromRoute] Guid id)
+        {
+            bool result = await _verificationService.DeleteVerificationAsync(id);
+            return result ? Ok("Delete Success") : BadRequest("Delete Failed");
         }
     }
 }

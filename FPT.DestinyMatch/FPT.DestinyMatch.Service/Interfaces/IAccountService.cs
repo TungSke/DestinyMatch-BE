@@ -12,7 +12,8 @@ namespace FPT.DestinyMatch.Service.Interfaces
         public Task<Account> LoginByPasswordAsync(string email, string password);
         public Task<bool> ChangeRoleAccountAsync(Guid accountId, string newRole);
         public Task<bool> ChangePasswordAccountAsync(Guid accountId, string oldPassword, string newPassword, bool privilegedOverride);
-        public Task<bool> DeleteAccountAsync(string email, string confirmPassword, bool privilegedOverride);
+        public Task<bool> DeleteAccountAsync(Guid accountId);
+        public Task<bool> DeleteAccountAsync(string email, string confirmPassword);
         public Task<bool> RecoverAccountAsync(string email, string newStatus);
     }
 }

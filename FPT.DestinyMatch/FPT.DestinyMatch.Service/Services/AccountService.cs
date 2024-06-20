@@ -41,7 +41,7 @@ namespace FPT.DestinyMatch.Service.Services
             size = size == 0 ? 10 : size;
             page = page == 0 ? 1 : page;
             var accountList = await _accountRepository.GetListAsync(size, page, keyword, byDate, status, role, isDescending);
-            if(accountList.Any()==false)
+            if (accountList.Any() == false)
             {
                 throw new NotFoundException("Not found any account");
             }
@@ -131,20 +131,29 @@ namespace FPT.DestinyMatch.Service.Services
             return await _accountRepository.SaveChangeAsync();
         }
 
-        public async Task<bool> DeleteAccountAsync(string email, string confirmPassword, bool privilegedOverride)
+        public async Task<bool> DeleteAccountAsync(Guid accountId)
+        {
+            var currentAcc = await _accountRepository.GetByIdAsync(accountId);
+            if (currentAcc is null)
+            {
+                throw new NotFoundException("Cannot found that account Id");
+            }
+            currentAcc.Status = "deleted";
+            return await _accountRepository.SaveChangeAsync();
+        }
+
+        public async Task<bool> DeleteAccountAsync(string email, string confirmPassword)
         {
             var currentAcc = await _accountRepository.GetByEmailAsync(email);
             if (currentAcc is null)
             {
                 throw new NotFoundException("Cannot found that email account");
             }
-            if (privilegedOverride == false)
+
+            string hashedPassword = HashString(confirmPassword);
+            if (!currentAcc.Password!.Equals(hashedPassword))
             {
-                string hashedPassword = HashString(confirmPassword);
-                if (!currentAcc.Password.Equals(hashedPassword))
-                {
-                    throw new BadRequestException("Wrong confirm password!");
-                }
+                throw new BadRequestException("Wrong confirm password!");
             }
             currentAcc.Status = "deleted";
             return await _accountRepository.SaveChangeAsync();
