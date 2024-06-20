@@ -15,7 +15,7 @@ namespace FPT.DestinyMatch.Service.Services
             _hobbyRepository = hobbyRepository;
         }
 
-        public async Task<IEnumerable<Hobby>> GetHobbies() => await _hobbyRepository.GetAsync().ToListAsync();
+        public async Task<(IEnumerable<Hobby> hobbies, int totalCount)> GetHobbies(string search, int page , int pagesize) => await _hobbyRepository.GetHobbies(search, page , pagesize);
 
         public async Task<Hobby?> GetHobbyById(Guid id) => await _hobbyRepository.GetByIdAsync(id);
 
@@ -27,7 +27,7 @@ namespace FPT.DestinyMatch.Service.Services
                 Name = hobbyRequest.Name,
                 Description = hobbyRequest.Description
             };
-            _hobbyRepository.Add(hobbyToAdd);
+            await _hobbyRepository.Add(hobbyToAdd);
             await _hobbyRepository.SaveChangeAsync();
             return hobbyToAdd;
         }

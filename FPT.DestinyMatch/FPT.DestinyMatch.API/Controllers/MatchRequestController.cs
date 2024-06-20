@@ -26,7 +26,7 @@ namespace FPT.DestinyMatch.API.Controllers
             return Ok(matchRequest);
         }
 
-        [HttpGet("match-requests")]
+        [HttpGet]
         public async Task<IActionResult> GetAllMatchRequest()
         {
             var matchRequest = await _matchRequestService.GetMatchRequests();
@@ -40,15 +40,15 @@ namespace FPT.DestinyMatch.API.Controllers
             return Ok(matchRequest);
         }
 
-        [HttpGet("match-by-me/{memberId}")]
+        [HttpGet("my-match")]
         public async Task<IActionResult> GetMatchRequestsByMe(Guid memberId)
         {
             var matchRequests = await _matchRequestService.MatchRequestOfMe(memberId);
             return Ok(matchRequests);
         }
 
-        [HttpGet("match-to-me/{memberId}")]
-        public async Task<IActionResult> GetMatchRequestsToMe(Guid memberId)
+        [HttpGet("they-match")]
+        public async Task<IActionResult> GetMatchRequestsToMe([FromBody] Guid memberId)
         {
             var matchRequests = await _matchRequestService.MatchRequestToMe(memberId);
             return Ok(matchRequests);
