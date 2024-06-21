@@ -33,7 +33,7 @@ namespace FPT.DestinyMatch.Service.Services
         public async Task<bool> DeleteMessage(Guid memberId)
         {
             var message = await _messageReposirory.GetByIdAsync(memberId);
-            if (message == null)
+            if (message is null)
             {
                 return false;
             }
@@ -55,7 +55,7 @@ namespace FPT.DestinyMatch.Service.Services
         public async Task<Message> UpdateMessage(Guid Id, MessageRequest messageRequest)
         {
             var message = await _messageReposirory.GetByIdAsync(Id);
-            if (message == null)
+            if (message is null)
             {
                 return null;
             }

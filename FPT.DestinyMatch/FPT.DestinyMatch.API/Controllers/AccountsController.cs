@@ -27,28 +27,37 @@ namespace FPT.DestinyMatch.API.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        [Authorize(Roles = "admin,moderator,member")]
+        [Authorize(Roles = "member")]
         public async Task<IActionResult> ViewAccount([FromRoute] Guid id)
         {
             var account = await _accountService.GetAccountByIdAsync(id);
-            if (account == null)
-            {
-                return NotFound("Not found that id account");
-            }
-            return Ok(account);
+            return account is null ? NotFound("Not found that id account") : Ok(account);
         }
+
         [HttpGet]
-        [Route("list/size={size}&page={page}")]
-        [Authorize(Roles = "admin,moderator")]
-        public async Task<IActionResult> GetListAccount([FromRoute] int size, int page)
+        [Route("me")]
+        [Authorize]//Must login to use
+        public IActionResult CheckCurrentSession()
         {
-            return Ok();
+            var userClaims = User.Claims.ToList();
+
+            if (userClaims.Any())
+            {
+                string? userId = userClaims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+                string? userEmail = userClaims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
+                string? userRole = userClaims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+
+                return Ok(new AuthenticationAccount { Id = userId, Email = userEmail, Role = userRole });
+            }
+            return Unauthorized();//401: User haven't authorized yet or don't have access permission
         }
 
         [HttpPost]
         [Route("register")]
         [AllowAnonymous]
-        public async Task<IActionResult> CreateAccountAsync([FromBody] AccountLogin accCreate)
+        public async Task<IActionResult> RegisterAccount([FromBody] AccountLogin accCreate)
         {
             // Validate the email address
             if (!AccountLogin.IsValidEmail(accCreate.Email))
@@ -57,11 +66,7 @@ namespace FPT.DestinyMatch.API.Controllers
             }
 
             var CreateSucces = await _accountService.CreateAccountAsync(accCreate.Email, accCreate.Password);
-            if (CreateSucces == true)
-            {
-                return Created(nameof(CreateAccountAsync), "Create Success");
-            }
-            return Conflict("Account existed!"); //409: Cannot complete because existed email
+            return CreateSucces ? Created(nameof(RegisterAccount), "Create Success") : BadRequest("Create Failed");
         }
 
         [HttpPost]
@@ -69,11 +74,7 @@ namespace FPT.DestinyMatch.API.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] AccountLogin accLog)
         {
-            var acc = await _accountService.LoginByPassword(accLog.Email, accLog.Password);
-            if (acc is null)
-            {
-                return Unauthorized("Wrong email or password");//401: No permission access this account
-            }
+            var acc = await _accountService.LoginByPasswordAsync(accLog.Email, accLog.Password);
 
             AuthenticationAccount validAcc = new()
             {
@@ -81,6 +82,7 @@ namespace FPT.DestinyMatch.API.Controllers
                 Email = acc.Email!,
                 Role = acc.Role
             };
+
             var token = GenerateToken(validAcc);
             return Created(nameof(Login), new JwtToken
             {
@@ -88,25 +90,6 @@ namespace FPT.DestinyMatch.API.Controllers
             });
         }
 
-        [HttpGet]
-        [Route("who-am-i")]
-        [Authorize]//Must login to use
-        public async Task<IActionResult> WhoAmI()
-        {
-            var userClaims = User.Claims.ToList();
-
-            if (userClaims.Any())
-            {
-                string userId = userClaims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-
-                string userEmail = userClaims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-
-                string userRole = userClaims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
-
-                return Ok(new AuthenticationAccount { Id = userId, Email = userEmail, Role = userRole });
-            }
-            return Unauthorized();//401: User haven't authorized yet or don't have access permission
-        }
 
         private string GenerateToken(AuthenticationAccount account)
         {
@@ -116,7 +99,7 @@ namespace FPT.DestinyMatch.API.Controllers
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, account.Id.ToString()),//Jwt standard claim
-                new Claim(JwtRegisteredClaimNames.Email, account.Email ?? ""),
+                new Claim(JwtRegisteredClaimNames.Email, account.Email),
                 new Claim(ClaimTypes.Role, account.Role)//Jwt claim in .Net
             };
 
@@ -130,61 +113,29 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpPatch]
-        [Route("chang-role")]
-        [Authorize(Roles = "admin")]
-        public async Task<IActionResult> ChangeRole([FromBody] AccountNewRole input)
-        {
-            bool result = await _accountService.ChangeRoleAccountAsync(input.Id, input.NewRole);
-            if (result == true)
-            {
-                return Ok("Update Success!");
-            }
-            return BadRequest("Update Failed!");
-        }
-
-        [HttpPatch]
-        [Route("change-password")]
-        [Authorize(Roles = "moderator,member")]
+        [Route("new-password")]
+        [Authorize(Roles = "member")]
         public async Task<IActionResult> ChangePassword([FromBody] AccountNewPassword input)
         {
-            bool result = await _accountService
-                .ChangePasswordAccountAsync(input.Id, input.OldPassword, input.NewPassword);
-            if (result == true)
+            if (input.OldPassword.IsNullOrEmpty())
             {
-                return Ok("Update Success!");
+                return BadRequest("Old password required for confirmation!");
             }
-            return BadRequest("Update Failed!");
+            bool result = await _accountService.ChangePasswordAccountAsync(input.Id, input.OldPassword, input.NewPassword, false);
+            return result ? Ok("Update Success!") : BadRequest("Update Failed!");
         }
 
         [HttpDelete]
-        [Authorize(Roles = "moderator,member")]
+        [Authorize(Roles = "member")]
         public async Task<IActionResult> Delete([FromBody] AccountLogin input)
         {
             bool result = await _accountService.DeleteAccountAsync(input.Email, input.Password);
-            if (result == true)
-            {
-                return Ok("Delete Success!");
-            }
-            return BadRequest("Delete Failed!");
+            return result ? Ok("Delete Success!") : BadRequest("Delete Failed!");
         }
 
         [HttpPatch]
-        [Route("recover-account")]
-        [Authorize(Roles = "admin,moderator")]
-        public async Task<IActionResult> Recover([FromBody] AccountRecover input)
-        {
-            bool result = await _accountService
-                .RecoverAccountAsync(input.Email, input.Status);
-            if (result == true)
-            {
-                return Ok("Recover Success!");
-            }
-            return BadRequest("Recover Failed!");
-        }
-
-        [HttpPatch]
-        [Route("reset-password")]
-        [Authorize(Roles = "moderator,member")]
+        [Route("password-recovery")]
+        [Authorize(Roles = "member")]
         public async Task<IActionResult> ResetPassword()
         {
             //Is doing with Google Cloud Api
@@ -192,7 +143,7 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpPost]
-        [Route("login-google")]
+        [Route("google-login")]
         [AllowAnonymous]
         public async Task<IActionResult> GoogleLogin([FromBody] string idToken)
         {
@@ -202,7 +153,7 @@ namespace FPT.DestinyMatch.API.Controllers
 
             // Extract the email from the payload
             var email = payload.Email;
-            
+
             string username = "", password = "";
             bool needSignup = true, existEmail = false;
             User user;
@@ -252,9 +203,9 @@ namespace FPT.DestinyMatch.API.Controllers
                needSignup = false;
                break;
             }
-            
+
             }//End loop
-            
+
             //If not exist then create account
             if (needSignup)
             {
@@ -262,12 +213,12 @@ namespace FPT.DestinyMatch.API.Controllers
             password = Guid.NewGuid().ToString();
             await _context.Database.ExecuteSqlRawAsync("exec dbo.proc_signUpAccount @username = @p0, @password = @p1, @email = @p2", email, password, email);
             }
-            
+
             //Then login
             var account = await _context.Accounts
             .AsNoTracking()
             .SingleOrDefaultAsync(acc => acc.Username.Equals(username) && acc.Password.Equals(password));
-            
+
             HttpContext.Session.SetString("usersession", JsonSerializer.Serialize(account));
             await HttpContext.Session.CommitAsync();
             return RedirectToAction("Index", "Home");

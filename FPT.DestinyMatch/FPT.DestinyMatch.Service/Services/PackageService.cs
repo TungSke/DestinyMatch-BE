@@ -56,7 +56,7 @@ namespace FPT.DestinyMatch.Service.Services
         public async Task<bool> UpdatePackageAsync(PackageResponse package)
         {
             var existed = await _packageRepository.GetByIdAsync(package.Id);
-            if (existed == null)
+            if (existed is null)
             {
                 throw new Exception("University not found");
             }
@@ -71,7 +71,7 @@ namespace FPT.DestinyMatch.Service.Services
         public async Task<bool> DeletePackageAsync(Guid id)
         {
             var existed = await _packageRepository.GetByIdAsync(id);
-            if (existed == null)
+            if (existed is null)
             {
                 throw new Exception("University not found");
             }
