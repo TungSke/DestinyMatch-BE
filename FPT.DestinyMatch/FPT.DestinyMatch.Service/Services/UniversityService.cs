@@ -22,12 +22,13 @@ namespace FPT.DestinyMatch.Service.Services
         {
             var universities = await _universityRepository.GetUniversities(pageIndex, PageSize, searchString);
             var totalRecords = await _universityRepository.GetAsync().CountAsync();
+            var totalPages = totalRecords > 0 ? (int)Math.Ceiling((double)totalRecords / PageSize) : 0;
             return new PageModel<University>
             {
                 PageIndex = pageIndex,
                 PageSize = PageSize,
-                TotalPage = (int)Math.Ceiling((double)totalRecords / PageSize),
-                TotalRecord = totalRecords,
+                totalPage = totalPages,
+                Count = totalRecords,
                 Data = universities
             };
         }

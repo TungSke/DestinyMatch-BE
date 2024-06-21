@@ -21,12 +21,13 @@ namespace FPT.DestinyMatch.Service.Services
         {
             var packages = await _packageRepository.GetPackages(pageIndex, PageSize, searchString);
             var totalRecords = await _packageRepository.GetAsync().CountAsync();
+            var totalPages = totalRecords > 0 ? (int)Math.Ceiling((double)totalRecords / PageSize) : 0;
             return new PageModel<Package>
             {
                 PageIndex = pageIndex,
                 PageSize = PageSize,
-                TotalPage = (int)Math.Ceiling((double)totalRecords / PageSize),
-                TotalRecord = totalRecords,
+                totalPage = totalPages,
+                Count = totalRecords,
                 Data = packages
             };
         }
