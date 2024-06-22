@@ -2,7 +2,7 @@
 
 namespace FPT.DestinyMatch.API.Models.RequestModels
 {
-    public class GuidRequestor
+    public class GuidRequest
     {
         [Required]
         public Guid Id { get; set; }

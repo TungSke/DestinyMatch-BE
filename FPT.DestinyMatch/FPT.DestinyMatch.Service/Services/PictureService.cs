@@ -66,7 +66,7 @@ namespace FPT.DestinyMatch.Service.Services
         public async Task UpdatePicture(PictureResponse picture)
         {
             var pic = await GetPictureById(picture.Id);
-            if(pic is null)
+            if(pic == null)
             {
                 throw new KeyNotFoundException("Picture not found");
             }
@@ -77,7 +77,7 @@ namespace FPT.DestinyMatch.Service.Services
         public async Task DeletePicture(Guid id)
         {
             var picture = await _pictureRepository.GetByIdAsync(id);
-            if (picture is not null)
+            if (picture != null)
             {
                 await DeletePictureInFirebase(picture.UrlPath);
                 _pictureRepository.Remove(picture);

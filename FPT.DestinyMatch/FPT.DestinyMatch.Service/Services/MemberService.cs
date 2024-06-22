@@ -24,7 +24,7 @@ namespace FPT.DestinyMatch.Service.Services
 
         public async Task<Member> CreateMember(MemberRequest memberRequest)
         {
-        //    DateTime? dob = memberRequest.Dob is not null
+        //    DateTime? dob = memberRequest.Dob != null
         //? new DateTime(memberRequest.Dob.Year, memberRequest.Dob.Month, memberRequest.Dob.Day)
         //: (DateTime?)null;
             var MemberToAdd = new Member
@@ -49,7 +49,7 @@ namespace FPT.DestinyMatch.Service.Services
         public async Task<bool> DeleteMeber(Guid memberId)
         {
             var member = await _memberRepository.GetByIdAsync(memberId);
-            if (member is null)
+            if (member == null)
             {
                 return false;
             }
@@ -73,13 +73,13 @@ namespace FPT.DestinyMatch.Service.Services
         public async Task<Member> UpdateMember(Guid Id, MemberRequest memberRequest)
         {
             var member = await _memberRepository.GetByIdAsync(Id);
-            if (member is null)
+            if (member == null)
             {
                 return null;
             }
             member.Fullname = !string.IsNullOrEmpty(memberRequest.Fullname) ? memberRequest.Fullname : member.Fullname;
             member.Introduce = !string.IsNullOrEmpty(memberRequest.Introduce) ? memberRequest.Introduce : member.Introduce;
-            if (memberRequest.Dob is not null)
+            if (memberRequest.Dob != null)
             {
                 member.Dob = memberRequest.Dob;//new DateTime(memberRequest.Dob.Year, memberRequest.Dob.Month, memberRequest.Dob.Day);
             }

@@ -20,7 +20,6 @@ namespace FPT.DestinyMatch.API.Middleware
             NotFound,
             BadRequest,
             Unauthorized,
-            Conflict,
             InternalServerError
         }
         public async Task Invoke(HttpContext context)
@@ -51,7 +50,6 @@ namespace FPT.DestinyMatch.API.Middleware
                 NotFoundException => errorDetails with { ErrorType = ErrorType.NotFound.ToString(), StatusCode = (int)HttpStatusCode.NotFound },
                 BadRequestException => errorDetails with { ErrorType = ErrorType.BadRequest.ToString(), StatusCode = (int)HttpStatusCode.BadRequest },
                 UnauthorizedException => errorDetails with { ErrorType = ErrorType.Unauthorized.ToString(), StatusCode = (int)HttpStatusCode.Unauthorized },
-                ConflictException => errorDetails with { ErrorType = ErrorType.Conflict.ToString(), StatusCode = (int)HttpStatusCode.Unauthorized },
                 _ => errorDetails
             };
 

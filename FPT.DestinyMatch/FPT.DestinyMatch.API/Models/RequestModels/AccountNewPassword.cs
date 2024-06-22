@@ -6,7 +6,7 @@ namespace FPT.DestinyMatch.API.Models.RequestModels
     {
         public Guid Id { get; set; }
 
-        public string? OldPassword { get; set; }
+        [Required] public string OldPassword { get; set; }
 
         [Required] public string NewPassword { get; set; }
     }

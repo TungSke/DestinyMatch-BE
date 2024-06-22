@@ -18,8 +18,6 @@ namespace FPT.DestinyMatch.Repository.Repositories
                 var search = searchString.ToLower();
                 list = list.Where(x => x.Name.ToLower().Contains(search) || x.Code.ToLower().Contains(search));
             }
-            if (pageIndex == 0) pageIndex = 1;
-            if (PageSize == 0) PageSize = 10;
             list = list.Skip((pageIndex - 1) * PageSize).Take(PageSize);
             return list;
         }

@@ -19,7 +19,7 @@ namespace FPT.DestinyMatch.API.Controllers
         public async Task<IActionResult> GetMatchRequest(Guid matchRequestId)
         {
             var matchRequest = await _matchRequestService.GetMatchRequestById(matchRequestId);
-            if (matchRequest is null)
+            if (matchRequest == null)
             {
                 return NotFound();
             }

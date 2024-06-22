@@ -2,7 +2,7 @@
 
 namespace FPT.DestinyMatch.API.Models.RequestModels
 {
-    public class ConversationNewName
+    public class RenamingConversationRequest
     {
         [Required] public Guid ConversationId { get; set; }
         [Required] public required string NewName { get; set; }

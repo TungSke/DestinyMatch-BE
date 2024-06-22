@@ -7,7 +7,7 @@ namespace FPT.DestinyMatch.API
     {
         public string? TransformOutbound(object? value)
         {
-            if (value is null) { return null; }
+            if (value == null) { return null; }
             string? str = value.ToString();
             if (string.IsNullOrEmpty(str)) { return null; }
 

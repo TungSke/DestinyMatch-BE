@@ -178,7 +178,7 @@ create table [Verification]
 (
 	Id uniqueidentifier default newid() primary key,
 	SubmittedPicture nvarchar(max),
-	[TimeStamp] datetime default CURRENT_TIMESTAMP,
+	[TimeStamp] datetime,
 	[Status] nvarchar(30) default N'Chưa Duyệt',
 
 	MemberId uniqueidentifier not null foreign key (MemberId) references [Member](Id)

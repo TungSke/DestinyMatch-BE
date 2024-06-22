@@ -31,7 +31,7 @@ namespace FPT.DestinyMatch.API.Controllers
             public async Task<IActionResult> GetMessageById(Guid id)
             {
                 var message = await _messageService.GetMessageById(id);
-                if (message is null)
+                if (message == null)
                 {
                     return BadRequest();
                 }
@@ -52,7 +52,7 @@ namespace FPT.DestinyMatch.API.Controllers
             public async Task<IActionResult> UpdateMessage(Guid id, [FromBody] MessageRequest messageRequest)
             {
                 var message = await _messageService.UpdateMessage(id, messageRequest);
-                if (message is null)
+                if (message == null)
                 {
                     return NotFound();
                 }
@@ -74,7 +74,7 @@ namespace FPT.DestinyMatch.API.Controllers
             public async Task<IActionResult> GetMessagesByConversationId(Guid conversationId)
             {
                 var messages = await _messageService.GetMessagesByConversationId(conversationId);
-                if (messages is null)
+                if (messages == null)
                 {
                     return NotFound();
                 }

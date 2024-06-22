@@ -26,7 +26,7 @@ namespace FPT.DestinyMatch.API.Controllers
         public async Task<IActionResult> GetMemberPackageById(Guid id)
         {
             var member = await _memberPackage.GetMemberPackageById(id);
-            if (member is null)
+            if (member == null)
             {
                 return BadRequest();
             }
@@ -44,7 +44,7 @@ namespace FPT.DestinyMatch.API.Controllers
         public async Task<IActionResult> UpdateMemberPackage(Guid id, [FromBody] MemberPackageRequest memberPackage)
         {
             var member = await _memberPackage.UpdateMemberPackage(id, memberPackage);
-            if (member is null)
+            if (member == null)
             {
                 return NotFound();
             }

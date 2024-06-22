@@ -24,7 +24,7 @@ namespace FPT.DestinyMatch.API.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadImage([Required] IFormFile file, Guid memberId)
         {
-            if (file is null)
+            if (file == null)
             {
                 return BadRequest("No file was uploaded");
             }
