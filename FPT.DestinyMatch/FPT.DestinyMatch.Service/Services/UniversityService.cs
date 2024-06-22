@@ -5,7 +5,7 @@ using FPT.DestinyMatch.Repository.Interfaces;
 using FPT.DestinyMatch.Repository.Models;
 using FPT.DestinyMatch.Service.Models.Request;
 using FPT.DestinyMatch.Service.Models.Response;
-using FPT.DestinyMatch.Repository.Repositories;
+using FPT.DestinyMatch.API.Models.ResponseModels;
 
 namespace FPT.DestinyMatch.Service.Services
 {
@@ -18,7 +18,20 @@ namespace FPT.DestinyMatch.Service.Services
             _universityRepository = universityRepository;
         }
 
-        public async Task<(IEnumerable<University> universities, int totalCount)> GetUniversities(string search, int page, int pagesize) => await _universityRepository.GetUniversities(search, page, pagesize);
+        public async Task<PageModel<University>> GetUniversities(int pageIndex, int PageSize, string searchString)
+        {
+            var universities = await _universityRepository.GetUniversities(pageIndex, PageSize, searchString);
+            var totalRecords = await _universityRepository.GetAsync().CountAsync();
+            var totalPages = totalRecords > 0 ? (int)Math.Ceiling((double)totalRecords / PageSize) : 0;
+            return new PageModel<University>
+            {
+                PageIndex = pageIndex,
+                PageSize = PageSize,
+                totalPage = totalPages,
+                Count = totalRecords,
+                Data = universities
+            };
+        }
 
         public async Task<University> GetUniversityById(Guid id)
         {
@@ -36,7 +49,7 @@ namespace FPT.DestinyMatch.Service.Services
         public async Task<University> UpdateUniversity(UniversityResponse university)
         {
             var univer = await _universityRepository.GetByIdAsync(university.Id);
-            if (univer == null)
+            if (univer is null)
             {
                 throw new Exception("University not found");
             }
@@ -48,7 +61,7 @@ namespace FPT.DestinyMatch.Service.Services
         public async Task DeleteUniversity(Guid id)
         {
             var university = await _universityRepository.GetByIdAsync(id);
-            if (university != null)
+            if (university is not null)
             {
                 _universityRepository.Remove(university);
             }

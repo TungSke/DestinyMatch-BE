@@ -36,7 +36,7 @@ namespace FPT.DestinyMatch.Service.Services
         public async Task<Major> EditMajor(Guid id, MajorRequest majorRequest)
         {
             var major = await _majorRepository.GetByIdAsync(id);
-            if (major == null)
+            if (major is null)
             {
                 return null;
             }
@@ -49,7 +49,7 @@ namespace FPT.DestinyMatch.Service.Services
         public async Task<bool> DeleteMajor(Guid id)
         {
             var major = await _majorRepository.GetByIdAsync(id);
-            if (major == null)
+            if (major is null)
             {
                 return false;
             }

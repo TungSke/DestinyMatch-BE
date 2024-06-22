@@ -18,7 +18,7 @@ namespace FPT.DestinyMatch.Service.Services
         public async Task<MatchRequest?> GetMatchRequestById(Guid matchRequestId)
         {
             var matchRequest = await _matchRequestRepository.GetByIdAsync(matchRequestId);
-            if(matchRequest == null)
+            if(matchRequest is null)
             {
                 return null;
             }
@@ -57,7 +57,7 @@ namespace FPT.DestinyMatch.Service.Services
         public async Task<MatchRequest> MatchResponse(Guid matchRequestId, string response)
         {
             var matchRequest = await _matchRequestRepository.GetByIdAsync(matchRequestId);
-            if(matchRequest == null)
+            if(matchRequest is null)
             {
                 return null;
             }
@@ -69,7 +69,7 @@ namespace FPT.DestinyMatch.Service.Services
         public async Task<bool> RemoveMatchRequest(Guid matchRequestId)
         {
             var matchRequest = await _matchRequestRepository.GetByIdAsync(matchRequestId);
-            if(matchRequest == null)
+            if(matchRequest is null)
             {
                 return false;
             }

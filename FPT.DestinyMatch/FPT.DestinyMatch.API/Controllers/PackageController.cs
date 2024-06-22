@@ -18,7 +18,7 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetPackages(int pageIndex, int PageSize, string searchString)
+        public async Task<IActionResult> GetPackages(int pageIndex, int PageSize, string? searchString)
         {
             var packages = await _packageService.GetPackages(pageIndex, PageSize, searchString);
             return Ok(packages);

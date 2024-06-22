@@ -35,7 +35,7 @@ namespace FPT.DestinyMatch.Service.Services
         public async Task<Hobby> EditHobby(Guid id, HobbyRequest hobbyRequest)
         {
             var hobby = await _hobbyRepository.GetByIdAsync(id);
-            if (hobby == null)
+            if (hobby is null)
             {
                 return null;
             }
@@ -48,7 +48,7 @@ namespace FPT.DestinyMatch.Service.Services
         public async Task<bool> DeleteHobby(Guid id) 
         {
             var hobby = await _hobbyRepository.GetByIdAsync(id);
-            if (hobby == null)
+            if (hobby is null)
             {
                 return false;
             }
