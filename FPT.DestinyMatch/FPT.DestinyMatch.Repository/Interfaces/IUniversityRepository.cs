@@ -4,6 +4,6 @@ namespace FPT.DestinyMatch.Repository.Interfaces
 {
     public interface IUniversityRepository : IGenericRepository<University>
     {
-        public Task<(IEnumerable<University> universities, int totalCount)> GetUniversities(string? search, int page, int pagesize);
+        public Task<IEnumerable<University>> GetUniversities(int page, int pagesize, string? search);
     }
 }

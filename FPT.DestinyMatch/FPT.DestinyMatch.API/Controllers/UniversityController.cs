@@ -22,8 +22,8 @@ namespace FPT.DestinyMatch.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUniversities(string? search, int page, int pagesize)
         {
-            var (universities, count) = await _universityService.GetUniversities(search, page, pagesize);
-            return Ok(new { universities, count });
+            var list = await _universityService.GetUniversities(page, pagesize, search);
+            return Ok(list);
         }
 
         [HttpGet("{id}")]
