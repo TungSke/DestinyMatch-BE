@@ -48,8 +48,7 @@ namespace FPT.DestinyMatch.Repository.Repositories
             var query = DMDB.Conversations.AsQueryable();
 
             // Apply search
-            query = query.Where(con => con.FirstMemberId == memberUsingId);
-            query = query.Where(con => con.SecondMemberId == memberUsingId);
+            query = query.Where(con => con.FirstMemberId == memberUsingId || con.SecondMemberId == memberUsingId);
 
             if (!string.IsNullOrEmpty(keyword))
             {

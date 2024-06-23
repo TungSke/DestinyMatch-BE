@@ -7,11 +7,11 @@ namespace FPT.DestinyMatch.Service.Interfaces
     public interface IMemberService
     {
         Task<IEnumerable<MemberResponse>> GetMembers();
-        
+
         Task<Member?> GetMemberById(Guid id);
         Task<bool> DeleteMeber(Guid memberId);
-         Task<Member> CreateMember(MemberRequest memberRequest);
-         Task<Member> UpdateMember(Guid Id, MemberRequest memberRequest);
-        
+        Task<Member> CreateMember(MemberRequest memberRequest);
+        Task<Member> UpdateMember(Guid Id, MemberRequest memberRequest);
+        Task<Member> GetMemberByAccountId(Guid id);
     }
 }

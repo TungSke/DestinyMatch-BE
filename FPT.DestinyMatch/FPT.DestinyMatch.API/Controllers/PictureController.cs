@@ -59,7 +59,7 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "member")]
+        //[Authorize(Roles = "member")]
         public async Task<IActionResult> GetPictureById(Guid id)
         {
             var picture = await _pictureService.GetPictureById(id);
@@ -67,7 +67,7 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpGet("user/{userid}")]
-        [Authorize(Roles = "member")]
+        //[Authorize(Roles = "member")]
         public async Task<IActionResult> GetAllPicturesFromUser(Guid userid)
         {
             var pictures = await _pictureService.getAllPicturfromusers(userid);
@@ -75,10 +75,10 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpPut]
-        [Authorize(Roles = "member")]
-        public async Task<IActionResult> UpdatePicture(PictureResponse picture)
+        //[Authorize(Roles = "member")]
+        public async Task<IActionResult> UpdatePicture(IFormFile? file,[FromQuery] PictureRequest picture)
         {
-            await _pictureService.UpdatePicture(picture);
+            await _pictureService.UpdatePicture(file,picture);
             return Ok(picture);
         }
 
