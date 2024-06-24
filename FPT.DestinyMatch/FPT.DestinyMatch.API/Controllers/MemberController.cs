@@ -34,6 +34,16 @@ namespace FPT.DestinyMatch.API.Controllers
             return Ok(member);
         }
 
+        [HttpGet("accountid")]
+        public async Task<IActionResult> GetMemberByAccountId(Guid id)
+        {
+            var member = await _memberService.GetMemberByAccountId(id);
+            if (member is null)
+            {
+                return NotFound();
+            }
+            return Ok(member);
+        }
 
 
         [HttpPost]
