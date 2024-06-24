@@ -19,17 +19,14 @@ namespace FPT.DestinyMatch.Service.Services
         //--------------------------[ IMPLEMENT ]--------------------------
         public async Task<Conversation> GetConversationDetailAsync(Guid conversationId, Guid memberUsingId)
         {
-            var currentConversation = await _conversationRepository.GetByIdAsync(conversationId);
-            if (currentConversation is null)
-            {
-                throw new NotFoundException("Not found this Conversation id");
-            }
+            var currentConversation = await _conversationRepository.GetByIdAsync(conversationId)
+                ?? throw new NotFoundException("Not found this Conversation id");
 
             // Validate Member having in this conversation
             ValidateMemberInConversation(currentConversation, memberUsingId);
 
             // Validate available conversation
-            ValidateConversationIsDeleted(currentConversation.Status);
+            ValidateConversationIsDeleted(currentConversation.Status!);
             return currentConversation;
         }
         public async Task<IEnumerable<Conversation>> GetRecentlyConversationListAsync(Guid memberId, int pageIndex)
@@ -52,28 +49,28 @@ namespace FPT.DestinyMatch.Service.Services
             return partialList;
         }
 
-        public async Task<bool> StartNewConversationAsync(Guid fromMemberId, Guid toMemberId)
+        public async Task<bool> StartNewConversationAsync(Member fromMember, Guid toMemberId)
         {
             var trySearch = await _conversationRepository
-                .GetByFilterAsync(cv1 => cv1.FirstMemberId == fromMemberId && cv1.SecondMemberId == toMemberId);
+                .GetByFilterAsync(cv1 => cv1.FirstMemberId == fromMember.Id && cv1.SecondMemberId == toMemberId);
 
             var existedConversation = trySearch is not null ? trySearch : //if not null -> Assign. Else search in reverse
                 await _conversationRepository
-                .GetByFilterAsync(cv2 => cv2.SecondMemberId == fromMemberId && cv2.FirstMemberId == toMemberId);
+                .GetByFilterAsync(cv2 => cv2.SecondMemberId == fromMember.Id && cv2.FirstMemberId == toMemberId);
 
             if (existedConversation is not null && !existedConversation.Status!.ToLower().Equals("deleted"))
             {
                 throw new ConflictException("Cannot start new Conversation due to existed a conversation with same member");
             }
 
-            var first_member = await _memberRepository.GetByIdAsync(fromMemberId) ?? throw new NotFoundException("From Member Id is not exist");
+            var first_member = fromMember ?? throw new NotFoundException("From Member Id is not exist");
             var second_member = await _memberRepository.GetByIdAsync(toMemberId) ?? throw new NotFoundException("To Member Id is not exist");
 
             var newConversation = await _conversationRepository.Add(new Conversation
             {
                 FirstName = first_member.Fullname,
                 SecondName = second_member.Fullname,
-                FirstMemberId = fromMemberId,
+                FirstMemberId = fromMember.Id,
                 SecondMemberId = toMemberId,
                 Status = "Created"
             });

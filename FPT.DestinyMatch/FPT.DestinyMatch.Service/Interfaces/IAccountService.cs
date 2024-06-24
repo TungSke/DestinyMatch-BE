@@ -5,6 +5,7 @@ namespace FPT.DestinyMatch.Service.Interfaces
     public interface IAccountService
     {
         public Task<Account> GetAccountByIdAsync(Guid accountId);
+        public Task<Account> GetMemberByAccountId(Guid accountId);
         public Task<Account> GetAccountByEmailAsync(string email);
         public Task<IEnumerable<Account>> GetAccountsListAsync(int size, int page,
             string? keyword, bool byDate, string? status, string? role, bool isDescending);
