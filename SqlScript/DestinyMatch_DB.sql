@@ -101,6 +101,7 @@ create table [Package]
 	[Name] nvarchar(50),
 	[Description] nvarchar(max),
 	Price int,
+	Duration int,
 	[Status] nvarchar(30)
 );
 go
@@ -120,33 +121,33 @@ create table [MemberPackage]
 );
 go
 
-create table [MatchRequest]
-(
-	Id uniqueidentifier default newid() primary key,
-	[CreateAt] datetime default CURRENT_TIMESTAMP,
-	[Status] nvarchar(30) default N'Chưa Phản Hồi',
+--create table [MatchRequest]
+--(
+--	Id uniqueidentifier default newid() primary key,
+--	[CreateAt] datetime default CURRENT_TIMESTAMP,
+--	[Status] nvarchar(30) default N'Chưa Phản Hồi',
 
-	FromId uniqueidentifier not null foreign key references [Member](Id),
-	ToId uniqueidentifier not null foreign key references [Member](Id)
-);
-create index idx_FromId on [MatchRequest](FromId);
-create index idx_ToId on [MatchRequest](ToId);
-go
+--	FromId uniqueidentifier not null foreign key references [Member](Id),
+--	ToId uniqueidentifier not null foreign key references [Member](Id)
+--);
+--create index idx_FromId on [MatchRequest](FromId);
+--create index idx_ToId on [MatchRequest](ToId);
+--go
 
-create table [Conversation]
+create table [Matching]
 (
 	Id uniqueidentifier default newid() primary key,
 	[FirstName] nvarchar(50),
 	[SecondName] nvarchar(50),
 	[RecentlyActivity] datetime default CURRENT_TIMESTAMP,
 	[CreatedAt] datetime default CURRENT_TIMESTAMP,
-	[Status] nvarchar(30),
+	[Status] nvarchar(30) default N'Chưa Phản Hồi',
 
 	FirstMemberId uniqueidentifier not null foreign key references [Member](Id),
 	SecondMemberId uniqueidentifier not null foreign key references [Member](Id)
 );
-create index idx_FirstMemberId on [Conversation](FirstMemberId);
-create index idx_SecondMemberId on [Conversation](SecondMemberId);
+create index idx_FirstMemberId on [Matching](FirstMemberId);
+create index idx_SecondMemberId on [Matching](SecondMemberId);
 go
 
 create table [Message]
@@ -156,30 +157,30 @@ create table [Message]
 	[SentAt] datetime default CURRENT_TIMESTAMP,
 	[Status] nvarchar(30) default N'Đã gửi',
 
-	ConversationId uniqueidentifier not null foreign key references [Conversation](Id),
+	MatchId uniqueidentifier not null foreign key references [Matching](Id),
 	SenderId uniqueidentifier not null foreign key references [Member](Id)
 );
 create index idx_SenderId on [Message](SenderId);
 go
 
-create table [Feedback]
-(
-	Id uniqueidentifier default newid() primary key,
-	Title nvarchar(max) not null,
-	Content nvarchar(max) not null,
-	[TimeStamp] datetime default CURRENT_TIMESTAMP,
-	[Status] nvarchar(30) default N'Đã Gửi',
+--create table [Feedback]
+--(
+--	Id uniqueidentifier default newid() primary key,
+--	Title nvarchar(max) not null,
+--	Content nvarchar(max) not null,
+--	[TimeStamp] datetime default CURRENT_TIMESTAMP,
+--	[Status] nvarchar(30) default N'Đã Gửi',
 
-	SenderId uniqueidentifier not null foreign key references [Member](Id)
-);
-go
+--	SenderId uniqueidentifier not null foreign key references [Member](Id)
+--);
+--go
 
-create table [Verification]
-(
-	Id uniqueidentifier default newid() primary key,
-	SubmittedPicture nvarchar(max),
-	[TimeStamp] datetime default CURRENT_TIMESTAMP,
-	[Status] nvarchar(30) default N'Chưa Duyệt',
+--create table [Verification]
+--(
+--	Id uniqueidentifier default newid() primary key,
+--	SubmittedPicture nvarchar(max),
+--	[TimeStamp] datetime default CURRENT_TIMESTAMP,
+--	[Status] nvarchar(30) default N'Chưa Duyệt',
 
-	MemberId uniqueidentifier not null foreign key (MemberId) references [Member](Id)
-);
+--	MemberId uniqueidentifier not null foreign key (MemberId) references [Member](Id)
+--);
