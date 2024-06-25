@@ -18,22 +18,31 @@ namespace FPT.DestinyMatch.Service.Services
         }
 
         //--------------------------[ IMPLEMENT ]--------------------------
-        public async Task<Account?> GetAccountByIdAsync(Guid accountId)
+        public async Task<Account> GetAccountByIdAsync(Guid accountId)
         {
             if (accountId == Guid.Empty)
             {
                 throw new BadRequestException("None account id like that");
             }
-            return await _accountRepository.GetByIdAsync(accountId);
+            var acc = await _accountRepository.GetByIdAsync(accountId);
+            return (acc is null) ? throw new NotFoundException("Not found that account id") : acc;
         }
 
-        public async Task<Account?> GetAccountByEmailAsync(string email)
+        public async Task<Account> GetMemberByAccountId(Guid accountId)
+        {
+            var acc = await _accountRepository.GetByIdIncludeMember(accountId)
+                ?? throw new NotFoundException("Don't found any account suitable that Id");
+            return (acc.Member is null) ? throw new NotFoundException("This account haven't create profile yet!") : acc;
+        }
+
+        public async Task<Account> GetAccountByEmailAsync(string email)
         {
             if (email.IsNullOrEmpty())
             {
                 throw new BadRequestException("Cannot find account with null email!");
             }
-            return await _accountRepository.GetByEmailAsync(email);
+            var acc = await _accountRepository.GetByEmailAsync(email);
+            return acc is null ? throw new NotFoundException("Not found that account id") : acc;
         }
         public async Task<IEnumerable<Account>> GetAccountsListAsync(int size, int page,
             string? keyword, bool byDate, string? status, string? role, bool isDescending)

@@ -13,7 +13,7 @@ namespace FPT.DestinyMatch.Service.Interfaces
         public Task<IEnumerable<Conversation>> GetRecentlyConversationListAsync(Guid memberId, int pageIndex);
         public Task<IEnumerable<Conversation>> SearchConversationsListAsync(int size, int page, Guid memberUsingId,
             string? keyword, string? status, bool isDescending);
-        public Task<bool> StartNewConversationAsync(Guid fromMemberId, Guid toMemberId);
+        public Task<bool> StartNewConversationAsync(Member fromMember, Guid toMemberId);
         public Task<bool> ChangeNameConversationAsync(Guid conversationId, Guid interactingMemberId, string newName);
         public Task<bool> DeleteConversationAsync(Guid conversationId);
     }

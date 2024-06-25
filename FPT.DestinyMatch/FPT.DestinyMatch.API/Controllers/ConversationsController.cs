@@ -15,9 +15,11 @@ namespace FPT.DestinyMatch.API.Controllers
     {
         private readonly ChatHub chatHub;
         private readonly IConversationService _conversationService;
-        public ConversationsController(IConversationService conversationService)
+        private readonly IAccountService _accountService;
+        public ConversationsController(IConversationService conversationService, IAccountService accountService)
         {
             _conversationService = conversationService;
+            _accountService = accountService;
         }
 
         [HttpGet]
@@ -26,13 +28,17 @@ namespace FPT.DestinyMatch.API.Controllers
         public async Task<IActionResult> GetConversationDetail([FromRoute] Guid id)
         {
             // Declare current member using
-            Guid currentMemberId;
+            Guid currentAccountId;
             if (Guid.TryParse
-                (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value, out currentMemberId)
+                (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value, out currentAccountId)
                 == false)
             {
                 return Unauthorized("Member Id is missing or not available for validate permission");
             };
+
+            //Get Member Id By Account ID
+            var currentAccount = await _accountService.GetMemberByAccountId(currentAccountId);
+            Guid currentMemberId = currentAccount.Member.Id;
 
             //Validate Member in Conversation
             var currentConversation = await _conversationService.GetConversationDetailAsync(id, currentMemberId);
@@ -66,13 +72,19 @@ namespace FPT.DestinyMatch.API.Controllers
         public async Task<IActionResult> GetListRecentlyConversation([FromRoute] Guid id, int page)
         {
             // Declare current member using
-            Guid currentMemberId;
+            Guid currentAccountId;
             if (Guid.TryParse
-                (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value, out currentMemberId)
+                (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value, out currentAccountId)
                 == false)
             {
                 return Unauthorized("Member Id is missing or not available");
             };
+
+            //Get Member Id By Account ID
+            var currentAccount = await _accountService.GetMemberByAccountId(currentAccountId);
+            Guid currentMemberId = currentAccount.Member.Id;
+
+            //Compare memberId from input with from payload
             if (id != currentMemberId)
             {
                 return Unauthorized("You don't have permission to view this member's conversations");
@@ -86,13 +98,19 @@ namespace FPT.DestinyMatch.API.Controllers
         [Authorize(Roles = "member")]
         public async Task<IActionResult> SearchConversation([FromBody] ConversationPaging inputData)
         {
-            Guid currentMemberId;
+            Guid currentAccountId;
             if (Guid.TryParse
-                (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value, out currentMemberId)
+                (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value, out currentAccountId)
                 == false)
             {
                 return Unauthorized("Member Id is missing or not available");
             };
+
+            //Get Member Id By Account ID
+            var currentAccount = await _accountService.GetMemberByAccountId(currentAccountId);
+            Guid currentMemberId = currentAccount.Member.Id;
+
+            //Compare MemberId from input with from payload
             if (inputData.CurrentUsingMemberId != currentMemberId)
             {
                 return Unauthorized("You don't have permission to view this member's conversations");
@@ -112,15 +130,19 @@ namespace FPT.DestinyMatch.API.Controllers
         [Authorize(Roles = "member")]
         public async Task<IActionResult> NewConversation([FromBody] GuidRequestor withMember)
         {
-            Guid interactingMemberId;
+            Guid currentAccountId;
             if (Guid.TryParse
-                (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value, out interactingMemberId)
+                (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value, out currentAccountId)
                 == false)
             {
                 return Unauthorized("Member Id is missing or not available");
             };
 
-            var newConversation = await _conversationService.StartNewConversationAsync(interactingMemberId, withMember.Id);
+            //Get Member Id By Account ID
+            var currentAccount = await _accountService.GetMemberByAccountId(currentAccountId);
+
+            //Send MemberId into conversation
+            var newConversation = await _conversationService.StartNewConversationAsync(currentAccount.Member, withMember.Id);
             return newConversation ? Created(nameof(NewConversation), "Create Success") : BadRequest("Create Failed");
         }
 
@@ -130,13 +152,18 @@ namespace FPT.DestinyMatch.API.Controllers
         public async Task<IActionResult> RenameConversation([FromBody] ConversationNewName request)
         {
             // Declare current member using
-            Guid interactingMemberId;
+            Guid currentAccountId;
             if (Guid.TryParse
-                (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value, out interactingMemberId)
+                (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value, out currentAccountId)
                 == false)
             {
                 return Unauthorized("Member Id is missing or not available");
             };
+
+            //Get Member Id By Account ID
+            var currentAccount = await _accountService.GetMemberByAccountId(currentAccountId);
+            Guid interactingMemberId = currentAccount.Member.Id;
+
             return await _conversationService.ChangeNameConversationAsync(request.ConversationId, interactingMemberId, request.NewName) ?
                 Ok("Rename Success") : BadRequest("Rename failed!");
         }

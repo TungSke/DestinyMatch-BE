@@ -27,9 +27,7 @@ namespace FPT.DestinyMatch.Repository.Repositories
             var query = DMDB.Conversations.AsQueryable();
 
             //Apply filter
-            query = query.Where(con => con.FirstMemberId == memberId);
-
-            query = query.Where(con => con.SecondMemberId == memberId);
+            query = query.Where(con => con.FirstMemberId == memberId || con.SecondMemberId == memberId);
 
             //Sort order by recently
             query = query.OrderByDescending(con => con.RecentlyActivity);
@@ -38,6 +36,18 @@ namespace FPT.DestinyMatch.Repository.Repositories
             var pagedConversations = await query
                 .Skip((pageIndex - 1) * 10)
                 .Take(10)
+                .Select(con => new Conversation
+                {
+                    Id = con.Id,
+                    FirstName = con.FirstName,
+                    SecondName = con.SecondName,
+                    RecentlyActivity = con.RecentlyActivity,
+                    CreatedAt = con.CreatedAt,
+                    Status = con.Status,
+                    FirstMemberId = con.FirstMemberId,
+                    SecondMemberId = con.SecondMemberId
+                    //Skip Virtual Object of EF navigate to relevant Model
+                })
                 .ToListAsync();
             pageIndex += 1;
             return pagedConversations;

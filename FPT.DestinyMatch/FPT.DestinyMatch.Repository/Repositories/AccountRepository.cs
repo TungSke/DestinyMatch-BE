@@ -17,6 +17,14 @@ namespace FPT.DestinyMatch.Repository.Repositories
             var acc = await DMDB.Accounts.SingleOrDefaultAsync(a => a.Email == email);
             return acc;
         }
+
+        public async Task<Account?> GetByIdIncludeMember(Guid accountId)
+        {
+            var acc = await DMDB.Accounts.Include(a => a.Member)
+                .SingleOrDefaultAsync(a => a.Id == accountId);
+            return acc; 
+        }
+
         public async Task<IEnumerable<Account>> GetListAsync(int amountItem, int pageIndex,
             string? keyword, bool sortByDate, string? statusSearch, string? roleSearch, bool sortDescending)
         {
