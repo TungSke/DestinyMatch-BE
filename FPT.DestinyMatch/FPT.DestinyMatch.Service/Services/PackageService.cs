@@ -20,7 +20,7 @@ namespace FPT.DestinyMatch.Service.Services
         public async Task<PageModel<Package>> GetPackages(int pageIndex, int PageSize, string searchString)
         {
             var packages = await _packageRepository.GetPackages(pageIndex, PageSize, searchString);
-            var totalRecords = await _packageRepository.GetAsync().CountAsync();
+            var totalRecords = packages.Count();
             var totalPages = totalRecords > 0 ? (int)Math.Ceiling((double)totalRecords / PageSize) : 0;
             return new PageModel<Package>
             {

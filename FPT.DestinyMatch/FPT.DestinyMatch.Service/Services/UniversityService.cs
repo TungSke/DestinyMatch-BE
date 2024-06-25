@@ -21,7 +21,7 @@ namespace FPT.DestinyMatch.Service.Services
         public async Task<PageModel<University>> GetUniversities(int pageIndex, int PageSize, string searchString)
         {
             var universities = await _universityRepository.GetUniversities(pageIndex, PageSize, searchString);
-            var totalRecords = await _universityRepository.GetAsync().CountAsync();
+            var totalRecords = universities.Count();
             var totalPages = totalRecords > 0 ? (int)Math.Ceiling((double)totalRecords / PageSize) : 0;
             return new PageModel<University>
             {
