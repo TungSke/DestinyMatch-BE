@@ -14,7 +14,7 @@ namespace FPT.DestinyMatch.Repository.Repositories
         //**************************[ METHODS ]**************************
         public async Task<Account?> GetByEmailAsync(string email)
         {
-            var acc = await DMDB.Accounts.SingleOrDefaultAsync(a => a.Email == email);
+            var acc = await DMDB.Accounts.Include(x => x.Member).SingleOrDefaultAsync(a => a.Email == email);
             return acc;
         }
 

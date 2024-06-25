@@ -49,7 +49,8 @@ namespace FPT.DestinyMatch.API.Controllers
 
                 string? userRole = userClaims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
 
-                return Ok(new ClaimAccountInfo { Id = userId, Email = userEmail, Role = userRole });
+                string memberid = userClaims.FirstOrDefault(c => c.Type == "memberid")?.Value;
+                return Ok(new ClaimAccountInfo { Id = userId, Email = userEmail, Role = userRole , MemberId = memberid});
             }
             return Unauthorized();//401: User haven't authorized yet or don't have access permission
         }
@@ -75,12 +76,12 @@ namespace FPT.DestinyMatch.API.Controllers
         public async Task<IActionResult> Login([FromBody] AccountAuthen accLog)
         {
             var acc = await _accountService.LoginByPasswordAsync(accLog.Email, accLog.Password);
-
             ClaimAccountInfo validAcc = new()
             {
                 Id = acc.Id.ToString(),
                 Email = acc.Email!,
-                Role = acc.Role
+                Role = acc.Role,
+                MemberId = acc.Member.Id.ToString()
             };
 
             var token = GenerateToken(validAcc);
@@ -98,10 +99,11 @@ namespace FPT.DestinyMatch.API.Controllers
 
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, account.Id.ToString()),//Jwt standard claim
-                new Claim(JwtRegisteredClaimNames.Email, account.Email),
-                new Claim(ClaimTypes.Role, account.Role)//Jwt claim in .Net
-            };
+        new Claim(JwtRegisteredClaimNames.Sub, account.Id),
+        new Claim(JwtRegisteredClaimNames.Email, account.Email),
+        new Claim(ClaimTypes.Role, account.Role),
+        new Claim("memberid", account.MemberId)
+    };
 
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],
               _config["Jwt:Audience"],
