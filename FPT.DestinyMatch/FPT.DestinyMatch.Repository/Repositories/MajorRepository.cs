@@ -19,7 +19,8 @@ namespace FPT.DestinyMatch.Repository.Repositories
             {
                 majors = majors.Where(m => m.Name.Contains(search) || m.Code.Contains(search));
             }
-
+            page = page == 0 ? 1 : page;
+            pagesize = pagesize == 0 ? 5 : pagesize;
             var totalCount = await majors.CountAsync();
             majors = majors.Skip((page - 1) * pagesize).Take(pagesize);
 
