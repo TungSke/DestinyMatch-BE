@@ -1,21 +1,17 @@
 ﻿use DestinyMatch;
 go
---admin@DestinyMatch.com', '12345', 'admin','working'),
---moderator@DestinyMatch.com', '12345', 'moderator', 'working'),
+--admin@destinymatch.com', '12345', 'admin','working'),
+--moderator@destinymatch.com', '12345', 'moderator', 'working'),
 --hoangphse172789@fpt.edu.vn', '14112003', 'moderator', 'working'),
---newbie@university.edu.vn', '12345', 'member', default),
---an.nguyen@example.com', '12345', 'member', 'experienced'),
+--newbie@university.edu.vn', '12345', 'member', default)
 --=============[RESET DATA]=============--
-delete from [Verification];
-delete from [Feedback];
 delete from [Picture];
 delete from [MemberPackage];
 delete from [Package];
 delete from [HobbyMember];
 delete from [Hobby];
 delete from [Message];
-delete from [Conversation];
-delete from [MatchRequest];
+delete from [Matching];
 delete from [Member];
 delete from [Account];
 delete from [Major];
@@ -393,10 +389,11 @@ insert into [Hobby] ([Name], [Description]) values
 go
 
 insert into [Account](Email,[Password],[Role],[Status]) values
-('admin@DestinyMatch.com', '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5', 'admin','working'),
-('moderator@DestinyMatch.com', '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5', 'moderator', 'working'),
+('admin@destinymatch.com', '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5', 'admin','working'),
+('moderator@destinymatch.com', '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5', 'moderator', 'working'),
 ('hoangphse172789@fpt.edu.vn', '995c2de2f8d71c5a6391d78b62d730784d81d8cd1815b0699812e7dae3e6ba68', 'moderator', 'working'),
 ('newbie@university.edu.vn', '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5', 'member', default),
+('user@example.com', '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5', 'member', 'experienced'),
 ('an.nguyen@example.com', '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5', 'member', 'experienced'),
 ('ha.tran@example.com', '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5', 'member', 'experienced'),
 ('minh.le@example.com', '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5', 'member', 'experienced'),
@@ -420,24 +417,53 @@ insert into [Account](Email,[Password],[Role],[Status]) values
 go
 
 insert into [Member](Fullname, Gender, AccountId, UniversityId, MajorId) values
-(N'Nguyễn Văn An', 1, (SELECT Id FROM [Account] WHERE Email = 'an.nguyen@example.com'), (SELECT Id FROM [University] WHERE Code = 'FPT'), (SELECT Id FROM [Major] WHERE Code = '7480103')),
-(N'Trần Thu Hà', 0, (SELECT Id FROM [Account] WHERE Email = 'ha.tran@example.com'), (SELECT Id FROM [University] WHERE Code = 'NTT'), (SELECT Id FROM [Major] WHERE Code = '7340115')),
-(N'Lê Hoàng Minh', 1,(SELECT Id FROM [Account] WHERE Email = 'minh.le@example.com'), (SELECT Id FROM [University] WHERE Code = 'QSX'), (SELECT Id FROM [Major] WHERE Code = '7480103')),
-(N'Phạm Thu Thủy', 0, (SELECT Id FROM [Account] WHERE Email = 'thuy.pham@example.com'), (SELECT Id FROM [University] WHERE Code = 'QSX'), (SELECT Id FROM [Major] WHERE Code = '7340115')),
-(N'Ngô Đức Tuấn', 1,(SELECT Id FROM [Account] WHERE Email = 'tuan.ngo@example.com'), (SELECT Id FROM [University] WHERE Code = 'FPT'), (SELECT Id FROM [Major] WHERE Code = '7480101')),
-(N'Nguyễn Thị Lan', 0, (SELECT Id FROM [Account] WHERE Email = 'lan.nguyen@example.com'), (SELECT Id FROM [University] WHERE Code = 'QST'), (SELECT Id FROM [Major] WHERE Code = '7340101')),
-(N'Trịnh Công Danh', 1,(SELECT Id FROM [Account] WHERE Email = 'danh.trinh@example.com'), (SELECT Id FROM [University] WHERE Code = 'QST'), (SELECT Id FROM [Major] WHERE Code = '7480101')),
-(N'Lê Thị Diễm', 0, (SELECT Id FROM [Account] WHERE Email = 'diem.le@example.com'), (SELECT Id FROM [University] WHERE Code = 'HCN'), (SELECT Id FROM [Major] WHERE Code = '7340101')),
-(N'Hoàng Quốc Bảo', 1,(SELECT Id FROM [Account] WHERE Email = 'bao.hoang@example.com'), (SELECT Id FROM [University] WHERE Code = 'FPT'), (SELECT Id FROM [Major] WHERE Code = '7520130')),
-(N'Trương Thị Vân', 0, (SELECT Id FROM [Account] WHERE Email = 'van.truong@example.com'), (SELECT Id FROM [University] WHERE Code = 'HCN'), (SELECT Id FROM [Major] WHERE Code = '7340201')),
-(N'Đỗ Minh Đức', 1,(SELECT Id FROM [Account] WHERE Email = 'duc.do@example.com'), (SELECT Id FROM [University] WHERE Code = 'NTT'), (SELECT Id FROM [Major] WHERE Code = '7520130')),
-(N'Nguyễn Thị Mỹ', 0, (SELECT Id FROM [Account] WHERE Email = 'my.nguyen@example.com'), (SELECT Id FROM [University] WHERE Code = 'DVL'), (SELECT Id FROM [Major] WHERE Code = '7340201')),
-(N'Lê Anh Tuấn', 1,(SELECT Id FROM [Account] WHERE Email = 'tuan.le@example.com'), (SELECT Id FROM [University] WHERE Code = 'DVL'), (SELECT Id FROM [Major] WHERE Code = '7220209')),
-(N'Trần Thị Phương', 0, (SELECT Id FROM [Account] WHERE Email = 'phuong.tran@example.com'), (SELECT Id FROM [University] WHERE Code = 'VHS'), (SELECT Id FROM [Major] WHERE Code = '7220209')),
-(N'Ngô Văn Hải', 1,(SELECT Id FROM [Account] WHERE Email = 'hai.ngo@example.com'), (SELECT Id FROM [University] WHERE Code = 'HIU'), (SELECT Id FROM [Major] WHERE Code = '7220209')),
-(N'Nguyễn Thị Thanh', 0, (SELECT Id FROM [Account] WHERE Email = 'thanh.nguyen@example.com'), (SELECT Id FROM [University] WHERE Code = 'VHS'), (SELECT Id FROM [Major] WHERE Code = '7510605')),
-(N'Trần Quốc Bảo', 1,(SELECT Id FROM [Account] WHERE Email = 'bao.tran@example.com'), (SELECT Id FROM [University] WHERE Code = 'HIU'), (SELECT Id FROM [Major] WHERE Code = '7510605')),
-(N'Lê Thị Hồng', 0, (SELECT Id FROM [Account] WHERE Email = 'hong.le@example.com'), (SELECT Id FROM [University] WHERE Code = 'HIU'), (SELECT Id FROM [Major] WHERE Code = '7520216')),
-(N'Đỗ Văn Minh', 1,(SELECT Id FROM [Account] WHERE Email = 'minh.do@example.com'), (SELECT Id FROM [University] WHERE Code = 'UEF'), (SELECT Id FROM [Major] WHERE Code = '7520216')),
-(N'Nguyễn Thị Nga', 0, (SELECT Id FROM [Account] WHERE Email = 'nga.nguyen@example.com'), (SELECT Id FROM [University] WHERE Code = 'UEF'), (SELECT Id FROM [Major] WHERE Code = '7340101'));
+(N'Người Dùng', 1, (select Id from [Account] where Email = 'user@example.com'),(select Id from [University] where Code = 'FPT'), (select Id from [Major] where Code = '7480103')),
+(N'Nguyễn Văn An', 1, (select Id from [Account] where Email = 'an.nguyen@example.com'), (select Id from [University] where Code = 'FPT'), (select Id from [Major] where Code = '7480103')),
+(N'Trần Thu Hà', 0, (select Id from [Account] where Email = 'ha.tran@example.com'), (select Id from [University] where Code = 'NTT'), (select Id from [Major] where Code = '7340115')),
+(N'Lê Hoàng Minh', 1,(select Id from [Account] where Email = 'minh.le@example.com'), (select Id from [University] where Code = 'QSX'), (select Id from [Major] where Code = '7480103')),
+(N'Phạm Thu Thủy', 0, (select Id from [Account] where Email = 'thuy.pham@example.com'), (select Id from [University] where Code = 'QSX'), (select Id from [Major] where Code = '7340115')),
+(N'Ngô Đức Tuấn', 1,(select Id from [Account] where Email = 'tuan.ngo@example.com'), (select Id from [University] where Code = 'FPT'), (select Id from [Major] where Code = '7480101')),
+(N'Nguyễn Thị Lan', 0, (select Id from [Account] where Email = 'lan.nguyen@example.com'), (select Id from [University] where Code = 'QST'), (select Id from [Major] where Code = '7340101')),
+(N'Trịnh Công Danh', 1,(select Id from [Account] where Email = 'danh.trinh@example.com'), (select Id from [University] where Code = 'QST'), (select Id from [Major] where Code = '7480101')),
+(N'Lê Thị Diễm', 0, (select Id from [Account] where Email = 'diem.le@example.com'), (select Id from [University] where Code = 'HCN'), (select Id from [Major] where Code = '7340101')),
+(N'Hoàng Quốc Bảo', 1,(select Id from [Account] where Email = 'bao.hoang@example.com'), (select Id from [University] where Code = 'FPT'), (select Id from [Major] where Code = '7520130')),
+(N'Trương Thị Vân', 0, (select Id from [Account] where Email = 'van.truong@example.com'), (select Id from [University] where Code = 'HCN'), (select Id from [Major] where Code = '7340201')),
+(N'Đỗ Minh Đức', 1,(select Id from [Account] where Email = 'duc.do@example.com'), (select Id from [University] where Code = 'NTT'), (select Id from [Major] where Code = '7520130')),
+(N'Nguyễn Thị Mỹ', 0, (select Id from [Account] where Email = 'my.nguyen@example.com'), (select Id from [University] where Code = 'DVL'), (select Id from [Major] where Code = '7340201')),
+(N'Lê Anh Tuấn', 1,(select Id from [Account] where Email = 'tuan.le@example.com'), (select Id from [University] where Code = 'DVL'), (select Id from [Major] where Code = '7220209')),
+(N'Trần Thị Phương', 0, (select Id from [Account] where Email = 'phuong.tran@example.com'), (select Id from [University] where Code = 'VHS'), (select Id from [Major] where Code = '7220209')),
+(N'Ngô Văn Hải', 1,(select Id from [Account] where Email = 'hai.ngo@example.com'), (select Id from [University] where Code = 'HIU'), (select Id from [Major] where Code = '7220209')),
+(N'Nguyễn Thị Thanh', 0, (select Id from [Account] where Email = 'thanh.nguyen@example.com'), (select Id from [University] where Code = 'VHS'), (select Id from [Major] where Code = '7510605')),
+(N'Trần Quốc Bảo', 1,(select Id from [Account] where Email = 'bao.tran@example.com'), (select Id from [University] where Code = 'HIU'), (select Id from [Major] where Code = '7510605')),
+(N'Lê Thị Hồng', 0, (select Id from [Account] where Email = 'hong.le@example.com'), (select Id from [University] where Code = 'HIU'), (select Id from [Major] where Code = '7520216')),
+(N'Đỗ Văn Minh', 1,(select Id from [Account] where Email = 'minh.do@example.com'), (select Id from [University] where Code = 'UEF'), (select Id from [Major] where Code = '7520216')),
+(N'Nguyễn Thị Nga', 0, (select Id from [Account] where Email = 'nga.nguyen@example.com'), (select Id from [University] where Code = 'UEF'), (select Id from [Major] where Code = '7340101'));
+go
+
+-- First, let's get the Id of the user with email 'user@example.com'
+declare @UserId uniqueidentifier;
+select @UserId = Id from [Member] where AccountId = (select Id from [Account] where Email = 'user@example.com');
+
+-- Now let's insert 20 records into the Matching table
+insert into [Matching] (FirstName, SecondName, FirstMemberId, SecondMemberId) values
+(N'Người Dùng', (select Fullname from [Member] where AccountId = (select Id from [Account] where Email = 'an.nguyen@example.com')), @UserId, (select Id from [Member] where AccountId = (select Id from [Account] where Email = 'an.nguyen@example.com'))),
+(N'Người Dùng', (select Fullname from [Member] where AccountId = (select Id from [Account] where Email = 'ha.tran@example.com')), @UserId, (select Id from [Member] where AccountId = (select Id from [Account] where Email = 'ha.tran@example.com'))),
+(N'Người Dùng', (select Fullname from [Member] where AccountId = (select Id from [Account] where Email = 'minh.le@example.com')), @UserId, (select Id from [Member] where AccountId = (select Id from [Account] where Email = 'minh.le@example.com'))),
+(N'Người Dùng', (select Fullname from [Member] where AccountId = (select Id from [Account] where Email = 'thuy.pham@example.com')), @UserId, (select Id from [Member] where AccountId = (select Id from [Account] where Email = 'thuy.pham@example.com'))),
+(N'Người Dùng', (select Fullname from [Member] where AccountId = (select Id from [Account] where Email = 'tuan.ngo@example.com')), @UserId, (select Id from [Member] where AccountId = (select Id from [Account] where Email = 'tuan.ngo@example.com'))),
+(N'Người Dùng', (select Fullname from [Member] where AccountId = (select Id from [Account] where Email = 'lan.nguyen@example.com')), @UserId, (select Id from [Member] where AccountId = (select Id from [Account] where Email = 'lan.nguyen@example.com'))),
+(N'Người Dùng', (select Fullname from [Member] where AccountId = (select Id from [Account] where Email = 'danh.trinh@example.com')), @UserId, (select Id from [Member] where AccountId = (select Id from [Account] where Email = 'danh.trinh@example.com'))),
+(N'Người Dùng', (select Fullname from [Member] where AccountId = (select Id from [Account] where Email = 'diem.le@example.com')), @UserId, (select Id from [Member] where AccountId = (select Id from [Account] where Email = 'diem.le@example.com'))),
+(N'Người Dùng', (select Fullname from [Member] where AccountId = (select Id from [Account] where Email = 'bao.hoang@example.com')), @UserId, (select Id from [Member] where AccountId = (select Id from [Account] where Email = 'bao.hoang@example.com'))),
+(N'Người Dùng', (select Fullname from [Member] where AccountId = (select Id from [Account] where Email = 'van.truong@example.com')), @UserId, (select Id from [Member] where AccountId = (select Id from [Account] where Email = 'van.truong@example.com'))),
+(N'Người Dùng', (select Fullname from [Member] where AccountId = (select Id from [Account] where Email = 'duc.do@example.com')), @UserId, (select Id from [Member] where AccountId = (select Id from [Account] where Email = 'duc.do@example.com'))),
+(N'Người Dùng', (select Fullname from [Member] where AccountId = (select Id from [Account] where Email = 'my.nguyen@example.com')), @UserId, (select Id from [Member] where AccountId = (select Id from [Account] where Email = 'my.nguyen@example.com'))),
+(N'Người Dùng', (select Fullname from [Member] where AccountId = (select Id from [Account] where Email = 'tuan.le@example.com')), @UserId, (select Id from [Member] where AccountId = (select Id from [Account] where Email = 'tuan.le@example.com'))),
+(N'Người Dùng', (select Fullname from [Member] where AccountId = (select Id from [Account] where Email = 'phuong.tran@example.com')), @UserId, (select Id from [Member] where AccountId = (select Id from [Account] where Email = 'phuong.tran@example.com'))),
+(N'Người Dùng', (select Fullname from [Member] where AccountId = (select Id from [Account] where Email = 'hai.ngo@example.com')), @UserId, (select Id from [Member] where AccountId = (select Id from [Account] where Email = 'hai.ngo@example.com'))),
+(N'Người Dùng', (select Fullname from [Member] where AccountId = (select Id from [Account] where Email = 'thanh.nguyen@example.com')), @UserId, (select Id from [Member] where AccountId = (select Id from [Account] where Email = 'thanh.nguyen@example.com'))),
+(N'Người Dùng', (select Fullname from [Member] where AccountId = (select Id from [Account] where Email = 'bao.tran@example.com')), @UserId, (select Id from [Member] where AccountId = (select Id from [Account] where Email = 'bao.tran@example.com'))),
+(N'Người Dùng', (select Fullname from [Member] where AccountId = (select Id from [Account] where Email = 'hong.le@example.com')), @UserId, (select Id from [Member] where AccountId = (select Id from [Account] where Email = 'hong.le@example.com'))),
+(N'Người Dùng', (select Fullname from [Member] where AccountId = (select Id from [Account] where Email = 'minh.do@example.com')), @UserId, (select Id from [Member] where AccountId = (select Id from [Account] where Email = 'minh.do@example.com'))),
+(N'Người Dùng', (select Fullname from [Member] where AccountId = (select Id from [Account] where Email = 'nga.nguyen@example.com')), @UserId, (select Id from [Member] where AccountId = (select Id from [Account] where Email = 'nga.nguyen@example.com')));
 go
