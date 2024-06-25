@@ -1,4 +1,6 @@
 ﻿using FPT.DestinyMatch.Repository.Models.Generic;
+using System;
+using System.Collections.Generic;
 
 namespace FPT.DestinyMatch.Repository.Models;
 
@@ -12,11 +14,11 @@ public partial class Message : GenericModel<Guid>
 
     public string? Status { get; set; }
 
-    public Guid ConversationId { get; set; }
+    public Guid MatchId { get; set; }
 
     public Guid SenderId { get; set; }
 
-    public virtual Conversation Conversation { get; set; } = null!;
+    public virtual Matching Match { get; set; } = null!;
 
     public virtual Member Sender { get; set; } = null!;
 }

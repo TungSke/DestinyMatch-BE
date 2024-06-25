@@ -9,7 +9,7 @@ namespace FPT.DestinyMatch.Service.Models.Request
         public DateTime? SentAt { get; set; } = DateTime.UtcNow;
         public string? Status { get; set; }
 
-        public Guid ConversationId { get; set; }
+        public Guid MatchId { get; set; }
 
         public Guid SenderId { get; set; }
     }

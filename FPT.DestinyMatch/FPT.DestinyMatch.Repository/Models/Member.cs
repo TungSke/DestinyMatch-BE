@@ -1,4 +1,6 @@
 ﻿using FPT.DestinyMatch.Repository.Models.Generic;
+using System;
+using System.Collections.Generic;
 
 namespace FPT.DestinyMatch.Repository.Models;
 
@@ -28,17 +30,11 @@ public partial class Member : GenericModel<Guid>
 
     public virtual Account Account { get; set; } = null!;
 
-    public virtual ICollection<Conversation> ConversationFirstMembers { get; set; } = new List<Conversation>();
-
-    public virtual ICollection<Conversation> ConversationSecondMembers { get; set; } = new List<Conversation>();
-
-    public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
-
     public virtual Major Major { get; set; } = null!;
 
-    public virtual ICollection<MatchRequest> MatchRequestFroms { get; set; } = new List<MatchRequest>();
+    public virtual ICollection<Matching> MatchingFirstMembers { get; set; } = new List<Matching>();
 
-    public virtual ICollection<MatchRequest> MatchRequestTos { get; set; } = new List<MatchRequest>();
+    public virtual ICollection<Matching> MatchingSecondMembers { get; set; } = new List<Matching>();
 
     public virtual ICollection<MemberPackage> MemberPackages { get; set; } = new List<MemberPackage>();
 
@@ -47,8 +43,6 @@ public partial class Member : GenericModel<Guid>
     public virtual ICollection<Picture> Pictures { get; set; } = new List<Picture>();
 
     public virtual University University { get; set; } = null!;
-
-    public virtual ICollection<Verification> Verifications { get; set; } = new List<Verification>();
 
     public virtual ICollection<Hobby> Hobbies { get; set; } = new List<Hobby>();
 }

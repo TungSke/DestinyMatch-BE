@@ -29,8 +29,6 @@ namespace FPT.DestinyMatch.API
 
             // Inject Service Classes
             services.AddScoped<IAccountService, AccountService>();
-            services.AddScoped<IConversationService, ConversationService>();
-            services.AddScoped<IVerificationService, VerificationService>();
             services.AddScoped<IMemberService, MemberService>();
             services.AddScoped<IMemberPackageService, MemberPackageService>();
             services.AddScoped<IMessageService, MessageService>();
@@ -39,13 +37,10 @@ namespace FPT.DestinyMatch.API
             services.AddScoped<IUniversitityService, UniversityService>();
             services.AddScoped<IHobbyService, HobbyService>();
             services.AddScoped<IMajorService, MajorService>();
-            services.AddScoped<IMatchRequestService, MatchRequestService>();
 
 
             // Inject Repository Classess
             services.AddScoped<IAccountRepository, AccountRepository>();
-            services.AddScoped<IConversationRepository, ConversationRepository>();
-            services.AddScoped<IVerificationRepository, VerificationRepository>();
             services.AddScoped<IMemberRepository, MemberRepository>();
             services.AddScoped<IMemberPackageRepository, MemberPackageRepository>();
             services.AddScoped<IMessageReposirory, MessageReposirory>();
@@ -54,7 +49,6 @@ namespace FPT.DestinyMatch.API
             services.AddScoped<IUniversityRepository, UniversityRepository>();
             services.AddScoped<IHobbyReposiroty, HobbyRepository>();
             services.AddScoped<IMajorRepository, MajorRepository>();
-            services.AddScoped<IMatchRequestRepository, MatchRequestRepository>();
 
             services.AddScoped<ChatHub>();
             //
