@@ -98,14 +98,10 @@ namespace FPT.DestinyMatch.API.Controllers
         [HttpDelete]
         [Route("account/{id}")]
         [Authorize(Roles = "moderator")]
-        public async Task<IActionResult> Delete([FromRoute] Guid id)
+        public async Task<IActionResult> BanAccount([FromRoute] Guid id)
         {
-            bool result = await _accountService.DeleteAccountAsync(id);
-            if (result == true)
-            {
-                return Ok("Delete Success!");
-            }
-            return BadRequest("Delete Failed!");
+            bool result = await _accountService.BanAccount(id);
+            return result ? Ok("Ban Success!") : BadRequest("Ban Failed!");
         }
 
         //=====================[ VERIFICATION ]=====================

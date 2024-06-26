@@ -22,7 +22,7 @@ namespace FPT.DestinyMatch.Service.Services
                 Content = messageRequest.Content,
                 SentAt = DateTime.UtcNow,
                 Status = messageRequest.Status,
-                ConversationId = messageRequest.ConversationId,
+                MatchingId = messageRequest.ConversationId,
                 SenderId = messageRequest.SenderId
             };
             _messageReposirory.Add(messageToAdd);
@@ -62,7 +62,7 @@ namespace FPT.DestinyMatch.Service.Services
             message.Content = !string.IsNullOrEmpty(messageRequest.Content) ? messageRequest.Content : message.Content;
             message.SentAt = DateTime.UtcNow;
             message.Status = !string.IsNullOrEmpty(messageRequest.Status) ? messageRequest.Status : message.Status;
-            message.ConversationId = messageRequest.ConversationId;
+            message.MatchingId = messageRequest.ConversationId;
             message.SenderId = messageRequest.SenderId;
             _messageReposirory.Update(message);
             await _messageReposirory.SaveChangeAsync();
@@ -71,7 +71,7 @@ namespace FPT.DestinyMatch.Service.Services
 
         public async Task<IEnumerable<Message>> GetMessagesByConversationId(Guid conversationId)
         {
-            return await _messageReposirory.GetAsync().Where(m => m.ConversationId == conversationId).ToListAsync();
+            return await _messageReposirory.GetAsync().Where(m => m.MatchingId == conversationId).ToListAsync();
         }
     }
 }

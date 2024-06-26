@@ -34,16 +34,6 @@ namespace FPT.DestinyMatch.Service.Services
                 ?? throw new NotFoundException("Don't found any account suitable that Id");
             return (acc.Member is null) ? throw new NotFoundException("This account haven't create profile yet!") : acc;
         }
-
-        public async Task<Account> GetAccountByEmailAsync(string email)
-        {
-            if (email.IsNullOrEmpty())
-            {
-                throw new BadRequestException("Cannot find account with null email!");
-            }
-            var acc = await _accountRepository.GetByEmailAsync(email);
-            return acc is null ? throw new NotFoundException("Not found that account id") : acc;
-        }
         public async Task<IEnumerable<Account>> GetAccountsListAsync(int size, int page,
             string? keyword, bool byDate, string? status, string? role, bool isDescending)
         {
@@ -59,10 +49,12 @@ namespace FPT.DestinyMatch.Service.Services
 
         public async Task<bool> CreateAccountAsync(string email, string password)
         {
-            var existAccount = await GetAccountByEmailAsync(email);
+            var existAccount = await _accountRepository.GetValidAccountByEmail(email);
+
             if (existAccount is not null)
             {
-                throw new ConflictException("Account existed!");
+                BannedChecker(existAccount.Status);
+                throw new ConflictException("Account existed! Cannot create duplicate account");
             }
             string hashedPassword = HashString(password);
             await _accountRepository.Add(
@@ -94,20 +86,21 @@ namespace FPT.DestinyMatch.Service.Services
 
         public async Task<Account> LoginByPasswordAsync(string email, string password)
         {
-            var existAccount = await _accountRepository.GetByEmailAsync(email);
-            if (existAccount is null
-                || existAccount.Status!.ToLower().Equals("deleted")
-                || existAccount.Status.ToLower().Equals("banned"))
+            var foundAccount = await _accountRepository.GetValidAccountByEmail(email);
+            if (foundAccount is null)
             {
-                throw new BadRequestException("Email is not existed or not available");
+                throw new BadRequestException("This account is not registered or not available");
             }
+
+            BannedChecker(foundAccount.Status);
+
             string hashedPassword = HashString(password);
 
-            if (!existAccount.Password!.Equals(hashedPassword))
+            if (!foundAccount.Password!.Equals(hashedPassword))
             {
                 throw new BadRequestException("Incorrect password!");
             }
-            return existAccount;
+            return foundAccount;
         }
 
         public async Task<bool> ChangeRoleAccountAsync(Guid accountId, string newRole)
@@ -140,23 +133,12 @@ namespace FPT.DestinyMatch.Service.Services
             return await _accountRepository.SaveChangeAsync();
         }
 
-        public async Task<bool> DeleteAccountAsync(Guid accountId)
+        public async Task<bool> DeleteAccountAsync(Guid accountId, string confirmPassword)
         {
             var currentAcc = await _accountRepository.GetByIdAsync(accountId);
             if (currentAcc is null)
             {
-                throw new NotFoundException("Cannot found that account Id");
-            }
-            currentAcc.Status = "deleted";
-            return await _accountRepository.SaveChangeAsync();
-        }
-
-        public async Task<bool> DeleteAccountAsync(string email, string confirmPassword)
-        {
-            var currentAcc = await _accountRepository.GetByEmailAsync(email);
-            if (currentAcc is null)
-            {
-                throw new NotFoundException("Cannot found that email account");
+                throw new NotFoundException("Cannot found that account");
             }
 
             string hashedPassword = HashString(confirmPassword);
@@ -167,16 +149,48 @@ namespace FPT.DestinyMatch.Service.Services
             currentAcc.Status = "deleted";
             return await _accountRepository.SaveChangeAsync();
         }
+        public async Task<bool> BanAccount(Guid accountId)
+        {
+            var existAccount = await _accountRepository.GetByIdAsync(accountId) ?? throw new NotFoundException("Not found this account id");
+            existAccount.Status = "banned";
+            return await _accountRepository.SaveChangeAsync();
+        }
 
         public async Task<bool> RecoverAccountAsync(string email, string newStatus)
         {
-            var accFound = await _accountRepository.GetByEmailAsync(email);
+            var accFound = await _accountRepository.GetValidAccountByEmail(email);
             if (accFound is null)
             {
                 return false;
             }
             accFound.Status = newStatus;
             return await _accountRepository.SaveChangeAsync();
+        }
+
+        public async Task<Account> HandleGoogleAsync(string email)
+        {
+            var existAccount = await _accountRepository.GetValidAccountByEmail(email);
+
+            if (existAccount is null) //null -> create account with that mail
+            {
+                await _accountRepository.Add(new Account { Email = email });
+                await _accountRepository.SaveChangeAsync();
+
+                //then return account object
+                var registered = await _accountRepository.GetValidAccountByEmail(email)
+                    ?? throw new BadRequestException("There is an error while Signup this email using google!");
+                return registered;
+            }
+
+            BannedChecker(existAccount!.Status);
+            return existAccount;
+        }
+        private static void BannedChecker(string status)
+        {
+            if (status.ToLower().Equals("banned"))
+            {
+                throw new BadRequestException("This Account has been banned and can't not be login or signup again!");
+            }
         }
     }
 }

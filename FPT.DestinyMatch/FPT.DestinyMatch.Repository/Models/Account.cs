@@ -6,7 +6,7 @@ public partial class Account : GenericModel<Guid>
 {
     public Guid Id { get; set; }
 
-    public string? Email { get; set; }
+    public string Email { get; set; } = null!;
 
     public string? Password { get; set; }
 
@@ -14,7 +14,7 @@ public partial class Account : GenericModel<Guid>
 
     public string Role { get; set; } = null!;
 
-    public string? Status { get; set; }
+    public string Status { get; set; } = null!;
 
     public virtual Member? Member { get; set; }
 }

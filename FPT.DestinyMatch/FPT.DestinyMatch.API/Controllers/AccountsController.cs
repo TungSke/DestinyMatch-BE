@@ -74,6 +74,12 @@ namespace FPT.DestinyMatch.API.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] AccountAuthen accLog)
         {
+            // Validate the email address
+            if (!AccountAuthen.IsValidEmail(accLog.Email))
+            {
+                return BadRequest("Invalid email address!");
+            }
+
             var acc = await _accountService.LoginByPasswordAsync(accLog.Email, accLog.Password);
 
             ClaimAccountInfo validAcc = new()
@@ -103,11 +109,13 @@ namespace FPT.DestinyMatch.API.Controllers
                 new Claim(ClaimTypes.Role, account.Role)//Jwt claim in .Net
             };
 
-            var token = new JwtSecurityToken(_config["Jwt:Issuer"],
-              _config["Jwt:Audience"],
-              claims,
-              expires: DateTime.Now.AddMinutes(15),
-              signingCredentials: credentials);
+            var token = new JwtSecurityToken(
+                _config["Jwt:Issuer"],
+                _config["Jwt:Audience"],
+                claims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: credentials
+                );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
@@ -127,9 +135,9 @@ namespace FPT.DestinyMatch.API.Controllers
 
         [HttpDelete]
         [Authorize(Roles = "member")]
-        public async Task<IActionResult> Delete([FromBody] AccountAuthen input)
+        public async Task<IActionResult> Delete([FromBody] AccountConfirm acc)
         {
-            bool result = await _accountService.DeleteAccountAsync(input.Email, input.Password);
+            bool result = await _accountService.DeleteAccountAsync(acc.Id, acc.Password);
             return result ? Ok("Delete Success!") : BadRequest("Delete Failed!");
         }
 
@@ -153,97 +161,34 @@ namespace FPT.DestinyMatch.API.Controllers
 
             return await GoogleJsonWebSignature.ValidateAsync(token, settings);
         }
+
         [HttpPost]
         [Route("google-authentication")]
         [AllowAnonymous]
         public async Task<IActionResult> GoogleLogin([FromBody] GoogleResponse responseData)
         {
 
-            var payload = await ValidateGoogleToken(responseData.Token,responseData.Platfrom);
+            var payload = await ValidateGoogleToken(responseData.Token, responseData.Platform);
 
             // Extract the email from the payload
             var email = payload.Email;
+            //var fullname = payload.Name;
+            //var pictureUrl = payload.Picture;
 
-            //var existAccount = await _accountService.GetAccountByEmailAsync(email);
-            //if()
+            var accInfo = await _accountService.HandleGoogleAsync(email);
 
-            //ClaimAccountInfo validAcc = new()
-            //{
-            //    Id = existAccount.Id.ToString(),
-            //    Email = existAccount.Email!,
-            //    Role = existAccount.Role
-            //};
+            ClaimAccountInfo validAcc = new()
+            {
+                Id = accInfo.Id.ToString(),
+                Email = accInfo.Email!,
+                Role = accInfo.Role
+            };
 
-            //var token = GenerateToken(validAcc);
-            //return Created(nameof(Login), new JwtToken
-            //{
-            //    Token = token
-            //});
-            //string username = "", password = "";
-            //bool needSignup = true, existEmail = false;
-            //for (int role = 1; role <= 4; role++)
-            //{
-            //    switch (role)
-            //    {
-            //        case 1:
-            //            user = await _context.Users
-            //            .Include(u => u.Account)
-            //            .SingleOrDefaultAsync(usr => usr.Email.Equals(email));
-            //            existEmail = (user is not null);
-            //            username = (user is not null) ? user.Account.Username : string.Empty;
-            //            password = (user is not null) ? user.Account.Password : string.Empty;
-            //            break;
-            //        case 2:
-            //            teacher = await _context.Teachers
-            //            .Include(tch => tch.Account)
-            //            .SingleOrDefaultAsync(tch => tch.Email.Equals(email));
-            //            existEmail = (teacher is not null);
-            //            username = (teacher is not null) ? teacher.Account.Username : string.Empty;
-            //            password = (teacher is not null) ? teacher.Account.Password : string.Empty;
-            //            break;
-            //        case 3:
-            //            staff = await _context.Staff
-            //            .Include(stf => stf.Account)
-            //            .SingleOrDefaultAsync(stf => stf.Email.Equals(email));
-            //            existEmail = (staff is not null);
-            //            username = (staff is not null) ? staff.Account.Username : string.Empty;
-            //            password = (staff is not null) ? staff.Account.Password : string.Empty;
-            //            break;
-            //        case 4:
-            //            admin = await _context.Admins
-            //            .Include(adm => adm.Account)
-            //            .SingleOrDefaultAsync(adm => adm.Email.Equals(email));
-            //            existEmail = (admin is not null);
-            //            username = (admin is not null) ? admin.Account.Username : string.Empty;
-            //            password = (admin is not null) ? admin.Account.Password : string.Empty;
-            //            break;
-            //    }
-            //    //If exist then stop checking
-            //    if (existEmail)
-            //    {
-            //        needSignup = false;
-            //        break;
-            //    }
-
-            //}//End loop
-
-            ////If not exist then create account
-            //if (needSignup)
-            //{
-            //    username = email;
-            //    password = Guid.NewGuid().ToString();
-            //    await _context.Database.ExecuteSqlRawAsync("exec dbo.proc_signUpAccount @username = @p0, @password = @p1, @email = @p2", email, password, email);
-            //}
-
-            ////Then login
-            //var account = await _context.Accounts
-            //.AsNoTracking()
-            //.SingleOrDefaultAsync(acc => acc.Username.Equals(username) && acc.Password.Equals(password));
-
-            //HttpContext.Session.SetString("usersession", JsonSerializer.Serialize(account));
-            //await HttpContext.Session.CommitAsync();
-            //return RedirectToAction("Index", "Home");
-            return Ok();
+            var token = GenerateToken(validAcc);
+            return Created(nameof(Login), new JwtToken
+            {
+                Token = token
+            });
         }
     }
 }
