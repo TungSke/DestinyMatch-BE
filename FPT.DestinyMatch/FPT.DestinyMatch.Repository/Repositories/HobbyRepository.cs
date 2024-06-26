@@ -20,7 +20,8 @@ namespace FPT.DestinyMatch.Repository.Repositories
             {
                 hobbies = hobbies.Where(h => h.Name.Contains(search) || h.Description.Contains(search));
             }
-
+            page = page == 0 ? 1 : page;
+            pagesize = pagesize == 0 ? 5 : pagesize;
             var totalCount = await hobbies.CountAsync();
             hobbies = hobbies.Skip((page - 1) * pagesize).Take(pagesize);
 

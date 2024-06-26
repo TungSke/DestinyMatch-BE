@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Mapster;
 using FPT.DestinyMatch.Service.Models.Response;
+using FPT.DestinyMatch.Repository.Repositories;
 
 namespace FPT.DestinyMatch.Service.Services
 {
@@ -68,12 +69,7 @@ namespace FPT.DestinyMatch.Service.Services
             return await _memberRepository.GetAsync().FirstOrDefaultAsync(x => x.AccountId == id);
         }
 
-        public async Task<IEnumerable<MemberResponse>> GetMembers()
-        {
-            var listmem = await _memberRepository.GetAsync().Include(x => x.Pictures).ToListAsync();
-            var mapper = listmem.Adapt<IEnumerable<MemberResponse>>();
-            return mapper;
-        }
+        public async Task<(IEnumerable<Member> members, int totalCount)> GetMembers(string search, int page, int pagesize) => await _memberRepository.GetMembers(search, page, pagesize);
 
         public async Task<Member> UpdateMember(Guid Id, MemberRequest memberRequest)
         {
