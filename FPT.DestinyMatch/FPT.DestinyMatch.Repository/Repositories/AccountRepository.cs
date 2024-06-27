@@ -12,12 +12,12 @@ namespace FPT.DestinyMatch.Repository.Repositories
         }
 
         //**************************[ METHODS ]**************************
-        public async Task<Account?> GetByEmailAsync(string email)
+        public async Task<Account?> GetValidAccountByEmail(string email)
         {
-            var acc = await DMDB.Accounts.Include(x => x.Member).SingleOrDefaultAsync(a => a.Email == email);
-            return acc;
+            return await GetByFilterAsync(acc =>
+            acc.Email.Equals(email) &&
+            !acc.Status.ToLower().Equals("deleted"));
         }
-
         public async Task<Account?> GetByIdIncludeMember(Guid accountId)
         {
             var acc = await DMDB.Accounts.Include(a => a.Member)

@@ -40,12 +40,11 @@ go
 create table [Account]
 (
 	Id uniqueidentifier default newid() primary key,
-	Email nvarchar(100) unique,
+	Email nvarchar(100) not null,
 	[Password] nvarchar(max),
 	[CreateAt] datetime default CURRENT_TIMESTAMP,
 	[Role] nvarchar(20) not null default 'member',				--1:admin   2:moderator   3:member
-	[Status] nvarchar(20) default 'newbie'						--newbie	experienced		working
-																--deleted	banned
+	[Status] nvarchar(20) not null default 'newbie'						--newbie	experienced		working		deleted		banned
 );
 go
 
@@ -157,7 +156,7 @@ create table [Message]
 	[SentAt] datetime default CURRENT_TIMESTAMP,
 	[Status] nvarchar(30) default N'Đã gửi',
 
-	MatchId uniqueidentifier not null foreign key references [Matching](Id),
+	MatchingId uniqueidentifier not null foreign key references [Matching](Id),
 	SenderId uniqueidentifier not null foreign key references [Member](Id)
 );
 create index idx_SenderId on [Message](SenderId);
