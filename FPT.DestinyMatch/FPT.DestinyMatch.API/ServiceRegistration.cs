@@ -37,6 +37,7 @@ namespace FPT.DestinyMatch.API
             services.AddScoped<IUniversitityService, UniversityService>();
             services.AddScoped<IHobbyService, HobbyService>();
             services.AddScoped<IMajorService, MajorService>();
+            services.AddScoped<IMatchingService, MatchingService>();
 
 
             // Inject Repository Classess
@@ -49,6 +50,7 @@ namespace FPT.DestinyMatch.API
             services.AddScoped<IUniversityRepository, UniversityRepository>();
             services.AddScoped<IHobbyReposiroty, HobbyRepository>();
             services.AddScoped<IMajorRepository, MajorRepository>();
+            services.AddScoped<IMatchingRepository, MatchingRepository>();
 
             services.AddScoped<ChatHub>();
             //
