@@ -71,7 +71,7 @@ namespace FPT.DestinyMatch.Service.Services
 
         public async Task<IEnumerable<Message>> GetMessagesByConversationId(Guid MatchId)
         {
-            return await _messageReposirory.GetAsync().Where(m => m.MatchId == MatchId).ToListAsync();
+            return await _messageReposirory.GetAsync().Where(m => m.MatchId == MatchId).OrderBy(x => x.SentAt).ToListAsync();
         }
     }
 }

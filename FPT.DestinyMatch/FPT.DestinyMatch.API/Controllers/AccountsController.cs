@@ -86,7 +86,8 @@ namespace FPT.DestinyMatch.API.Controllers
             {
                 Id = acc.Id.ToString(),
                 Email = acc.Email!,
-                Role = acc.Role
+                Role = acc.Role,
+                MemberId = acc.Member.Id.ToString()
             };
 
             var token = GenerateToken(validAcc);
@@ -106,7 +107,8 @@ namespace FPT.DestinyMatch.API.Controllers
             {
                 new Claim(JwtRegisteredClaimNames.Sub, account.Id.ToString()),//Jwt standard claim
                 new Claim(JwtRegisteredClaimNames.Email, account.Email),
-                new Claim(ClaimTypes.Role, account.Role)//Jwt claim in .Net
+                new Claim(ClaimTypes.Role, account.Role),//Jwt claim in .Net
+                new Claim("memberid", account.MemberId)//Custom claim
             };
 
             var token = new JwtSecurityToken(
