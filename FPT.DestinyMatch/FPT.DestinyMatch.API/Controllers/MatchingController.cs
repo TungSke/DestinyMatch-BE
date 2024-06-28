@@ -18,7 +18,8 @@ namespace FPT.DestinyMatch.API.Controllers
             this._matchingService = matchingService;
         }
 
-        [HttpGet("GetThisUserConversation")]
+        [HttpGet]
+        [Route("get-current-user-conversation")]
         [Authorize]
         public async Task<IActionResult> GetMatchings(int pageIndex = 1, int pageSize = 10, string? search = null)
         {
