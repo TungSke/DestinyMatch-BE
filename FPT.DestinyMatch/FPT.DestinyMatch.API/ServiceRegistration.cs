@@ -63,9 +63,6 @@ namespace FPT.DestinyMatch.API
             // Add Authorize On Swagger
             services.AddAuthorizeOnSwagger();
 
-            // Add Google Service
-            services.AddGoogleService();
-
             // Cors
             services.CorsConfig();
 
@@ -149,18 +146,6 @@ namespace FPT.DestinyMatch.API
                     }
                 });
             });
-            return services;
-        }
-
-        private static IServiceCollection AddGoogleService(this IServiceCollection services)
-        {
-            //services.AddAuthentication().AddGoogle(options =>
-            //{
-            //    IConfigurationSection googleAuthNSection = configuration.GetSection("Authentication:Google");
-
-            //    options.ClientId = "268713324794-6op71f4fodke41ftkgc70r76so334dqn.apps.googleusercontent.com";
-            //    options.ClientSecret = "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";
-            //});
             return services;
         }
 

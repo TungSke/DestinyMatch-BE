@@ -9,8 +9,8 @@ namespace FPT.DestinyMatch.Service.Interfaces
         public Task<IEnumerable<Account>> GetAccountsListAsync(int size, int page,
             string? keyword, bool byDate, string? status, string? role, bool isDescending);
         public Task<bool> CreateAccountAsync(string email, string password);
-        public Task<Account> LoginByPasswordAsync(string email, string password);
-        public Task<Account> HandleGoogleAsync(string email);
+        public Task<string> LoginByPasswordAsync(string email, string password);
+        public Task<string> HandleGoogleAsync(string token, string platform);
         public Task<bool> ChangeRoleAccountAsync(Guid accountId, string newRole);
         public Task<bool> ChangePasswordAccountAsync(Guid accountId, string oldPassword, string newPassword, bool privilegedOverride);
         public Task<bool> DeleteAccountAsync(Guid accountId, string confirmPassword);

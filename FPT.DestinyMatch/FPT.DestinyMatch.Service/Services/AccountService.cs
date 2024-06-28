@@ -6,15 +6,22 @@ using System.Text;
 using FPT.DestinyMatch.Service.Extensions.Exceptions;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Identity.Client;
+using Google.Apis.Auth;
+using Google.Apis.Gmail.v1;
+using Microsoft.Extensions.Configuration;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace FPT.DestinyMatch.Service.Services
 {
     public class AccountService : IAccountService
     {
         private readonly IAccountRepository _accountRepository;
-        public AccountService(IAccountRepository accountRepository)
+        private readonly IConfiguration _config;
+        public AccountService(IAccountRepository accountRepository, IConfiguration config)
         {
             _accountRepository = accountRepository;
+            _config = config;
         }
 
         //--------------------------[ IMPLEMENT ]--------------------------
@@ -84,7 +91,7 @@ namespace FPT.DestinyMatch.Service.Services
             }
         }
 
-        public async Task<Account> LoginByPasswordAsync(string email, string password)
+        public async Task<string> LoginByPasswordAsync(string email, string password)
         {
             var foundAccount = await _accountRepository.GetValidAccountByEmail(email);
             if (foundAccount is null)
@@ -100,7 +107,38 @@ namespace FPT.DestinyMatch.Service.Services
             {
                 throw new BadRequestException("Incorrect password!");
             }
-            return foundAccount;
+
+            //==========================
+            var jwtToken = GenerateToken(
+                foundAccount.Id.ToString(),
+                foundAccount.Email!,
+                foundAccount.Role,
+                ""
+            );
+            return jwtToken;
+        }
+        private string GenerateToken(string id, string email, string role, string? name)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            name = name ?? "";
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, id),//Jwt standard claim
+                new Claim(JwtRegisteredClaimNames.Email, email),
+                new Claim(ClaimTypes.Role, role),//Jwt claim in .Net
+                new Claim(JwtRegisteredClaimNames.Name, name)
+            };
+
+            var token = new JwtSecurityToken(
+                _config["Jwt:Issuer"],
+                _config["Jwt:Audience"],
+                claims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: credentials
+                );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         public async Task<bool> ChangeRoleAccountAsync(Guid accountId, string newRole)
@@ -167,10 +205,16 @@ namespace FPT.DestinyMatch.Service.Services
             return await _accountRepository.SaveChangeAsync();
         }
 
-        public async Task<Account> HandleGoogleAsync(string email)
+        public async Task<string> HandleGoogleAsync(string googleToken, string platform)
         {
-            var existAccount = await _accountRepository.GetValidAccountByEmail(email);
+            var payload = await ValidateGoogleToken(googleToken, platform);
+            // Extract the email from the payload
+            var email = payload.Email;
+            var fullname = payload.Name;
+            //var pictureUrl = payload.Picture;
 
+            var existAccount = await _accountRepository.GetValidAccountByEmail(email);
+            string jwtToken;
             if (existAccount is null) //null -> create account with that mail
             {
                 await _accountRepository.Add(new Account { Email = email });
@@ -179,11 +223,33 @@ namespace FPT.DestinyMatch.Service.Services
                 //then return account object
                 var registered = await _accountRepository.GetValidAccountByEmail(email)
                     ?? throw new BadRequestException("There is an error while Signup this email using google!");
-                return registered;
+
+                jwtToken = GenerateToken(
+                    registered.Id.ToString(),
+                    registered.Email!,
+                    registered.Role,
+                    fullname);
+                return jwtToken;
             }
 
             BannedChecker(existAccount!.Status);
-            return existAccount;
+            jwtToken = GenerateToken(
+                    existAccount.Id.ToString(),
+                    existAccount.Email!,
+                    existAccount.Role,
+                    fullname);
+            return jwtToken;
+        }
+        private async Task<GoogleJsonWebSignature.Payload> ValidateGoogleToken(string token, string platform)
+        {
+            var settings = new GoogleJsonWebSignature.ValidationSettings
+            {
+                Audience = platform.ToLower().Equals("web") ?
+                new List<string> { _config["Google:web:client_id"]! } :
+                new List<string> { _config["Google:mobile:client_id"]! }
+            };
+
+            return await GoogleJsonWebSignature.ValidateAsync(token, settings);
         }
         private static void BannedChecker(string status)
         {
