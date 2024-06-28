@@ -87,8 +87,8 @@ namespace FPT.DestinyMatch.API.Controllers
                 Id = acc.Id.ToString(),
                 Email = acc.Email!,
                 Role = acc.Role,
-                MemberId = acc.Member.Id.ToString()
-            };
+                MemberId =  acc.Member?.Id.ToString() ?? ""
+        };
 
             var token = GenerateToken(validAcc);
             return Created(nameof(Login), new JwtToken
