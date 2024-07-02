@@ -46,7 +46,9 @@ namespace FPT.DestinyMatch.API.Controllers
 
                 string? userRole = userClaims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
 
-                return Ok(new ClaimAccountInfo { Id = userId, Email = userEmail, Role = userRole });
+                string? memberid = userClaims.FirstOrDefault(c => c.Type == "memberid")?.Value;
+
+                return Ok(new ClaimAccountInfo { Id = userId, Email = userEmail, Role = userRole, MemberId = memberid });
             }
             return Unauthorized();//401: User haven't authorized yet or don't have access permission
         }
