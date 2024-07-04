@@ -32,8 +32,8 @@ namespace FPT.DestinyMatch.Service.Services
                 ? m.SecondMember?.Fullname ?? "Unknown"
                 : m.FirstMember?.Fullname ?? "Unknown",
             ParticipantAvatarUrl = m.FirstMemberId == currentMemId
-                ? m.SecondMember?.Pictures?.FirstOrDefault()?.UrlPath ?? "default-avatar-url"
-                : m.FirstMember?.Pictures?.FirstOrDefault()?.UrlPath ?? "default-avatar-url",
+                ? m.SecondMember?.Pictures?.FirstOrDefault()?.UrlPath ?? "https://i.pinimg.com/736x/21/91/6e/21916e491ef0d796398f5724c313bbe7.jpg"
+                : m.FirstMember?.Pictures?.FirstOrDefault()?.UrlPath ?? "https://i.pinimg.com/736x/21/91/6e/21916e491ef0d796398f5724c313bbe7.jpg",
             LastMessage = m.Messages?.OrderByDescending(msg => msg.SentAt).FirstOrDefault()?.Content ?? "No messages",
             LastMessageTime = m.Messages?.OrderByDescending(msg => msg.SentAt).FirstOrDefault()?.SentAt
         })
