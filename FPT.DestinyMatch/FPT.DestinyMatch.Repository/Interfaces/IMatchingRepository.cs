@@ -9,6 +9,6 @@ namespace FPT.DestinyMatch.Repository.Interfaces
 {
     public interface IMatchingRepository : IGenericRepository<Matching>
     {
-        Task<List<Matching>> GetMatchings(Guid usingMemid, int pageIndex, int pageSize, string search);
+        Task<List<Matching>> GetMatchings(Guid usingMemid, int pageIndex, int pageSize, string search, string status);
     }
 }

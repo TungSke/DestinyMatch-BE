@@ -3,6 +3,8 @@ using FPT.DestinyMatch.Service.Interfaces;
 using FPT.DestinyMatch.Service.Models.Request;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
 using System.Security.Claims;
 
 namespace FPT.DestinyMatch.API.Controllers
@@ -21,10 +23,10 @@ namespace FPT.DestinyMatch.API.Controllers
         [HttpGet]
         [Route("get-current-user-conversation")]
         [Authorize]
-        public async Task<IActionResult> GetMatchings(int pageIndex = 1, int pageSize = 10, string? search = null)
+        public async Task<IActionResult> GetMatchings(int pageIndex = 1, int pageSize = 10, string? search = null, string status = "success : pending" )
         {
             thisUsermemId = User.Claims.FirstOrDefault(c => c.Type == "memberid")?.Value;
-            var list = await _matchingService.GetMatchings(Guid.Parse(thisUsermemId), pageIndex, pageSize, search);
+            var list = await _matchingService.GetMatchings(Guid.Parse(thisUsermemId), pageIndex, pageSize, search, status);
             return Ok(list);
         }
 
@@ -35,7 +37,7 @@ namespace FPT.DestinyMatch.API.Controllers
             thisUsermemId = User.Claims.FirstOrDefault(c => c.Type == "memberid")?.Value;
             matchingrequest.thisMemberId = Guid.Parse(thisUsermemId);
             await _matchingService.CreateMatching(matchingrequest);
-            return Ok("Created");
+            return Created();
         }
 
         [HttpPatch]

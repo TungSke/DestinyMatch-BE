@@ -20,9 +20,9 @@ namespace FPT.DestinyMatch.Service.Services
             _membberRepo=membberRepo;
         }
 
-        public async Task<IEnumerable<MatchingResponse>> GetMatchings(Guid currentMemId, int pageIndex, int pageSize, string search)
+        public async Task<IEnumerable<MatchingResponse>> GetMatchings(Guid currentMemId, int pageIndex, int pageSize, string search, string status)
         {
-            var list = await _matchingRepository.GetMatchings(currentMemId, pageIndex, pageSize, search);
+            var list = await _matchingRepository.GetMatchings(currentMemId, pageIndex, pageSize, search, status);
             var matchings = list
         .OrderBy(m => m.CreatedAt)
         .Select(m => new MatchingResponse

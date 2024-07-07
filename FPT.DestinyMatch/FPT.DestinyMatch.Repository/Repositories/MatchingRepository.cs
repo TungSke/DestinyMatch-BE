@@ -11,10 +11,10 @@ namespace FPT.DestinyMatch.Repository.Repositories
         }
 
 
-        public async Task<List<Matching>> GetMatchings(Guid usingMemid, int pageIndex, int pageSize, string search)
+        public async Task<List<Matching>> GetMatchings(Guid usingMemid, int pageIndex, int pageSize, string search, string status)
         {
             var query = GetAsync().Include(fm => fm.FirstMember).ThenInclude(fm => fm.Messages).Include(sm => sm.SecondMember).ThenInclude(sm => sm.Messages)
-                .Where(x => x.Status.ToLower().Equals("success") && (x.FirstMemberId.Equals(usingMemid) || x.SecondMemberId.Equals(usingMemid))
+                .Where(x => x.Status.ToLower().Equals(status.ToLower()) && (x.FirstMemberId.Equals(usingMemid) || x.SecondMemberId.Equals(usingMemid))
                 );
 
             if (!string.IsNullOrEmpty(search))
