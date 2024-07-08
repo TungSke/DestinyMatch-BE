@@ -43,7 +43,7 @@ namespace FPT.DestinyMatch.API.Controllers
                 var message = await _messageService.CreateMessage(messageRequest);
 
                 // Notify clients about the new message
-                await _hubContext.Clients.All.SendAsync("ReceiveMessage", message.MatchId.ToString(), message.Content);
+                await _hubContext.Clients.Client(message.MatchId.ToString()).SendAsync(message.Content);
                 Console.WriteLine(_hubContext.Groups);
                 return Ok(message);
             }
