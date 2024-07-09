@@ -28,7 +28,8 @@ namespace FPT.DestinyMatch.Repository.Repositories
 
         public async Task<Member?> GetMemberById(Guid id)
         {
-            return await DMDB.Members.Include(m => m.Pictures)
+            return await DMDB.Members.Include(m => m.Pictures).Include(m => m.Hobbies)
+
                                      .FirstOrDefaultAsync(m => m.Id == id);
         }
     }
