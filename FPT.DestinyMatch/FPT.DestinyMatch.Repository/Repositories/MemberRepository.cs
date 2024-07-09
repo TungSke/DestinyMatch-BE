@@ -12,7 +12,7 @@ namespace FPT.DestinyMatch.Repository.Repositories
 
         public async Task<(IEnumerable<Member> members, int totalCount)> GetMembers(string? search, int page, int pagesize)
         {
-            var members = DMDB.Members.AsQueryable();
+            var members = DMDB.Members.Include(m => m.Pictures).AsQueryable();
 
             if (!string.IsNullOrEmpty(search))
             {
@@ -24,6 +24,13 @@ namespace FPT.DestinyMatch.Repository.Repositories
             members = members.Skip((page - 1) * pagesize).Take(pagesize);
 
             return (members, totalCount);
+        }
+
+        public async Task<Member?> GetMemberById(Guid id)
+        {
+            return await DMDB.Members.Include(m => m.Pictures).Include(m => m.Hobbies)
+
+                                     .FirstOrDefaultAsync(m => m.Id == id);
         }
     }
 }

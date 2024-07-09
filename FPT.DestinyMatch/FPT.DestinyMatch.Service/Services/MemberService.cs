@@ -61,7 +61,7 @@ namespace FPT.DestinyMatch.Service.Services
 
         public async Task<Member?> GetMemberById(Guid id)
         {
-            return await _memberRepository.GetByIdAsync(id);
+            return await _memberRepository.GetMemberById(id);
         }
 
         public async Task<Member> GetMemberByAccountId(Guid id)
