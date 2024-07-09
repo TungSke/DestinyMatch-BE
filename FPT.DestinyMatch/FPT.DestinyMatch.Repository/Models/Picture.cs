@@ -1,6 +1,7 @@
 ﻿using FPT.DestinyMatch.Repository.Models.Generic;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace FPT.DestinyMatch.Repository.Models;
 
@@ -16,5 +17,6 @@ public partial class Picture : GenericModel<Guid>
 
     public Guid MemberId { get; set; }
 
+    [JsonIgnore]
     public virtual Member Member { get; set; } = null!;
 }
