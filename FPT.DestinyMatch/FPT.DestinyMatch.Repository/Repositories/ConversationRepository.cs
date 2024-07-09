@@ -24,7 +24,10 @@ namespace FPT.DestinyMatch.Repository.Repositories
         }
         public async Task<IEnumerable<Conversation>> GetRecentlyListAsync(Guid memberId, int pageIndex)
         {
-            //var query = DMDB.Conversations.AsQueryable();
+            //var query = DMDB.Conversations
+            //.AsNoTracking()
+            //.AsSplitQuery()
+            //.AsQueryable();
 
             ////Apply filter
             //query = query.Where(con => con.FirstMemberId == memberId || con.SecondMemberId == memberId);
@@ -56,7 +59,10 @@ namespace FPT.DestinyMatch.Repository.Repositories
         public async Task<IEnumerable<Conversation>> GetFilteredListAsync(int amountItem, int pageIndex, Guid memberUsingId,
             string? keyword, string? statusSearch, bool isDescending)
         {
-            //var query = DMDB.Conversations.AsQueryable();
+            //var query = DMDB.Conversations
+                //.AsNoTracking()
+                //.AsSplitQuery()
+                //.AsQueryable();
 
             //// Apply search
             //query = query.Where(con => con.FirstMemberId == memberUsingId);

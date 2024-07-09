@@ -28,7 +28,10 @@ namespace FPT.DestinyMatch.Repository.Repositories
         public async Task<IEnumerable<Account>> GetListAsync(int amountItem, int pageIndex,
             string? keyword, bool sortByDate, string? statusSearch, string? roleSearch, bool sortDescending)
         {
-            var query = DMDB.Accounts.AsQueryable();
+            var query = DMDB.Accounts
+                .AsNoTracking()
+                .AsSplitQuery()
+                .AsQueryable();
 
             // Apply search
             if (!string.IsNullOrEmpty(keyword))
