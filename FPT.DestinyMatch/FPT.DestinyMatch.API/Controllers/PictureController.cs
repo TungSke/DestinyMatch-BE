@@ -28,19 +28,11 @@ namespace FPT.DestinyMatch.API.Controllers
             {
                 return BadRequest("No file was uploaded");
             }
-            /*using var image = await Image.LoadAsync(file.OpenReadStream());
-
-            image.Mutate(x => x.Resize(1024, 720));
-
-            using var ms = new MemoryStream();
-            await image.SaveAsync(ms, new JpegEncoder());
-
-            ms.Position = 0;*/
             Image image = Image.FromStream(file.OpenReadStream(), true, true);
-            var newImage = new Bitmap(1024, 768);
+            var newImage = new Bitmap(1980, 1080);
             using (var g = Graphics.FromImage(newImage))
             {
-                g.DrawImage(image, 0, 0, 1024, 768);
+                g.DrawImage(image, 0, 0, 1980, 1080);
             }
             using (var outputStream = new MemoryStream())
             {

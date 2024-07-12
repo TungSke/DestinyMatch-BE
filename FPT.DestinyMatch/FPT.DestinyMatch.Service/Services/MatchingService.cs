@@ -32,8 +32,8 @@ namespace FPT.DestinyMatch.Service.Services
                 ? m.SecondMember?.Fullname ?? "Unknown"
                 : m.FirstMember?.Fullname ?? "Unknown",
             ParticipantAvatarUrl = m.FirstMemberId == currentMemId
-                ? m.SecondMember?.Pictures?.FirstOrDefault()?.UrlPath ?? "https://i.pinimg.com/736x/21/91/6e/21916e491ef0d796398f5724c313bbe7.jpg"
-                : m.FirstMember?.Pictures?.FirstOrDefault()?.UrlPath ?? "https://i.pinimg.com/736x/21/91/6e/21916e491ef0d796398f5724c313bbe7.jpg",
+                ? m.SecondMember?.Pictures.FirstOrDefault(x => x.IsAvatar == true)?.UrlPath ?? "https://firebasestorage.googleapis.com/v0/b/destinymatch-70b72.appspot.com/o/imgs%2Fdefault-avatar-profile-icon-of-social-media-user-vector.jpg?alt=media&token=6ebdc7fd-6433-4c0d-9c36-d80fd848ce41"
+                : m.FirstMember?.Pictures.FirstOrDefault(x => x.IsAvatar == true)?.UrlPath ?? "https://firebasestorage.googleapis.com/v0/b/destinymatch-70b72.appspot.com/o/imgs%2Fdefault-avatar-profile-icon-of-social-media-user-vector.jpg?alt=media&token=6ebdc7fd-6433-4c0d-9c36-d80fd848ce41",
             LastMessage = m.Messages?.OrderByDescending(msg => msg.SentAt).FirstOrDefault()?.Content ?? "No messages",
             LastMessageTime = m.Messages?.OrderByDescending(msg => msg.SentAt).FirstOrDefault()?.SentAt
         })

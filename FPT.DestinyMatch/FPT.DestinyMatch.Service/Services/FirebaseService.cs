@@ -8,9 +8,6 @@ namespace FPT.DestinyMatch.Service.Services
 {
     public class FirebaseService
     {
-        public void PushNotification()
-        {
-                                                                                  
-        }
+        
     }
 }
