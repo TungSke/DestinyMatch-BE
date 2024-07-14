@@ -158,7 +158,8 @@ namespace FPT.DestinyMatch.API
                     {
                         builder.AllowAnyOrigin()
                                .AllowAnyMethod()
-                               .AllowAnyHeader();
+                               .AllowAnyHeader()
+                               .SetIsOriginAllowed((host) => true);
                     });
             });
             return services;
