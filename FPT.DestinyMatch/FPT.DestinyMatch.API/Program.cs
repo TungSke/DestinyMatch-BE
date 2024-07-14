@@ -25,7 +25,7 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseCors("AllowAllOrigins");
+app.UseCors("CorsPolicy");
 app.UseRouting();
 app.UseAuthentication();//Jwt
 

@@ -153,14 +153,11 @@ namespace FPT.DestinyMatch.API
         {
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowAllOrigins",
-                    builder =>
-                    {
-                        builder.AllowAnyOrigin()
-                               .AllowAnyMethod()
-                               .AllowAnyHeader()
-                               .SetIsOriginAllowed((host) => true);
-                    });
+                options.AddPolicy("CorsPolicy",
+                        builder => builder
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials());
             });
             return services;
         }

@@ -20,12 +20,13 @@ namespace FPT.DestinyMatch.API
             }
         }
 
-
         public async Task JoinGroup(string memberId, string matchId)
         {
+            Console.WriteLine($"Member {memberId} joining group {matchId}");
             try
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, matchId);
+                Console.WriteLine($"Member {memberId} successfully joined group {matchId}");
             }
             catch (Exception ex)
             {
@@ -34,10 +35,11 @@ namespace FPT.DestinyMatch.API
             }
         }
 
-
         public async Task LeaveGroup(string matchId)
         {
+            Console.WriteLine($"Leaving group {matchId}");
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, matchId);
         }
+
     }
 }
