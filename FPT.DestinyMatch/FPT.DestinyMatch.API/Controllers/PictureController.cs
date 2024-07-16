@@ -28,19 +28,11 @@ namespace FPT.DestinyMatch.API.Controllers
             {
                 return BadRequest("No file was uploaded");
             }
-            /*using var image = await Image.LoadAsync(file.OpenReadStream());
-
-            image.Mutate(x => x.Resize(1024, 720));
-
-            using var ms = new MemoryStream();
-            await image.SaveAsync(ms, new JpegEncoder());
-
-            ms.Position = 0;*/
             Image image = Image.FromStream(file.OpenReadStream(), true, true);
-            var newImage = new Bitmap(1024, 768);
+            var newImage = new Bitmap(1980, 1080);
             using (var g = Graphics.FromImage(newImage))
             {
-                g.DrawImage(image, 0, 0, 1024, 768);
+                g.DrawImage(image, 0, 0, 1980, 1080);
             }
             using (var outputStream = new MemoryStream())
             {
@@ -59,7 +51,7 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "member")]
+        //[Authorize(Roles = "member")]
         public async Task<IActionResult> GetPictureById(Guid id)
         {
             var picture = await _pictureService.GetPictureById(id);
@@ -67,7 +59,7 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpGet("user/{userid}")]
-        [Authorize(Roles = "member")]
+        //[Authorize(Roles = "member")]
         public async Task<IActionResult> GetAllPicturesFromUser(Guid userid)
         {
             var pictures = await _pictureService.getAllPicturfromusers(userid);
@@ -75,10 +67,10 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpPut]
-        [Authorize(Roles = "member")]
-        public async Task<IActionResult> UpdatePicture(PictureResponse picture)
+        //[Authorize(Roles = "member")]
+        public async Task<IActionResult> UpdatePicture(IFormFile? file,[FromQuery] PictureRequest picture)
         {
-            await _pictureService.UpdatePicture(picture);
+            await _pictureService.UpdatePicture(file,picture);
             return Ok(picture);
         }
 

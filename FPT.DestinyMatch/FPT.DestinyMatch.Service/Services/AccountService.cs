@@ -107,17 +107,18 @@ namespace FPT.DestinyMatch.Service.Services
             {
                 throw new BadRequestException("Incorrect password!");
             }
-
+            string memberid = foundAccount?.Member?.Id.ToString() ?? "";
             //==========================
             var jwtToken = GenerateToken(
                 foundAccount.Id.ToString(),
                 foundAccount.Email!,
                 foundAccount.Role,
-                ""
-            );
+                "",
+                memberid
+            );   
             return jwtToken;
         }
-        private string GenerateToken(string id, string email, string role, string? name)
+        private string GenerateToken(string id, string email, string role, string? name, string memberid)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -127,7 +128,8 @@ namespace FPT.DestinyMatch.Service.Services
                 new Claim(JwtRegisteredClaimNames.Sub, id),//Jwt standard claim
                 new Claim(JwtRegisteredClaimNames.Email, email),
                 new Claim(ClaimTypes.Role, role),//Jwt claim in .Net
-                new Claim(JwtRegisteredClaimNames.Name, name)
+                new Claim("memberid", memberid),
+                new Claim(JwtRegisteredClaimNames.Name, name),
             };
 
             var token = new JwtSecurityToken(
@@ -227,7 +229,7 @@ namespace FPT.DestinyMatch.Service.Services
                     registered.Id.ToString(),
                     registered.Email!,
                     registered.Role,
-                    fullname);
+                    fullname,"");
                 return jwtToken;
             }
 
@@ -236,7 +238,8 @@ namespace FPT.DestinyMatch.Service.Services
                     existAccount.Id.ToString(),
                     existAccount.Email!,
                     existAccount.Role,
-                    fullname);
+                    fullname,
+                    "");
             return jwtToken;
         }
         private async Task<GoogleJsonWebSignature.Payload> ValidateGoogleToken(string token, string platform)

@@ -3,6 +3,7 @@ using FPT.DestinyMatch.Service.Models.Request;
 using Microsoft.EntityFrameworkCore;
 using FPT.DestinyMatch.Repository.Interfaces;
 using FPT.DestinyMatch.Repository.Models;
+using FPT.DestinyMatch.Repository.Repositories;
 
 namespace FPT.DestinyMatch.Service.Services
 {
@@ -15,7 +16,7 @@ namespace FPT.DestinyMatch.Service.Services
             _majorRepository = majorRepository;
         }
 
-        public async Task<IEnumerable<Major>> GetAllMajor() => await _majorRepository.GetAsync().ToListAsync();
+        public async Task<(IEnumerable<Major> majors, int totalCount)> GetMajors(string search, int page, int pagesize) => await _majorRepository.GetMajors(search, page, pagesize);
 
         public async Task<Major?> GetMajorById(Guid id) => await _majorRepository.GetByIdAsync(id);
 

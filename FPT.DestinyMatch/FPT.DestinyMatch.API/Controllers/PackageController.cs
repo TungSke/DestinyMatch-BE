@@ -4,6 +4,7 @@ using FPT.DestinyMatch.Service.Models.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
 
 namespace FPT.DestinyMatch.API.Controllers
 {
@@ -18,7 +19,7 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetPackages(int pageIndex, int PageSize, string searchString)
+        public async Task<IActionResult> GetPackages(int pageIndex=1, int PageSize=10, string? searchString=null)
         {
             var packages = await _packageService.GetPackages(pageIndex, PageSize, searchString);
             return Ok(packages);
@@ -30,11 +31,12 @@ namespace FPT.DestinyMatch.API.Controllers
         public async Task<IActionResult> GetPackageById(Guid id)
         {
             var package = await _packageService.GetPackageById(id);
+            if(package == null) return NotFound("Package not found");
             return Ok(package);
         }
 
         [HttpPost]
-        [Authorize(Roles = "admin,moderator")]
+        //[Authorize(Roles = "admin,moderator")]
         public async Task<IActionResult> CreatePackageAsync(PackageRequest package)
         {
             var res = await _packageService.CreatePackageAsync(package);
@@ -46,7 +48,7 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpPut]
-        [Authorize(Roles = "admin,moderator")]
+        //[Authorize(Roles = "admin,moderator")]
         public async Task<IActionResult> UpdatePackageAsync(PackageResponse package)
         {
             var res = await _packageService.UpdatePackageAsync(package);
@@ -58,7 +60,7 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "admin,moderator")]
+        /*[Authorize(Roles = "admin,moderator")]*/
         public async Task<IActionResult> DeletePackageAsync(Guid id)
         {
             var res = await _packageService.DeletePackageAsync(id);
@@ -66,7 +68,7 @@ namespace FPT.DestinyMatch.API.Controllers
             {
                 return NotFound();
             }
-            return Ok();
+            return Ok("delete success");
         }
     }
 }

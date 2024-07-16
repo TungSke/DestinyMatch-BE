@@ -5,6 +5,8 @@ using FPT.DestinyMatch.Repository.Interfaces;
 using FPT.DestinyMatch.Repository.Models;
 using FPT.DestinyMatch.Service.Models.Request;
 using FPT.DestinyMatch.Service.Models.Response;
+using FPT.DestinyMatch.API.Models.ResponseModels;
+using FPT.DestinyMatch.Repository.Repositories;
 
 namespace FPT.DestinyMatch.Service.Services
 {
@@ -15,10 +17,19 @@ namespace FPT.DestinyMatch.Service.Services
         {
             _packageRepository = packageRepository;
         }
-        public async Task<IEnumerable<Package>> GetPackages(int pageIndex, int PageSize, string searchString)
+        public async Task<PageModel<Package>> GetPackages(int pageIndex, int PageSize, string searchString)
         {
-
-            return await _packageRepository.GetPackages(pageIndex, PageSize, searchString);
+            var packages = await _packageRepository.GetPackages(pageIndex, PageSize, searchString);
+            var totalRecords = packages.Count();
+            var totalPages = totalRecords > 0 ? (int)Math.Ceiling((double)totalRecords / PageSize) : 0;
+            return new PageModel<Package>
+            {
+                PageIndex = pageIndex,
+                PageSize = PageSize,
+                totalPage = totalPages,
+                Count = totalRecords,
+                Data = packages
+            };
         }
 
         public async Task<Package> GetPackageById(Guid id)
@@ -28,10 +39,10 @@ namespace FPT.DestinyMatch.Service.Services
 
         public async Task<bool> CreatePackageAsync(PackageRequest package)
         {
-            var existed = await _packageRepository.GetAsync().AnyAsync(x => x.Code.ToLower().Equals(package.Code.ToLower()));
-            if (existed == true)
+            var existed = await _packageRepository.GetAsync().FirstOrDefaultAsync(x => x.Code.ToLower().Equals(package.Code.ToLower()));
+            if (existed != null)
             {
-                throw new Exception("University not found");
+                throw new Exception("Package Existed");
             }
             else
             {
@@ -47,11 +58,11 @@ namespace FPT.DestinyMatch.Service.Services
             var existed = await _packageRepository.GetByIdAsync(package.Id);
             if (existed is null)
             {
-                throw new Exception("University not found");
+                throw new Exception("Package not found");
             }
             else
             {
-                var mapster = package.Adapt(existed);
+                package.Adapt(existed);
                 await _packageRepository.SaveChangeAsync();
                 return true;
             }
@@ -62,7 +73,7 @@ namespace FPT.DestinyMatch.Service.Services
             var existed = await _packageRepository.GetByIdAsync(id);
             if (existed is null)
             {
-                throw new Exception("University not found");
+                throw new Exception("Package not found");
             }
             else
             {

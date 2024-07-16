@@ -9,9 +9,8 @@ namespace FPT.DestinyMatch.Service.Models.Request
 {
     public class PictureRequest
     {
-        [Required(ErrorMessage = "Picture Id require")]
-        public Guid PictureId { get; set; }
-        [Required(ErrorMessage = "Picture URL is require")]
-        public required string UrlPath { get; set; }
+        public Guid Id { get; set; }
+        public bool? IsAvatar { get; set; }
+        public Guid? MemberId { get; set; }
     }
 }

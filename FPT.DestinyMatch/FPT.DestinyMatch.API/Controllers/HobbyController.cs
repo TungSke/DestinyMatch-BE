@@ -16,10 +16,17 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllHobbies()
+        public async Task<IActionResult> GetHobbies(string? search, int page, int pagesize)
         {
-            var hobbies = await _hobbyService.GetHobbies();
-            return Ok(hobbies);
+            try
+            {
+                var (hobbies, count) = await _hobbyService.GetHobbies(search, page, pagesize);
+                return Ok(new { hobbies, count });
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         [HttpGet("{id}")]

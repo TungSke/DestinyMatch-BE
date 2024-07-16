@@ -1,7 +1,9 @@
 ﻿using FPT.DestinyMatch.Service.Interfaces;
 using FPT.DestinyMatch.Service.Models.Request;
+using FPT.DestinyMatch.Service.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Drawing.Printing;
 
 namespace FPT.DestinyMatch.API.Controllers
 {
@@ -17,10 +19,17 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllMember()
+        public async Task<IActionResult> GetMembers(string? search, int page, int pagesize)
         {
-            var members = await _memberService.GetMembers();
-            return Ok(members);
+            try
+            {
+                var (data, count) = await _memberService.GetMembers(search, page, pagesize);
+                return Ok(new { data, count });
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         [HttpGet("{id}")]
@@ -34,6 +43,23 @@ namespace FPT.DestinyMatch.API.Controllers
             return Ok(member);
         }
 
+        [HttpGet("accountid")]
+        public async Task<IActionResult> GetMemberByAccountId(Guid id)
+        {
+            var member = await _memberService.GetMemberByAccountId(id);
+            if (member is null)
+            {
+                return NotFound();
+            }
+            return Ok(member);
+        }
+
+        [HttpGet("exists")]
+        public async Task<ActionResult<bool>> CheckAccountExistsInMember( Guid accountId)
+        {
+            var exists = await _memberService.CheckAccountExistsInMember(accountId);
+            return Ok(exists);
+        }
 
 
         [HttpPost]

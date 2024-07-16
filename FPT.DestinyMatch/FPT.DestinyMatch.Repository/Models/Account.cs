@@ -1,4 +1,6 @@
 ﻿using FPT.DestinyMatch.Repository.Models.Generic;
+using System;
+using System.Collections.Generic;
 
 namespace FPT.DestinyMatch.Repository.Models;
 

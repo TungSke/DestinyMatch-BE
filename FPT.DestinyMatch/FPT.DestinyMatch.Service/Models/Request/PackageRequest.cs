@@ -15,5 +15,7 @@ namespace FPT.DestinyMatch.Service.Models.Request
         public string? Description { get; set; }
 
         public int? Price { get; set; }
+
+        public string? Status { get; set; }
     }
 }

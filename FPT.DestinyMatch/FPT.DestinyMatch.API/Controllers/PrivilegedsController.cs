@@ -15,13 +15,9 @@ namespace FPT.DestinyMatch.API.Controllers
     public class PrivilegedsController : ControllerBase
     {
         private readonly IAccountService _accountService;
-        private readonly IVerificationService _verificationService;
-        public PrivilegedsController(
-            IAccountService accountService,
-            IVerificationService verificationService)
+        public PrivilegedsController(IAccountService accountService)
         {
             _accountService = accountService;
-            _verificationService = verificationService;
         }
 
         //=====================[ ACCOUNT ]=====================
@@ -105,44 +101,5 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         //=====================[ VERIFICATION ]=====================
-        [HttpGet]
-        [Route("verification/{id}")]
-        [Authorize(Roles = "moderator")]
-        public async Task<IActionResult> ViewDetail([FromRoute] Guid id)
-        {
-            return Ok(await _verificationService.GetVerificationDetailAsync(id));
-        }
-
-        [HttpPost]
-        [Route("verification/list")]
-        [Authorize(Roles = "moderator")]
-        public async Task<IActionResult> ViewListVerification([FromBody] VerificationPaging inputData)
-        {
-            var verList = await _verificationService.GetListVerificationAsync(
-                inputData.Amount,
-                inputData.Page,
-                inputData.MemberId,
-                inputData.Status,
-                inputData.OrderByAscending);
-            return Ok(verList);
-        }
-
-        [HttpPatch]
-        [Route("verification/new-status")]
-        [Authorize(Roles = "moderator")]
-        public async Task<IActionResult> UpdateStatusVerification([FromBody] VerificationUpdate inputData)
-        {
-            bool result = await _verificationService.UpdateStatusVerificationAsync(inputData.Id, inputData.Status);
-            return result ? Ok("Update Success") : BadRequest("Update Failed");
-        }
-
-        [HttpDelete]
-        [Route("verification/{id}")]
-        [Authorize(Roles = "member")]
-        public async Task<IActionResult> CancelVerification([FromRoute] Guid id)
-        {
-            bool result = await _verificationService.DeleteVerificationAsync(id);
-            return result ? Ok("Delete Success") : BadRequest("Delete Failed");
-        }
     }
 }

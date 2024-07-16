@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace FPT.DestinyMatch.Repository.Interfaces
 {
-    public interface IMatchRequestRepository : IGenericRepository<MatchRequest>
+    public interface IMatchingRepository : IGenericRepository<Matching>
     {
-        Task<List<MatchRequest>> MatchRequestOfMe(Guid fromMemberId);
-
-        Task<List<MatchRequest>> MatchRequestToMe(Guid toMemberId);
+        Task<List<Matching>> GetMatchings(Guid usingMemid, int pageIndex, int pageSize, string search, string status);
     }
 }

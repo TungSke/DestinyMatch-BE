@@ -2,6 +2,7 @@
 using FPT.DestinyMatch.Service.Models.Request;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace FPT.DestinyMatch.API.Controllers
 {
@@ -43,8 +44,7 @@ namespace FPT.DestinyMatch.API.Controllers
                 var message = await _messageService.CreateMessage(messageRequest);
 
                 // Notify clients about the new message
-                await _hubContext.Clients.All.SendAsync("ReceiveMessage", message.MatchingId.ToString(), message.Content);
-                Console.WriteLine(_hubContext.Groups);
+                
                 return Ok(message);
             }
 

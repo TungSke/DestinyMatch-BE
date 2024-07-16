@@ -6,37 +6,40 @@ namespace FPT.DestinyMatch.API
 {
     public class ChatHub : Hub
     {
-        public async Task SendMessage(Guid conversationId, string message)
+        public async Task SendMessage(string matchId, string memberId, string message)
         {
-            await Clients.Group(conversationId.ToString()).SendAsync("ReceiveMessage", conversationId, message);
-        }
-
-        public async Task JoinConversation(string conversationId)
-        {
-            if (string.IsNullOrWhiteSpace(conversationId))
-            {
-                throw new ArgumentException("Conversation ID cannot be null or empty", nameof(conversationId));
-            }
-
-            var connectionId = Context.ConnectionId;
-            if (string.IsNullOrWhiteSpace(connectionId))
-            {
-                throw new InvalidOperationException("Connection ID cannot be null or empty");
-            }
-
+            Console.WriteLine($"Message sent from {memberId} to ${matchId} with content ${message}");
             try
             {
-                await Groups.AddToGroupAsync(connectionId, conversationId);
-                Console.WriteLine($"Connection {connectionId} added to group {conversationId}");
+                await Clients.Group(matchId).SendAsync("ReceiveMessage", memberId, message);
             }
             catch (Exception ex)
             {
-                // Log the exception
-                Console.WriteLine($"Error joining group {conversationId}: {ex.Message}");
+                Console.WriteLine($"Error sending message: {ex.Message}");
                 throw;
             }
         }
 
-        
+        public async Task JoinGroup(string memberId, string matchId)
+        {
+            Console.WriteLine($"Member {memberId} joining group {matchId}");
+            try
+            {
+                await Groups.AddToGroupAsync(Context.ConnectionId, matchId);
+                Console.WriteLine($"Member {memberId} successfully joined group {matchId}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error joining group: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task LeaveGroup(string matchId)
+        {
+            Console.WriteLine($"Leaving group {matchId}");
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, matchId);
+        }
+
     }
 }

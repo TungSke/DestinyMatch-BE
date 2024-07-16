@@ -1,4 +1,6 @@
 ﻿using FPT.DestinyMatch.Repository.Models.Generic;
+using System;
+using System.Collections.Generic;
 
 namespace FPT.DestinyMatch.Repository.Models;
 
@@ -40,6 +42,7 @@ public partial class Member : GenericModel<Guid>
 
     public virtual ICollection<Picture> Pictures { get; set; } = new List<Picture>();
 
+    [JsonIgnore]
     public virtual University University { get; set; } = null!;
 
     public virtual ICollection<Hobby> Hobbies { get; set; } = new List<Hobby>();

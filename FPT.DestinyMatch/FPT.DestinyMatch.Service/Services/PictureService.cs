@@ -7,6 +7,7 @@ using FPT.DestinyMatch.Repository.Models;
 using Microsoft.EntityFrameworkCore;
 using Mapster;
 using FPT.DestinyMatch.Service.Models.Response;
+using FPT.DestinyMatch.Service.Models.Request;
 
 namespace FPT.DestinyMatch.Service.Services
 {
@@ -63,16 +64,55 @@ namespace FPT.DestinyMatch.Service.Services
             return await _pictureRepository.GetByIdAsync(id);
         }
 
-        public async Task UpdatePicture(PictureResponse picture)
+        public async Task UpdatePicture(IFormFile? file, PictureRequest picture)
         {
+            string downloadUrl = null;
+
+            if (file != null)
+            {
+                var task = new FirebaseStorage(_bucket, new FirebaseStorageOptions
+                {
+                    ThrowOnCancel = true
+                })
+                .Child("imgs")
+                .Child(file.FileName)
+                .PutAsync(file.OpenReadStream());
+
+                task.Progress.ProgressChanged += (s, e) => Console.WriteLine($"Progress: {e.Percentage} %");
+                downloadUrl = await task;
+            }
+
             var pic = await GetPictureById(picture.Id);
-            if(pic is null)
+            if (pic is null)
             {
                 throw new KeyNotFoundException("Picture not found");
             }
+
+
+            if (picture.IsAvatar == true)
+            {
+                var userPictures = await _pictureRepository.GetAsync()
+                    .Where(x => x.MemberId == pic.MemberId && x.Id != picture.Id)
+                    .ToListAsync();
+
+                foreach (var userPicture in userPictures)
+                {
+                    if (userPicture.IsAvatar == true)
+                    {
+                        userPicture.IsAvatar = false;
+                        _pictureRepository.Update(userPicture);
+                    }
+                }
+            }
+
             picture.Adapt(pic);
+            pic.IsAvatar = picture.IsAvatar;
+            pic.UrlPath = downloadUrl ?? pic.UrlPath;
+
             await _pictureRepository.SaveChangeAsync();
         }
+
+
 
         public async Task DeletePicture(Guid id)
         {
@@ -95,8 +135,8 @@ namespace FPT.DestinyMatch.Service.Services
                 ThrowOnCancel = true
             }).Child("imgs").Child(filename);
             Console.WriteLine($"Delete file: {filename}");
-            await storageReference.DeleteAsync();       
-            
+            await storageReference.DeleteAsync();
+
         }
     }
 }
