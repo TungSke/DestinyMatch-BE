@@ -6,5 +6,6 @@ namespace FPT.DestinyMatch.Repository.Interfaces
     {
         public Task<(IEnumerable<Member> members, int totalCount)> GetMembers(string? search, int page, int pagesize);
         Task<Member?> GetMemberById(Guid id);
+        Task<bool> CheckAccountExistsInMember(Guid accountId);
     }
 }

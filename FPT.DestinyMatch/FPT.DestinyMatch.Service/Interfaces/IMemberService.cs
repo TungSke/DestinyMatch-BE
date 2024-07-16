@@ -13,5 +13,6 @@ namespace FPT.DestinyMatch.Service.Interfaces
         Task<Member> CreateMember(MemberRequest memberRequest);
         Task<Member> UpdateMember(Guid Id, MemberRequest memberRequest);
         Task<Member> GetMemberByAccountId(Guid id);
+        Task<bool> CheckAccountExistsInMember(Guid accountId);
     }
 }
