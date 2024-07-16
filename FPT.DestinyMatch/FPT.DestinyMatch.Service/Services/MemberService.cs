@@ -64,6 +64,11 @@ namespace FPT.DestinyMatch.Service.Services
             return await _memberRepository.GetMemberById(id);
         }
 
+        public async Task<bool> CheckAccountExistsInMember(Guid accountId)
+        {
+            return await _memberRepository.CheckAccountExistsInMember(accountId);
+        }
+
         public async Task<Member> GetMemberByAccountId(Guid id)
         {
             return await _memberRepository.GetAsync().FirstOrDefaultAsync(x => x.AccountId == id);

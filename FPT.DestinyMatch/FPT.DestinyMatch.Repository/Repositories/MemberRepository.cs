@@ -32,5 +32,10 @@ namespace FPT.DestinyMatch.Repository.Repositories
 
                                      .FirstOrDefaultAsync(m => m.Id == id);
         }
+
+        public async Task<bool> CheckAccountExistsInMember(Guid accountId)
+        {
+            return await DMDB.Members.AnyAsync(m => m.AccountId == accountId);
+        }
     }
 }

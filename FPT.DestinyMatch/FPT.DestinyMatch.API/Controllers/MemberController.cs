@@ -54,6 +54,13 @@ namespace FPT.DestinyMatch.API.Controllers
             return Ok(member);
         }
 
+        [HttpGet("exists")]
+        public async Task<ActionResult<bool>> CheckAccountExistsInMember( Guid accountId)
+        {
+            var exists = await _memberService.CheckAccountExistsInMember(accountId);
+            return Ok(exists);
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> CreateMember([FromBody] MemberRequest memberRequest)
