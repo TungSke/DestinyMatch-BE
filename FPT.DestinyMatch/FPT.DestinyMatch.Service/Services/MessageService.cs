@@ -3,16 +3,20 @@ using FPT.DestinyMatch.Repository.Models;
 using FPT.DestinyMatch.Service.Interfaces;
 using FPT.DestinyMatch.Service.Models.Request;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace FPT.DestinyMatch.Service.Services
 {
     public class MessageService : IMessageService
     {
         private readonly IMessageReposirory _messageReposirory;
-
-        public MessageService(IMessageReposirory messageReposirory)
+        private readonly IFirebaseService _firebaseService;
+        private readonly IMatchingRepository _matchingRepository;
+        public MessageService(IMessageReposirory messageReposirory, IFirebaseService firebaseService, IMatchingRepository matchingRepository)
         {
             _messageReposirory = messageReposirory;
+            _firebaseService = firebaseService;
+            _matchingRepository=matchingRepository;
         }
         public async Task<Message> CreateMessage(MessageRequest messageRequest)
         {
@@ -27,6 +31,20 @@ namespace FPT.DestinyMatch.Service.Services
             };
             _messageReposirory.Add(messageToAdd);
             await _messageReposirory.SaveChangeAsync();
+
+            var FcmTokenopponent = await _matchingRepository.GetAsync()
+                .Where(m => m.Id == messageRequest.MatchId)
+            .Include(m => m.FirstMember)
+                .ThenInclude(m => m.Account)
+            .Include(m => m.SecondMember)
+                .ThenInclude(m => m.Account)
+            .Select(m => m.FirstMemberId != messageRequest.SenderId ? m.FirstMember.Account.FcmtToken : m.SecondMember.Account.FcmtToken)
+            .FirstOrDefaultAsync();
+            
+            if (!FcmTokenopponent.IsNullOrEmpty())
+            {
+                await _firebaseService.SendNotification(FcmTokenopponent, "Bạn vừa nhận được tin nhắn mới", messageRequest.Content);
+            }
             return messageToAdd;
         }
 

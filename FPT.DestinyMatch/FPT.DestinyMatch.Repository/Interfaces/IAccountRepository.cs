@@ -8,5 +8,6 @@ namespace FPT.DestinyMatch.Repository.Interfaces
         public Task<Account?> GetByIdIncludeMember(Guid accountId);
         public Task<IEnumerable<Account>> GetListAsync(int amountItem, int pageIndex,
             string? keyword, bool sortByDate, string? statusSearch, string? roleSearch, bool sortDescending);
+
     }
 }

@@ -11,6 +11,8 @@ using Google.Apis.Gmail.v1;
 using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace FPT.DestinyMatch.Service.Services
 {
@@ -259,6 +261,14 @@ namespace FPT.DestinyMatch.Service.Services
             {
                 throw new BadRequestException("This Account has been banned and can't not be login or signup again!");
             }
+        }
+
+        public async Task UpdateFcmToken(HttpContext User, string fcmtoken)
+        {
+            var accountid = User.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            var account = await _accountRepository.GetAsync().FirstOrDefaultAsync(x => x.Id == Guid.Parse(accountid));
+            account.FcmtToken = fcmtoken;
+            await _accountRepository.SaveChangeAsync();
         }
     }
 }

@@ -133,5 +133,14 @@ namespace FPT.DestinyMatch.API.Controllers
                     Token = jwtToken
                 });
         }
+
+        [HttpPut]
+        [Route("update-fcmtoken")]
+        public async Task<IActionResult> UpdateFcmToken(string fcmtoken)
+        {
+            var context = HttpContext;
+            await _accountService.UpdateFcmToken(context, fcmtoken);
+            return Ok("Update Success!");
+        }
     }
 }
