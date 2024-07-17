@@ -136,6 +136,7 @@ namespace FPT.DestinyMatch.API.Controllers
 
         [HttpPut]
         [Route("update-fcmtoken")]
+        [Authorize]
         public async Task<IActionResult> UpdateFcmToken(string fcmtoken)
         {
             var context = HttpContext;
