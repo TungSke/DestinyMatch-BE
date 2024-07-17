@@ -1,6 +1,5 @@
 ﻿using FPT.DestinyMatch.Repository.Models.Generic;
-using System;
-using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace FPT.DestinyMatch.Repository.Models;
 
