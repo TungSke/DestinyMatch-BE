@@ -1,6 +1,4 @@
 ﻿using FPT.DestinyMatch.Repository.Models.Generic;
-using System;
-using System.Collections.Generic;
 
 namespace FPT.DestinyMatch.Repository.Models;
 
@@ -11,6 +9,8 @@ public partial class Account : GenericModel<Guid>
     public string Email { get; set; } = null!;
 
     public string? Password { get; set; }
+
+    public string? FcmtToken { get; set; }
 
     public DateTime? CreateAt { get; set; }
 

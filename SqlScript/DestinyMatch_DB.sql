@@ -42,6 +42,7 @@ create table [Account]
 	Id uniqueidentifier default newid() primary key,
 	Email nvarchar(100) not null,
 	[Password] nvarchar(max),
+	FcmtToken nvarchar(max),
 	[CreateAt] datetime default CURRENT_TIMESTAMP,
 	[Role] nvarchar(20) not null default 'member',				--1:admin   2:moderator   3:member
 	[Status] nvarchar(20) not null default 'newbie'						--newbie	experienced		working		deleted		banned
