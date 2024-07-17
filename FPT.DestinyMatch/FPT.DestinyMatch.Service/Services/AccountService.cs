@@ -213,7 +213,6 @@ namespace FPT.DestinyMatch.Service.Services
             // Extract the email from the payload
             var email = payload.Email;
             var fullname = payload.Name;
-            //var pictureUrl = payload.Picture;
 
             var existAccount = await _accountRepository.GetValidAccountByEmail(email);
             string jwtToken;
