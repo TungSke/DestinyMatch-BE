@@ -1,11 +1,9 @@
-﻿using FPT.DestinyMatch.API.Models.ResponseModels;
-using FPT.DestinyMatch.Repository.Interfaces;
+﻿using FPT.DestinyMatch.Repository.Interfaces;
 using FPT.DestinyMatch.Repository.Models;
 using FPT.DestinyMatch.Service.Extensions.Exceptions;
 using FPT.DestinyMatch.Service.Interfaces;
 using FPT.DestinyMatch.Service.Models.Request;
 using FPT.DestinyMatch.Service.Models.Response;
-using Google.Apis.Requests;
 using Mapster;
 
 namespace FPT.DestinyMatch.Service.Services

@@ -1,5 +1,4 @@
-﻿using FPT.DestinyMatch.Repository.Interfaces;
-using FPT.DestinyMatch.Repository.Models;
+﻿using FPT.DestinyMatch.Repository.Models;
 using FPT.DestinyMatch.Service.Models.Request;
 
 namespace FPT.DestinyMatch.Service.Interfaces
