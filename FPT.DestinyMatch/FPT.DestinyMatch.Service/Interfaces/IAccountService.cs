@@ -1,4 +1,5 @@
 ﻿using FPT.DestinyMatch.Repository.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace FPT.DestinyMatch.Service.Interfaces
 {
@@ -16,5 +17,6 @@ namespace FPT.DestinyMatch.Service.Interfaces
         public Task<bool> DeleteAccountAsync(Guid accountId, string confirmPassword);
         public Task<bool> RecoverAccountAsync(string email, string newStatus);
         public Task<bool> BanAccount(Guid accountId);
+        Task UpdateFcmToken(HttpContext User, string fcmtoken);
     }
 }

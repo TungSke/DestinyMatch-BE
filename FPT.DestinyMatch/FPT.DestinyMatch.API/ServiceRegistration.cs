@@ -38,6 +38,7 @@ namespace FPT.DestinyMatch.API
             services.AddScoped<IHobbyService, HobbyService>();
             services.AddScoped<IMajorService, MajorService>();
             services.AddScoped<IMatchingService, MatchingService>();
+            services.AddScoped<IFirebaseService, FirebaseService>();
 
 
             // Inject Repository Classess

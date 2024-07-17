@@ -2,35 +2,25 @@
 using Microsoft.AspNetCore.Mvc;
 using FirebaseAdmin;
 using FirebaseAdmin.Messaging;
+using FPT.DestinyMatch.Service.Interfaces;
 
 namespace FPT.DestinyMatch.API.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]  
+    [ApiController]
     public class FirebaseController : ControllerBase
     {
-        [HttpPost("send-notification")]
-        public async Task<IActionResult> SendNotification(string fcmToken, string? title,string body)
+        private readonly IFirebaseService _firebaseService;
+
+        public FirebaseController(IFirebaseService firebaseService)
         {
-            var message = new Message()
-            {
-                Token = fcmToken,
-                Notification = new Notification
-                {
-                    Title = title,
-                    Body = body
-                }
-            };
-            try
-            {
-                Console.WriteLine("Sending notification to: " + fcmToken);
-                string response = await FirebaseMessaging.DefaultInstance.SendAsync(message);
-                return Ok("Notification sent successfully: " + fcmToken);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error sending notification: {ex.Message}");
-            }
+            _firebaseService = firebaseService;
+        }
+        [HttpPost("send-notification")]
+        public async Task<IActionResult> SendNotification(string fcmToken, string? title, string body)
+        {
+            await _firebaseService.SendNotification(fcmToken, title, body);
+            return Ok("Notification sent successfully: " + fcmToken);
         }
     }
 }
