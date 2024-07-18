@@ -1,9 +1,9 @@
-﻿using FPT.DestinyMatch.API.Models.RequestModels.Paging;
-using FPT.DestinyMatch.API.Models.ResponseModels;
-using FPT.DestinyMatch.Repository.Models;
-using FPT.DestinyMatch.Service.Interfaces;
+﻿using FPT.DestinyMatch.Service.Interfaces;
 using FPT.DestinyMatch.Service.Models.Request;
+using FPT.DestinyMatch.Service.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Drawing.Printing;
 
 namespace FPT.DestinyMatch.API.Controllers
 {
@@ -16,6 +16,20 @@ namespace FPT.DestinyMatch.API.Controllers
         public MemberController(IMemberService memberService)
         {
             _memberService = memberService;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetMembers(string? search, int? minAge, int? maxAge, int page, int pagesize)
+        {
+            try
+            {
+                var (data, count) = await _memberService.GetMembers(search, minAge, maxAge, page, pagesize);
+                return Ok(new { data, count });
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         [HttpGet("{id}")]
@@ -41,7 +55,7 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpGet("exists")]
-        public async Task<ActionResult<bool>> CheckAccountExistsInMember( Guid accountId)
+        public async Task<ActionResult<bool>> CheckAccountExistsInMember(Guid accountId)
         {
             var exists = await _memberService.CheckAccountExistsInMember(accountId);
             return Ok(exists);
@@ -75,24 +89,6 @@ namespace FPT.DestinyMatch.API.Controllers
                 return NotFound();
             }
             return NoContent();
-        }
-
-        [HttpPost("list")]
-        public async Task<IActionResult> FilterMember([FromBody] MemberPaging filter)
-        {
-            var mixObj = await _memberService.SearchMember(
-                filter.Amount,filter.Page,
-                filter.EmailKeyword, filter.NameKeyword, filter.Gender, filter.Status,
-                filter.UniversityKeyword, filter.MajorKeyword, filter.HobbyList,
-                filter.MinAge, filter.MaxAge, filter.OrderByName_Descending);
-
-            return Ok(new PagedResultResponse<Member>
-            {
-                PageIndex = mixObj.CurrentPage,
-                PageSize = mixObj.CurrentAmount,
-                TotalCount = mixObj.TotalCount,
-                ResultsList = mixObj.ResultList
-            });
         }
     }
 }

@@ -168,7 +168,10 @@ namespace FPT.DestinyMatch.API
         {
             TypeAdapterConfig<Member, MemberResponse>
                 .NewConfig()
-                .Map(dest => dest.UrlPath, src => src.Pictures.Select(p => p.UrlPath).ToList());
+                .Map(dest => dest.UrlPath, src => src.Pictures.Select(p => p.UrlPath).ToList())
+                .Map(dest => dest.Hobbies, src => src.Hobbies.Select(h => h.Name).ToList())
+                .Map(dest => dest.UniversityName, src => src.University.Name)
+                .Map(dest => dest.MajorName, src => src.Major.Name);
         }
     }
 }
