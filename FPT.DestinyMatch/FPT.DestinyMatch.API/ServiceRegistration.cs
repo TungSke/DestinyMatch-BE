@@ -21,7 +21,7 @@ namespace FPT.DestinyMatch.API
         public static IServiceCollection InjectServices(this IServiceCollection services, IConfiguration configuration)
         {
             // Read ConnectionString from appsettings.json
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            var connectionString = configuration.GetConnectionString("OnlineConnection");
 
             // Inject DbContext
             services.AddDbContext<DestinyMatchContext>(options =>
@@ -168,7 +168,10 @@ namespace FPT.DestinyMatch.API
         {
             TypeAdapterConfig<Member, MemberResponse>
                 .NewConfig()
-                .Map(dest => dest.UrlPath, src => src.Pictures.Select(p => p.UrlPath).ToList());
+                .Map(dest => dest.UrlPath, src => src.Pictures.Select(p => p.UrlPath).ToList())
+                .Map(dest => dest.Hobbies, src => src.Hobbies.Select(h => h.Name).ToList())
+                .Map(dest => dest.UniversityName, src => src.University.Name)
+                .Map(dest => dest.MajorName, src => src.Major.Name);
         }
     }
 }

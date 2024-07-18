@@ -24,11 +24,11 @@ namespace FPT.DestinyMatch.Service.Models.Response
 
         public string? Status { get; set; }
 
-        public Guid AccountId { get; set; }
+        public string? UniversityName { get; set; }
 
-        public Guid UniversityId { get; set; }
+        public string? MajorName { get; set; }
 
-        public Guid MajorId { get; set; }
+        public ICollection<string> Hobbies { get; set; }
 
         public ICollection<string> UrlPath { get; set; }
     }

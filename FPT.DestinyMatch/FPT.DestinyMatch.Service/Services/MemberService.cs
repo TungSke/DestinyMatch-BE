@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using Mapster;
 using FPT.DestinyMatch.Service.Models.Response;
 using FPT.DestinyMatch.Repository.Repositories;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace FPT.DestinyMatch.Service.Services
 {
@@ -74,13 +76,21 @@ namespace FPT.DestinyMatch.Service.Services
             return await _memberRepository.GetAsync().FirstOrDefaultAsync(x => x.AccountId == id);
         }
 
-        public async Task<(IEnumerable<MemberResponse> members, int totalCount)> GetMembers(string search, int page, int pagesize)
+        public async Task<(IEnumerable<MemberResponse> members, int totalCount)> GetMembers(string search, int? minAge, int? maxAge, int page, int pagesize)
         {
-            var members = _memberRepository.GetAsync().Include(m => m.Pictures).AsQueryable();
+            var members = _memberRepository.GetAsync().Include(m => m.Pictures).Include(x => x.University).Include(x => x.Major).AsQueryable();
 
             if (!string.IsNullOrEmpty(search))
             {
-                members = members.Where(m => m.Fullname.ToLower().Contains(search) || m.Introduce.ToLower().Contains(search));
+                members = members.Where(m => m.Fullname.ToLower().Contains(search) || m.Major.Name.ToLower().Contains(search));
+            }
+            if (minAge.HasValue && maxAge.HasValue)
+            {
+                var today = DateOnly.FromDateTime(DateTime.Today);
+                var minDob = today.AddYears(-maxAge.Value);
+                var maxDob = today.AddYears(-minAge.Value);
+
+                members = members.Where(mem => mem.Dob >= minDob && mem.Dob <= maxDob);
             }
             page = page == 0 ? 1 : page;
             pagesize = pagesize == 0 ? 5 : pagesize;

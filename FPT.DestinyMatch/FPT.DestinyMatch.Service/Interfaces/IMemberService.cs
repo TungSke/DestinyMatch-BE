@@ -6,7 +6,7 @@ namespace FPT.DestinyMatch.Service.Interfaces
 {
     public interface IMemberService
     {
-        Task<(IEnumerable<MemberResponse> members, int totalCount)> GetMembers(string search, int page, int pagesize);
+        Task<(IEnumerable<MemberResponse> members, int totalCount)> GetMembers(string search, int? minAge, int? maxAge, int page, int pagesize);
 
         Task<Member?> GetMemberById(Guid id);
         Task<bool> DeleteMeber(Guid memberId);
