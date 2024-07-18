@@ -1,6 +1,5 @@
 ﻿using FPT.DestinyMatch.Service.Interfaces;
 using FPT.DestinyMatch.Service.Models.Request;
-using Microsoft.EntityFrameworkCore;
 using FPT.DestinyMatch.Repository.Interfaces;
 using FPT.DestinyMatch.Repository.Models;
 

@@ -3,14 +3,7 @@ using FPT.DestinyMatch.Service.Models.Request;
 using Microsoft.EntityFrameworkCore;
 using FPT.DestinyMatch.Repository.Interfaces;
 using FPT.DestinyMatch.Repository.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Mapster;
-using FPT.DestinyMatch.Service.Models.Response;
-using FPT.DestinyMatch.Repository.Repositories;
+using FPT.DestinyMatch.Service.Extensions.Exceptions;
 
 namespace FPT.DestinyMatch.Service.Services
 {
@@ -25,9 +18,9 @@ namespace FPT.DestinyMatch.Service.Services
 
         public async Task<Member> CreateMember(MemberRequest memberRequest)
         {
-        //    DateTime? dob = memberRequest.Dob is not null
-        //? new DateTime(memberRequest.Dob.Year, memberRequest.Dob.Month, memberRequest.Dob.Day)
-        //: (DateTime?)null;
+            //    DateTime? dob = memberRequest.Dob is not null
+            //? new DateTime(memberRequest.Dob.Year, memberRequest.Dob.Month, memberRequest.Dob.Day)
+            //: (DateTime?)null;
             var MemberToAdd = new Member
             {
                 Id = Guid.NewGuid(),
@@ -113,9 +106,19 @@ namespace FPT.DestinyMatch.Service.Services
             member.AccountId = memberRequest.AccountId;
             member.UniversityId = memberRequest.UniversityId;
             member.MajorId = memberRequest.MajorId;
-            _memberRepository.Update(member);
+            await _memberRepository.Update(member);
             await _memberRepository.SaveChangeAsync();
             return member;
+        }
+        public async Task<(IEnumerable<Member> ResultList, int TotalCount, int CurrentPage, int CurrentAmount)>
+            SearchMember(int amount, int pageIndex, string? emailKeyword, string? nameKeyword, bool? genderType, string? statusType, string? universityKeyword, string? majorKeyword, List<string>? hobbyList, int? minAge, int? maxAge, bool orderByName_Descending)
+        {
+            var tuppleObj = await _memberRepository.GetListMember_Search(amount, pageIndex, emailKeyword, nameKeyword, genderType, statusType, universityKeyword, majorKeyword, hobbyList, minAge, maxAge, orderByName_Descending);
+            if (tuppleObj.ResultList is null || !tuppleObj.ResultList.Any())
+            {
+                throw new NotFoundException("Not found any Member suitable that filter");
+            }
+            return (tuppleObj.ResultList, tuppleObj.TotalCount, tuppleObj.CurrentPage, tuppleObj.CurrentAmount);
         }
     }
 }

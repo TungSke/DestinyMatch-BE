@@ -1,11 +1,5 @@
-﻿using FPT.DestinyMatch.Repository.Models;
-using FPT.DestinyMatch.Service.Models.Request;
+﻿using FPT.DestinyMatch.Service.Models.Request;
 using FPT.DestinyMatch.Service.Models.Response;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FPT.DestinyMatch.Service.Interfaces
 {
