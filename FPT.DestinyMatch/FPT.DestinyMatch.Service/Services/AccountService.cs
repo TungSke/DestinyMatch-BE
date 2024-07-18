@@ -54,7 +54,7 @@ namespace FPT.DestinyMatch.Service.Services
             return accountList;
         }
 
-        public async Task<bool> CreateAccountAsync(string email, string password)
+        public async Task<bool> CreateAccountAsync(string email, string password, bool ReceiveEmail)
         {
             var existAccount = await _accountRepository.GetValidAccountByEmail(email);
 
@@ -68,7 +68,8 @@ namespace FPT.DestinyMatch.Service.Services
                 new Account
                 {
                     Email = email,
-                    Password = hashedPassword
+                    Password = hashedPassword,
+                    ReceiveNotifiEmail = ReceiveEmail,
                 }
             );
             return await _accountRepository.SaveChangeAsync();

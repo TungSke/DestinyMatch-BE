@@ -28,7 +28,7 @@ namespace FPT.DestinyMatch.API.Controllers
         [Authorize(Roles = "member")]
         public async Task<IActionResult> ViewAccount([FromRoute] Guid id)
         {
-            return Ok(await _accountService.GetAccountByIdAsync(id));
+            return Ok(await _accountService.GetMemberByAccountId(id));
         }
 
         [HttpGet]
@@ -64,7 +64,7 @@ namespace FPT.DestinyMatch.API.Controllers
                 return BadRequest("Invalid email address!");
             }
 
-            var CreateSucces = await _accountService.CreateAccountAsync(accCreate.Email, accCreate.Password);
+            var CreateSucces = await _accountService.CreateAccountAsync(accCreate.Email, accCreate.Password, accCreate.ReceiveNotifiEmail);
             return CreateSucces ? Created(nameof(RegisterAccount), "Create Success") : BadRequest("Create Failed");
         }
 
