@@ -21,7 +21,7 @@ namespace FPT.DestinyMatch.API
         public static IServiceCollection InjectServices(this IServiceCollection services, IConfiguration configuration)
         {
             // Read ConnectionString from appsettings.json
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            var connectionString = configuration.GetConnectionString("OnlineConnection");
 
             // Inject DbContext
             services.AddDbContext<DestinyMatchContext>(options =>

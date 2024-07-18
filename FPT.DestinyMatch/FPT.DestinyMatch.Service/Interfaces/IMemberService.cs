@@ -8,7 +8,7 @@ namespace FPT.DestinyMatch.Service.Interfaces
     {
         Task<(IEnumerable<MemberResponse> members, int totalCount)> GetMembers(string search, int page, int pagesize);
 
-        Task<Member?> GetMemberById(Guid id);
+        Task<MemberResponse?> GetMemberById(Guid id);
         Task<bool> DeleteMeber(Guid memberId);
         Task<Member> CreateMember(MemberRequest memberRequest);
         Task<Member> UpdateMember(Guid Id, MemberRequest memberRequest);
