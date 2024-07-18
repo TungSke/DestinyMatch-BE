@@ -1,4 +1,5 @@
 ﻿using FPT.DestinyMatch.Repository.Models.Generic;
+
 namespace FPT.DestinyMatch.Repository.Models;
 
 public partial class Package : GenericModel<Guid>

@@ -12,6 +12,8 @@ public partial class Account : GenericModel<Guid>
 
     public string? FcmtToken { get; set; }
 
+    public bool ReceiveNotifiEmail { get; set; }
+
     public DateTime? CreateAt { get; set; }
 
     public string Role { get; set; } = null!;

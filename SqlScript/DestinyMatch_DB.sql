@@ -43,6 +43,7 @@ create table [Account]
 	Email nvarchar(100) not null,
 	[Password] nvarchar(max),
 	FcmtToken nvarchar(max),
+	ReceiveNotifiEMail bit not null default 0,
 	[CreateAt] datetime default CURRENT_TIMESTAMP,
 	[Role] nvarchar(20) not null default 'member',				--1:admin   2:moderator   3:member
 	[Status] nvarchar(20) not null default 'newbie'						--newbie	experienced		working		deleted		banned
@@ -56,7 +57,7 @@ create table [Member]
 	Introduce nvarchar(max) default N'Tên này rất lười, chả để lại lời nói gì cả!',
 	Dob date,
 	Gender bit,					--0:girl   1:boy
-	[Address] nvarchar(max),
+	[Address] nvarchar(max) default N'Ở trên mặt đất, ở dưới bầu trời! :3',
 	Surplus int default 0,				--money bag
 	[Status] nvarchar(30) default N'Chưa Xác Thực',
 
