@@ -47,7 +47,11 @@ namespace FPT.DestinyMatch.Service.Services
             var firstMember = await _membberRepo.GetByIdAsync(matchingrequest.thisMemberId);
             var secondMember = await _membberRepo.GetByIdAsync(matchingrequest.toMemberId);
             matching.Status = "success";
-            matching.SecondName = firstMember.Fullname;
+            matching.FirstMemberId = firstMember.Id;
+            matching.SecondMemberId = secondMember.Id;
+            matching.FirstName = firstMember.Fullname;
+            matching.SecondName = secondMember.Fullname;
+            matching.CreatedAt = DateTime.Now;
             await _matchingRepository.Add(matching);
             await _matchingRepository.SaveChangeAsync();
         }
