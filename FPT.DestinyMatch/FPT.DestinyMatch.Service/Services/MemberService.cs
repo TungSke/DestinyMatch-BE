@@ -74,7 +74,23 @@ namespace FPT.DestinyMatch.Service.Services
             return await _memberRepository.GetAsync().FirstOrDefaultAsync(x => x.AccountId == id);
         }
 
-        public async Task<(IEnumerable<Member> members, int totalCount)> GetMembers(string search, int page, int pagesize) => await _memberRepository.GetMembers(search, page, pagesize);
+        public async Task<(IEnumerable<MemberResponse> members, int totalCount)> GetMembers(string search, int page, int pagesize)
+        {
+            var members = _memberRepository.GetAsync().Include(m => m.Pictures).AsQueryable();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                members = members.Where(m => m.Fullname.ToLower().Contains(search) || m.Introduce.ToLower().Contains(search));
+            }
+            page = page == 0 ? 1 : page;
+            pagesize = pagesize == 0 ? 5 : pagesize;
+            var totalCount = await members.CountAsync();
+            members = members.Skip((page - 1) * pagesize).Take(pagesize);
+
+            var memberResponses = members.Adapt<IEnumerable<MemberResponse>>();
+
+            return (memberResponses, totalCount);
+        }
 
         public async Task<Member> UpdateMember(Guid Id, MemberRequest memberRequest)
         {
