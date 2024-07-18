@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FPT.DestinyMatch.Service.Models.Request
+﻿namespace FPT.DestinyMatch.Service.Models.Request
 {
     public class MemberPackageRequest
     {

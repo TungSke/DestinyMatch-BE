@@ -18,4 +18,8 @@
     <ProjectReference Include="..\FPT.DestinyMatch.Service\FPT.DestinyMatch.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Imgs\" />
+  </ItemGroup>
+
 </Project>

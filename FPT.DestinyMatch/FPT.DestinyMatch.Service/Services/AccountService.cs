@@ -5,9 +5,7 @@ using System.Security.Cryptography;//For hash password
 using System.Text;
 using FPT.DestinyMatch.Service.Extensions.Exceptions;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Identity.Client;
 using Google.Apis.Auth;
-using Google.Apis.Gmail.v1;
 using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -95,11 +93,8 @@ namespace FPT.DestinyMatch.Service.Services
 
         public async Task<string> LoginByPasswordAsync(string email, string password)
         {
-            var foundAccount = await _accountRepository.GetValidAccountByEmail(email);
-            if (foundAccount is null)
-            {
-                throw new BadRequestException("This account is not registered or not available");
-            }
+            var foundAccount = await _accountRepository.GetValidAccountByEmail(email)
+               ?? throw new BadRequestException("This account is not registered or not available");
 
             BannedChecker(foundAccount.Status);
 
@@ -112,7 +107,7 @@ namespace FPT.DestinyMatch.Service.Services
             string memberid = foundAccount?.Member?.Id.ToString() ?? "";
             //==========================
             var jwtToken = GenerateToken(
-                foundAccount.Id.ToString(),
+                foundAccount!.Id.ToString(),
                 foundAccount.Email!,
                 foundAccount.Role,
                 "",
@@ -158,11 +153,8 @@ namespace FPT.DestinyMatch.Service.Services
 
         public async Task<bool> ChangePasswordAccountAsync(Guid accountId, string oldPassword, string newPassword, bool privilegedOverride)
         {
-            var currentAcc = await _accountRepository.GetByIdAsync(accountId);
-            if (currentAcc is null)
-            {
-                throw new NotFoundException("Not found that account");
-            }
+            var currentAcc = await _accountRepository.GetByIdAsync(accountId)
+                ??throw new NotFoundException("Not found that account");
             if (privilegedOverride == false)
             {
                 string hashedOldPassword = HashString(oldPassword);
