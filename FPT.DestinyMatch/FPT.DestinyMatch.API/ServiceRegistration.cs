@@ -155,13 +155,14 @@ namespace FPT.DestinyMatch.API
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
-                        builder => builder
+                    builder => builder
+                        .AllowAnyOrigin()
                         .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowCredentials());
+                        .AllowAnyHeader());
             });
             return services;
         }
+
 
         private static void addMapper()
         {
