@@ -5,6 +5,8 @@ using FPT.DestinyMatch.Service.Interfaces;
 using FPT.DestinyMatch.Service.Models.Request;
 using FPT.DestinyMatch.Service.Models.Response;
 using Mapster;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace FPT.DestinyMatch.Service.Services
 {
@@ -12,10 +14,12 @@ namespace FPT.DestinyMatch.Service.Services
     {
         private readonly IMatchingRepository _matchingRepository;
         private readonly IMemberRepository _membberRepo;
-        public MatchingService(IMatchingRepository matchingRepository, IMemberRepository membberRepo)
+        private readonly IFirebaseService _firebaseService;
+        public MatchingService(IMatchingRepository matchingRepository, IMemberRepository membberRepo, IFirebaseService firebaseService)
         {
             _matchingRepository = matchingRepository;
             _membberRepo=membberRepo;
+            _firebaseService=firebaseService;
         }
 
         public async Task<IEnumerable<MatchingResponse>> GetMatchings(Guid currentMemId, int pageIndex, int pageSize, string search, string status)
@@ -43,7 +47,7 @@ namespace FPT.DestinyMatch.Service.Services
         {
             var matching = matchingrequest.Adapt<Matching>();
             var firstMember = await _membberRepo.GetByIdAsync(matchingrequest.thisMemberId);
-            var secondMember = await _membberRepo.GetByIdAsync(matchingrequest.toMemberId);
+            var secondMember = await _membberRepo.GetAsync().Include(x => x.Account).FirstOrDefaultAsync(x => x.Id == matchingrequest.toMemberId);
             matching.Status = "success";
             matching.FirstMemberId = firstMember.Id;
             matching.SecondMemberId = secondMember.Id;
@@ -52,6 +56,10 @@ namespace FPT.DestinyMatch.Service.Services
             matching.CreatedAt = DateTime.Now;
             await _matchingRepository.Add(matching);
             await _matchingRepository.SaveChangeAsync();
+            if (!secondMember.Account.FcmtToken.IsNullOrEmpty())
+            {
+                await _firebaseService.SendNotification(secondMember.Account.FcmtToken, $"Bạn vừa ghép đôi thành công với {matching.FirstName}", "Chúng ta vừa ghép dôi thành công");
+            }
         }
 
 
