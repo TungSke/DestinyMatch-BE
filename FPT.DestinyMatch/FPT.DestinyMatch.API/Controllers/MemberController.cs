@@ -19,11 +19,11 @@ namespace FPT.DestinyMatch.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetMembers(string? search, int? minAge, int? maxAge, int page, int pagesize)
+        public async Task<IActionResult> GetMembers(string? search, bool? gender, int? minAge, int? maxAge, int page, int pagesize)
         {
             try
             {
-                var (data, count) = await _memberService.GetMembers(search, minAge, maxAge, page, pagesize);
+                var (data, count) = await _memberService.GetMembers(search, gender, minAge, maxAge, page, pagesize);
                 return Ok(new { data, count });
             }
             catch

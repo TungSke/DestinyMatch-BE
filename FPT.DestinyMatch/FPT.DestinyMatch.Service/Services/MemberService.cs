@@ -77,14 +77,19 @@ namespace FPT.DestinyMatch.Service.Services
             return await _memberRepository.GetAsync().FirstOrDefaultAsync(x => x.AccountId == id);
         }
 
-        public async Task<(IEnumerable<MemberResponse> members, int totalCount)> GetMembers(string search, int? minAge, int? maxAge, int page, int pagesize)
+        public async Task<(IEnumerable<MemberResponse> members, int totalCount)> GetMembers(string search, bool? gender, int? minAge, int? maxAge, int page, int pagesize)
         {
-            var members = _memberRepository.GetAsync().Include(m => m.Pictures).Include(x => x.University).Include(x => x.Major).AsQueryable();
+            var members = _memberRepository.GetAsync()
+                .Include(m => m.Pictures)
+                .Include(x => x.University)
+                .Include(x => x.Major)
+                .AsQueryable();
 
             if (!string.IsNullOrEmpty(search))
             {
                 members = members.Where(m => m.Fullname.ToLower().Contains(search) || m.Major.Name.ToLower().Contains(search));
             }
+
             if (minAge.HasValue && maxAge.HasValue)
             {
                 var today = DateOnly.FromDateTime(DateTime.Today);
@@ -93,8 +98,15 @@ namespace FPT.DestinyMatch.Service.Services
 
                 members = members.Where(mem => mem.Dob >= minDob && mem.Dob <= maxDob);
             }
+
+            if (gender.HasValue)
+            {
+                members = members.Where(m => m.Gender == gender.Value);
+            }
+
             page = page == 0 ? 1 : page;
             pagesize = pagesize == 0 ? 5 : pagesize;
+
             var totalCount = await members.CountAsync();
             members = members.Skip((page - 1) * pagesize).Take(pagesize);
 
@@ -102,6 +114,7 @@ namespace FPT.DestinyMatch.Service.Services
 
             return (memberResponses, totalCount);
         }
+
 
         public async Task<Member> UpdateMember(Guid Id, MemberRequest memberRequest)
         {
